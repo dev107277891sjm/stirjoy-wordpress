@@ -90,6 +90,18 @@ $last_subscription_id = 0;
 $total_delivery_count = 0;
 $first_delivery_date = '';
 $first_subscription_id = 0;
+$next_delivery_date = '';
+$next_delivery_year = '';
+$subscription_price = 0;
+$formatted_subscription_price = '';
+$parent_order_id = 0;
+$parent_order = false;
+$shipping_price = 0;
+$formatted_shipping_price = '';
+$cutoff_date = '';
+$delivery_date = '';
+$exist_past_order = false;
+
 if ( ! empty( $subscription_ids ) && is_array( $subscription_ids ) ) {
 	/*foreach ( $subscription_ids as $key => $subcription_id ) {
 		$wps_status = wps_sfw_get_meta_data( $subcription_id, 'wps_subscription_status', true );
@@ -112,35 +124,43 @@ if ( ! empty( $subscription_ids ) && is_array( $subscription_ids ) ) {
 		$total_delivery_count = $total_delivery_count - 1;
 	}
 	$first_schedule_start = wps_sfw_get_meta_data( $first_subscription_id, 'wps_schedule_start', true );
-	$first_delivery_date = date('M Y', strtotime('+5 days', $first_schedule_start));
+	if ( ! empty( $first_schedule_start ) && is_numeric( $first_schedule_start ) ) {
+		$first_delivery_date = date('M Y', strtotime('+5 days', $first_schedule_start));
+	}
 }
 
 $wps_cancel_url = '';
 if($last_subscription_id > 0){
 	$wps_schedule_start = wps_sfw_get_meta_data( $last_subscription_id, 'wps_schedule_start', true );
-	$next_delivery_date = date('M d', strtotime('+5 days', $wps_schedule_start));
-	$next_delivery_year = date('Y', strtotime('+5 days', $wps_schedule_start));
+	if ( ! empty( $wps_schedule_start ) && is_numeric( $wps_schedule_start ) ) {
+		$next_delivery_date = date('M d', strtotime('+5 days', $wps_schedule_start));
+		$next_delivery_year = date('Y', strtotime('+5 days', $wps_schedule_start));
+	}
 
 	$subscription_price = wps_sfw_get_meta_data( $last_subscription_id, 'line_subtotal', true );
 	$formatted_subscription_price = wp_kses_post( wc_price( $subscription_price ) );
 	$parent_order_id   = wps_sfw_get_meta_data( $last_subscription_id, 'wps_parent_order', true );
 	$parent_order = wc_get_order( $parent_order_id );
-	$shipping_price = $parent_order->get_shipping_total();
-	$formatted_shipping_price = wp_kses_post( wc_price( $shipping_price ) );
+	
+	if ( $parent_order && is_a( $parent_order, 'WC_Order' ) ) {
+		$shipping_price = $parent_order->get_shipping_total();
+		$formatted_shipping_price = wp_kses_post( wc_price( $shipping_price ) );
+
+		$order_created_at = $parent_order->get_date_created();
+		if ( $order_created_at ) {
+			$cutoff_date = $order_created_at->date('F d, Y');
+			$timestamp = $order_created_at->getTimestamp();
+			if ( $timestamp ) {
+				$delivery_date = date('F d, Y', strtotime('+5 days', $timestamp));
+			}
+		}
+	}
 
 	$wps_sfw_cancel_subscription = get_option( 'wps_sfw_cancel_subscription_for_customer', '' );
 	$wps_sfw_cancel_subscription = apply_filters( 'wps_sfw_customer_cancel_button', $wps_sfw_cancel_subscription, $last_subscription_id );
 	if ( 'on' == $wps_sfw_cancel_subscription ) {
 		$wps_cancel_url = wps_sfw_cancel_url( $last_subscription_id, $wps_status );
 	}
-
-	$parent_order_id   = wps_sfw_get_meta_data( $last_subscription_id, 'wps_parent_order', true );
-	$parent_order = wc_get_order( $parent_order_id );
-	$order_created_at = $parent_order->get_date_created();
-	$cutoff_date = $order_created_at->date('F d, Y');
-	$timestamp = $order_created_at->getTimestamp();
-	$delivery_date = date('F d, Y', strtotime('+5 days', $timestamp));
-	$exist_past_order = false;
 }
 ?>
 
@@ -180,7 +200,7 @@ if($last_subscription_id > 0){
 									break;
 							}
 						?>
-						<span style="background: <?= $bgColor ?>"><?= esc_html__($wps_status, 'thecrate') ?></span>
+						<span style="background: <?= esc_attr( $bgColor ) ?>"><?= esc_html( ucfirst( $wps_status ) ) ?></span>
 					<?php endif; ?>
 				</div>
 				<h4>Subscription Status</h4>
@@ -194,8 +214,8 @@ if($last_subscription_id > 0){
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-5 h-5 text-primary mb-2" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
 				<h4>Next Delivery</h4>
 				<?php if($wps_status === 'active'): ?>
-					<h3><?= $next_delivery_date ?></h3>
-					<h5><?= $next_delivery_year ?></h5>
+					<h3><?= esc_html( $next_delivery_date ) ?></h3>
+					<h5><?= esc_html( $next_delivery_year ) ?></h5>
 				<?php else: ?>
 					<h3>- - -</h3>
 				<?php endif; ?>
@@ -203,30 +223,42 @@ if($last_subscription_id > 0){
 			<div class="total-deliveries">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck w-5 h-5 text-primary mb-2" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path><path d="M15 18H9"></path><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path><circle cx="17" cy="18" r="2"></circle><circle cx="7" cy="18" r="2"></circle></svg>
 				<h4>Total Deliveries</h4>
-				<h3><?= $total_delivery_count ?></h3>
-				<h5>since <?= $first_delivery_date ?></h5>
+				<h3><?= esc_html( $total_delivery_count ) ?></h3>
+				<?php if ( ! empty( $first_delivery_date ) ): ?>
+				<h5>since <?= esc_html( $first_delivery_date ) ?></h5>
+				<?php endif; ?>
 			</div>
 		</div>
 
 		<div class="upcoming-deliveries">
 			<div class="block-title">Upcoming Deliveries</div>
+			<?php if ( $parent_order && is_a( $parent_order, 'WC_Order' ) && $parent_order_id > 0 ): ?>
 			<div class="order-item upcoming-order">
 				<div class="order-summary">
 					<div class="order-number">
-						<span>Order #<?= $parent_order_id ?></span>
+						<span>Order #<?= esc_html( $parent_order_id ) ?></span>
 						<span>Scheduled</span>
 					</div>
-					<div class="order-price"><?= $parent_order->get_formatted_order_total() ?></div>
+					<div class="order-price"><?= wp_kses_post( $parent_order->get_formatted_order_total() ) ?></div>
 				</div>
+				<?php if ( ! empty( $cutoff_date ) ): ?>
 				<div class="cutoff">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-3 h-3 mr-1" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-					Cutoff: <?= $cutoff_date ?>
+					Cutoff: <?= esc_html( $cutoff_date ) ?>
 				</div>
+				<?php endif; ?>
+				<?php if ( ! empty( $delivery_date ) ): ?>
 				<div class="delivery">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck w-3 h-3 mr-1" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path><path d="M15 18H9"></path><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path><circle cx="17" cy="18" r="2"></circle><circle cx="7" cy="18" r="2"></circle></svg>
-					Delivery: <?= $delivery_date ?>
+					Delivery: <?= esc_html( $delivery_date ) ?>
 				</div>
+				<?php endif; ?>
 			</div>
+			<?php else: ?>
+			<div class="order-item upcoming-order">
+				<div>No upcoming deliveries</div>
+			</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="past-deliveries">
@@ -301,24 +333,24 @@ if($last_subscription_id > 0){
 			<div class="customer-info-text">
 				<div class="line-with-left-icon customer-name">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user w-4 h-4 mr-2 text-muted-foreground" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-					<span><?= $customer->get_first_name() . ' ' . $customer->get_last_name() ?></span>
+					<span><?= esc_html( $customer->get_first_name() . ' ' . $customer->get_last_name() ) ?></span>
 				</div>
 				<div class="line-with-left-icon customer-email">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail w-4 h-4 mr-2 text-muted-foreground" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
-					<span><?= $customer->get_email() ?></span>
+					<span><?= esc_html( $customer->get_email() ) ?></span>
 				</div>
 				<div class="line-with-left-icon customer-phone">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone w-4 h-4 mr-2 text-muted-foreground" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>
-					<span><?= $customer->get_billing_phone() ?></span>
+					<span><?= esc_html( $customer->get_billing_phone() ) ?></span>
 				</div>
 			</div>
 			<div class="customer-info-form" style="display: none;">
 				<label for="customer-name">Name</label>
-				<input type="text" name="customer_name" id="customer-name" value="<?= $customer->get_first_name() . ' ' . $customer->get_last_name() ?>">
+				<input type="text" name="customer_name" id="customer-name" value="<?= esc_attr( $customer->get_first_name() . ' ' . $customer->get_last_name() ) ?>">
 				<label for="customer-email">Email</label>
-				<input type="email" name="customer_email" id="customer-email" value="<?= $customer->get_email() ?>">
+				<input type="email" name="customer_email" id="customer-email" value="<?= esc_attr( $customer->get_email() ) ?>">
 				<label for="customer-phone">Phone</label>
-				<input type="text" name="customer_phone" id="customer-phone" value="<?= $customer->get_billing_phone() ?>">
+				<input type="text" name="customer_phone" id="customer-phone" value="<?= esc_attr( $customer->get_billing_phone() ) ?>">
 
 				<div class="button-wrapper">
 					<button type="button" class="customer-info-save">
@@ -340,12 +372,17 @@ if($last_subscription_id > 0){
 			<div class="line-with-left-icon">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin w-4 h-4 mr-2 text-muted-foreground mt-0.5" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
 				<div>
-					<?= $customer->get_shipping_address_1() ?><br>
+					<?= esc_html( $customer->get_shipping_address_1() ) ?><br>
 					<?php if(!empty($customer->get_shipping_address_2())): ?>
-						<?= $customer->get_shipping_address_2() ?><br>
+						<?= esc_html( $customer->get_shipping_address_2() ) ?><br>
 					<?php endif; ?>
-					<?= $customer->get_shipping_city() ?>, <?= $customer->get_shipping_state() ?>, <?= $customer->get_shipping_postcode() ?><br>
-					<?= WC()->countries->countries[$customer->get_shipping_country()] ?>
+					<?= esc_html( $customer->get_shipping_city() ) ?>, <?= esc_html( $customer->get_shipping_state() ) ?>, <?= esc_html( $customer->get_shipping_postcode() ) ?><br>
+					<?php 
+					$shipping_country = $customer->get_shipping_country();
+					if ( ! empty( $shipping_country ) && isset( WC()->countries->countries[ $shipping_country ] ) ) {
+						echo esc_html( WC()->countries->countries[ $shipping_country ] );
+					}
+					?>
 				</div>
 			</div>
 		</div>
