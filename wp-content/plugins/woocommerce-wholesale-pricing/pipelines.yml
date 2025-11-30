@@ -1,0 +1,26 @@
+
+  image: atlassian/default-image:latest
+
+  pipelines:
+    branches:
+      main: # Set branch name to default branch 
+        - step:
+            name: 'Run Semgrep scan with current branch'
+            deployment: test
+            image: returntocorp/semgrep
+            script:
+              # Set SEMGREP Variables
+              # - export SEMGREP_BASELINE_REF=""
+              - export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN
+              - semgrep ci
+        pull-requests:
+          '**':
+            - step:
+                name: 'Run Semgrep diff scan with PR branch'
+                image: returntocorp/semgrep
+                script:
+                  # Set SEMGREP Variables
+                  - export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN
+                  - export SEMGREP_BASELINE_REF="origin/main" # Set baseline branch to default branch
+                  - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+                  - semgrep ci

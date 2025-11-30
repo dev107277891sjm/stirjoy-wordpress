@@ -1,0 +1,169 @@
+.hs-dk-doko_card_row_2{
+	display: flex;
+}
+.hs-dk-card-container {
+	display: flex;
+	align-items: center;
+}
+
+.hs-dk-card-image {
+	flex: 1;
+	margin-right: 18px;
+}
+
+.hs-dk-card-image img {
+	width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+
+.hs-dk-card-details {
+	flex: 2;
+	width: 50%;
+}
+
+.hs-dk-input-container {
+	margin-bottom: 15px;
+	display: flex;
+	flex-direction: column;
+	width: 46%;
+}
+
+.hs-dk-input-container-form{
+	border: 1px solid #cccccc;
+	display: block;
+	background-color: transparent;
+	outline: none;
+	padding: 8px 10px
+}
+
+.hs-dk-input-container label {
+	display: block;
+	margin-bottom: 8px;
+}
+
+.hs-dk-note-options {
+	margin-bottom: 8px;
+}
+.hs-dk-customer-checkbox{
+	display: inline-block;
+	margin-right: 15px;
+	font-size: 12px;
+	line-height: 1.5;
+	cursor: pointer
+}
+.hs-dk-note-options label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.hs-dk-message-container {
+	margin-bottom: 10px;
+}
+#message-box{
+	display: block;
+	margin-bottom: 15px;
+	padding: 15px;
+	width: 94%;
+	height: 116px;
+	font-size: 16px;
+	color: #000;
+	border: solid 1px #ccc;
+	resize: none;
+}
+
+.hs-dk-message-container label {
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.hs-dk-remaining-characters {
+	margin-bottom: 4px;
+	font-size: 12px;
+}
+
+.add-to-cart-btn {
+	display: block;
+	width: 100%;
+	padding: 12px;
+	border: none;
+	cursor: pointer;
+	border: 1px solid #cccccc;
+}
+
+.add-to-cart-btn:hover {
+
+}
+
+/****************************************************************/
+
+.hs-dk-card_box_container{
+	display: flex;
+	flex-direction: column;
+	width: 60%;
+	margin: auto;
+}
+.hs-dk-input-bloc{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.hs-dk-card_row_1{
+	text-align: center;
+	padding-bottom: 30px;
+}
+
+.hs-dk-card_row_1 h2{
+	margin: 10px 0;
+	padding: 0;
+	color: #000;
+	line-height: 1.5;
+	text-align: center;
+	text-transform: uppercase;
+	border-top: none;
+	border-bottom: none;
+}
+
+/**********************************Responsive**************************************/
+
+@media (max-width: 767px){
+
+	.hs-dk-card_row_2 {
+		flex-direction: column;
+	}
+	.hs-dk-card_row_1 h2{
+		font-size: 15px;
+	}
+	.hs-dk-card_text{
+		font-size: 10px;
+	}
+	.hs-dk-card-image{
+		margin-right: auto !important;
+	}
+	.hs-dk-input-container {
+		width: auto;
+	}
+	.hs-dk-input-bloc{
+		display: unset !important;
+		padding-top: 20px;
+	}
+	.hs-dk-card_box_container{
+		width: 90%;
+	}
+	#message-box{
+		padding: 9px;
+		width: 94%;
+		height: 90px;
+	}
+
+}
+
+#tooltip {
+	background: #333;
+	color: white;
+	font-weight: bold;
+	padding: 4px 8px;
+	font-size: 13px;
+	border-radius: 4px;
+  }

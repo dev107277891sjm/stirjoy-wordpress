@@ -1,0 +1,24 @@
+{
+    "name": "themehigh/woocommerce-multiple-addresses-pro",
+    "description": "Lets you save multiple addresses, as well as ship different products to as many multiple addresses in a single purchase.",
+    "license": "GPL",
+    "autoload": {
+        "psr-4": {
+            "Themehigh\\WoocommerceMultipleAddressesPro\\": "src/",
+             "files": ["src/woocommerce/includes"]
+
+        }
+    },
+    "authors": [
+        {
+            "name": "themehigh"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "config": {
+        "allow-plugins": {
+            "composer/installers": false
+        }
+    }
+}

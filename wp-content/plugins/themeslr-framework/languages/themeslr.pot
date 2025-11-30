@@ -1,0 +1,1780 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#: inc/metaboxes/metaboxes.php:97 inc/metaboxes/metaboxes.php:258
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:170
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:181
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:194
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:204
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:244
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:254
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:264
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:274
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:284
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:304
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-21 00:10+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: init.php:258
+msgid "Clear"
+msgstr ""
+
+#: init.php:259
+msgid "Default"
+msgstr ""
+
+#: init.php:260
+msgid "Select Color"
+msgstr ""
+
+#: init.php:261
+msgid "Current Color"
+msgstr ""
+
+#: init.php:288
+msgid "Select / Deselect All"
+msgstr ""
+
+#: init.php:1179
+msgid "Save"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_ajax.php:47
+msgid "Please Try Again"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_ajax.php:131
+msgid "Remove Embed"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_ajax.php:134
+#, php-format
+msgid "No oEmbed Results Found for %s. View more info at"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_field.php:459
+msgid "Add Group"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_field.php:460
+msgid "Remove Group"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:250
+msgid "Add Row"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:306 helpers/cmb_Meta_Box_types.php:706
+#: helpers/cmb_Meta_Box_types.php:768
+#: inc/mega-menu/lib/class.mega-menu.php:228
+msgid "Remove"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:601 helpers/cmb_Meta_Box_types.php:635
+msgid "No terms"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:674 helpers/cmb_Meta_Box_types.php:728
+msgid "Add or Upload File"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:695 helpers/cmb_Meta_Box_types.php:760
+msgid "Remove Image"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:706 helpers/cmb_Meta_Box_types.php:768
+msgid "File:"
+msgstr ""
+
+#: helpers/cmb_Meta_Box_types.php:706 helpers/cmb_Meta_Box_types.php:768
+msgid "Download"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/extension_wbc_importer.php:236
+msgid "Demo Already Imported"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/extension_wbc_importer.php:277
+#: inc/demo-importer-v2/extensions/wbc_importer/extension_wbc_importer.php:279
+msgid "Demo Importer"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/extension_wbc_importer.php:285
+msgid "Works best to import on a new install of WordPress"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:42
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:72
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:84
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:89
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:279
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/parsers.php:468
+msgid ""
+"This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:256
+msgid "Theme options Import file could not be found. Please try again."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:331
+msgid "Widget Import file could not be found. Please try again."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:405
+msgid "Sidebar does not exist in theme (using Inactive)"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:427
+msgid "Site does not support widget"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:450
+msgid "Widget already exists"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:499
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:116
+msgid "Imported"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:502
+msgid "Imported to Inactive"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/radium-importer.php:509
+msgid "No Title"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:134
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:143
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:194
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:198
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:207
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:135
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:178
+msgid "All done."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:178
+msgid "Have fun!"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:179
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:199
+#, php-format
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:215
+#, php-format
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:240
+#, php-format
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:266
+msgid "Assign Authors"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:267
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of this "
+"site. For example, you may want to import all the entries as <code>admin</"
+"code>s entries."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:269
+#, php-format
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually changing "
+"the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:279
+msgid "Import Attachments"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:282
+msgid "Download and import file attachments"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:286
+msgid "Submit"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:299
+msgid "Import author:"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:310
+msgid "or create new user with login name:"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:313
+msgid "as a new user:"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:321
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:323
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:324
+msgid "- Select -"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:374
+#, php-format
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:425
+#, php-format
+msgid "Failed to import category %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:465
+#, php-format
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:511
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:652
+#, php-format
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:537
+#, php-format
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:559
+#, php-format
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:618
+#, php-format
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:783
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:790
+#, php-format
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:853
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:866
+msgid "Invalid file type"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:910
+msgid "Remote server did not respond"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:916
+#, php-format
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:923
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:928
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:934
+#, php-format
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:1032
+msgid "Import WordPress"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:1039
+#, php-format
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:1054
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/inc/importer/wordpress-importer.php:1055
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:93
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:114
+msgid "Import Demo"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:97
+msgid "Demo Imported"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:114
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:117
+msgid "Please Wait..."
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:118
+msgid "Re-Import"
+msgstr ""
+
+#: inc/demo-importer-v2/extensions/wbc_importer/wbc_importer/field_wbc_importer.php:127
+msgid "No Demo Data Provided"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:23
+msgid "TSLR Mega Menus"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:24 inc/mega-menu/mega-menu.php:25
+msgid "TSLR Mega Menu"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:26
+msgid "All Mega Menus"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:27
+msgid "Add New Mega Menu"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:28
+msgid "Edit Mega Menu"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:29
+msgid "New Mega Menu"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:30
+msgid "View Mega Menu"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:31
+msgid "Search Mega Menus"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:32
+msgid "No mega menus found"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:33
+msgid "No mega menus found in trash"
+msgstr ""
+
+#: inc/mega-menu/mega-menu.php:35
+msgid "A utility post type used to control contents within mega menu dropdowns"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:58
+#, php-format
+msgid "%s (Invalid)"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:62
+#, php-format
+msgid "%s (Pending)"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:79
+msgid "sub item"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:94
+msgid "Move up"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:107
+msgid "Move down"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:109
+#: inc/mega-menu/lib/class.mega-menu.php:111
+msgid "Edit Menu Item"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:120
+msgid "URL"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:127
+msgid "Navigation Label"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:133
+msgid "Title Attribute"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:140
+msgid "Open link in a new window/tab"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:145
+msgid "CSS Classes (optional)"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:151
+msgid "Link Relationship (XFN)"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:157
+msgid "Description"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:159
+msgid ""
+"The description will be displayed in the menu if the current theme supports "
+"it."
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:167
+msgid "Mega Menu:"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:172
+#: inc/mega-menu/lib/class.mega-menu.php:190
+msgid "-- None --"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:176
+msgid "The mega menu to display where mega menus are enabled."
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:182
+msgid "Mega Menu Columns:"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:191
+msgid "1 Column"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:192
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:104
+msgid "2 Columns"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:193
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:105
+msgid "3 Columns"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:195
+msgid "The mega menu width shown in frontend."
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:203
+msgid "Move"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:204
+msgid "Up one"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:205
+msgid "Down one"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:208
+msgid "To the top"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:215
+#, php-format
+msgid "Original: %s"
+msgstr ""
+
+#: inc/mega-menu/lib/class.mega-menu.php:229
+msgid "Cancel"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:10
+msgid "TSLR Testimonials Custom Options"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:17
+msgid "Job Position"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:18
+msgid "Enter testimonial author job position"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:23
+msgid "Company"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:24
+msgid "Enter testimonial author company name"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:76
+msgid "TSLR Post Layout"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:83
+msgid "Rewrite Sidebar Theme Options?"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:84
+msgid "If \"Yes\" - Page Options will rewrite Theme Options"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:88
+msgid "Inherit from Theme Panel"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:89
+msgid "Left Sidebar"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:90
+msgid "Right Sidebar"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:91
+msgid "No Sidebar"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:96
+msgid "Select Sidebar"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:119
+msgid "TSLR Custom Options"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:141
+msgid "Header Custom background color"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:142 inc/metaboxes/metaboxes.php:276
+#: inc/metaboxes/metaboxes.php:282 inc/metaboxes/metaboxes.php:288
+msgid ""
+"Replaces the current background color of the header(Default: Theme Panel "
+"Color)"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:152
+msgid "Enabled"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:153
+msgid "Disabled"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:163 inc/metaboxes/metaboxes.php:183
+msgid "0"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:164 inc/metaboxes/metaboxes.php:184
+msgid "0.1"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:165 inc/metaboxes/metaboxes.php:185
+msgid "0.2"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:166 inc/metaboxes/metaboxes.php:186
+msgid "0.3"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:167 inc/metaboxes/metaboxes.php:187
+msgid "0.4"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:168 inc/metaboxes/metaboxes.php:188
+msgid "0.5"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:169 inc/metaboxes/metaboxes.php:189
+msgid "0.6"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:170 inc/metaboxes/metaboxes.php:190
+msgid "0.7"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:171 inc/metaboxes/metaboxes.php:191
+msgid "0.8"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:172 inc/metaboxes/metaboxes.php:192
+msgid "0.9"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:173 inc/metaboxes/metaboxes.php:193
+msgid "1"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:208
+msgid "Custom Logo - Width"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:209
+msgid "Override the default theme panel width (Example: 250) 250 = 250px"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:226
+msgid "Select Revolution Slider"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:233
+msgid "Page title-breadcrumbs"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:237
+msgid "Off - Hide title-breadcrumbs area"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:238
+msgid "On - Show title-breadcrumbs area"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:257
+msgid "Page top/bottom spacing"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:262
+msgid "High Padding"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:263
+msgid "No Padding"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:264
+msgid "No Padding top"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:265
+msgid "No Padding bottom"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:275
+msgid "Custom Skin Background"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:281
+msgid "Custom Skin Background - Hover"
+msgstr ""
+
+#: inc/metaboxes/metaboxes.php:287
+msgid "Custom Skin Color"
+msgstr ""
+
+#: inc/post-types/post-types.php:13
+msgid "TSLR Galley"
+msgstr ""
+
+#: inc/post-types/post-types.php:27
+msgid "Galleries"
+msgstr ""
+
+#: inc/post-types/post-types.php:28
+msgid "Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:29
+msgid "TSLR Galleries"
+msgstr ""
+
+#: inc/post-types/post-types.php:30
+msgid "Add Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:31
+msgid "Add New Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:32 inc/post-types/post-types.php:66
+msgid "Edit Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:33
+msgid "Edit Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:34
+msgid "New Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:35 inc/post-types/post-types.php:36
+msgid "View Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:37
+msgid "Search Gallery Items"
+msgstr ""
+
+#: inc/post-types/post-types.php:38
+msgid "No Gallery Item Found"
+msgstr ""
+
+#: inc/post-types/post-types.php:39
+msgid "No Gallery Item Found in Trash"
+msgstr ""
+
+#: inc/post-types/post-types.php:40
+msgid "Parent Gallery Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:58
+msgctxt "Taxonomy General Name"
+msgid "Categories"
+msgstr ""
+
+#: inc/post-types/post-types.php:59
+msgctxt "Taxonomy Singular Name"
+msgid "Gallery"
+msgstr ""
+
+#: inc/post-types/post-types.php:60
+msgid "Gallery Categories"
+msgstr ""
+
+#: inc/post-types/post-types.php:61
+msgid "All Items"
+msgstr ""
+
+#: inc/post-types/post-types.php:62
+msgid "Parent Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:63
+msgid "Parent Item:"
+msgstr ""
+
+#: inc/post-types/post-types.php:64
+msgid "New Item Name"
+msgstr ""
+
+#: inc/post-types/post-types.php:65
+msgid "Add New Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:67
+msgid "Update Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:68
+msgid "View Item"
+msgstr ""
+
+#: inc/post-types/post-types.php:69
+msgid "Separate items with commas"
+msgstr ""
+
+#: inc/post-types/post-types.php:70
+msgid "Add or remove items"
+msgstr ""
+
+#: inc/post-types/post-types.php:71
+msgid "Choose from the most used"
+msgstr ""
+
+#: inc/post-types/post-types.php:72
+msgid "Popular Items"
+msgstr ""
+
+#: inc/post-types/post-types.php:73
+msgid "Search Items"
+msgstr ""
+
+#: inc/post-types/post-types.php:74
+msgid "Not Found"
+msgstr ""
+
+#: inc/post-types/post-types.php:100 inc/post-types/post-types.php:114
+msgid "Testimonials"
+msgstr ""
+
+#: inc/post-types/post-types.php:115
+msgid "Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:116
+msgid "TSLR Testimonials"
+msgstr ""
+
+#: inc/post-types/post-types.php:117
+msgid "Add Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:118
+msgid "Add New Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:119 inc/post-types/post-types.php:297
+msgid "Edit"
+msgstr ""
+
+#: inc/post-types/post-types.php:120
+msgid "Edit Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:121
+msgid "New Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:122 inc/post-types/post-types.php:123
+msgid "View Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:124
+msgid "Search Testimonials"
+msgstr ""
+
+#: inc/post-types/post-types.php:125
+msgid "No Testimonials Found"
+msgstr ""
+
+#: inc/post-types/post-types.php:126
+msgid "No Testimonials Found in Trash"
+msgstr ""
+
+#: inc/post-types/post-types.php:127
+msgid "Parent Testimonial"
+msgstr ""
+
+#: inc/post-types/post-types.php:278 inc/post-types/post-types.php:292
+msgid "Clients"
+msgstr ""
+
+#: inc/post-types/post-types.php:293
+msgid "Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:294
+msgid "TSLR Clients"
+msgstr ""
+
+#: inc/post-types/post-types.php:295
+msgid "Add Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:296
+msgid "Add New Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:298
+msgid "Edit Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:299
+msgid "New Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:300 inc/post-types/post-types.php:301
+msgid "View Client"
+msgstr ""
+
+#: inc/post-types/post-types.php:302
+msgid "Search Clients"
+msgstr ""
+
+#: inc/post-types/post-types.php:303
+msgid "No Clients Found"
+msgstr ""
+
+#: inc/post-types/post-types.php:304
+msgid "No Clients Found in Trash"
+msgstr ""
+
+#: inc/post-types/post-types.php:305
+msgid "Parent Client"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:43
+msgid "Video Popup"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:59
+msgid "ThemeSLR - Video Popup"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:61
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:182
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:47
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:34
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:70
+#: inc/shortcodes/tslr-clients/tslr-clients.php:54
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:65
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:160
+#: inc/shortcodes/tslr-skills/tslr-skills.php:41
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:91
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:102
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:65
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:111
+msgid "ThemeSLR"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:64 inc/shortcodes/shortcodes.php:90
+#: inc/shortcodes/shortcodes.php:100 inc/shortcodes/shortcodes.php:113
+#: inc/shortcodes/shortcodes.php:125
+msgid "Options"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:68
+msgid "Choose image"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:71
+msgid "Choose image for play button"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:76
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:54
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:72
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:90
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:108
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:125
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:88
+msgid "Icon"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:87
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:67
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:85
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:103
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:138
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:102
+msgid "Select icon from library."
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:94
+msgid "Text Label Next to Icon"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:104
+msgid "Video source"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:121
+msgid "Vimeo id link"
+msgstr ""
+
+#: inc/shortcodes/shortcodes.php:133
+msgid "Youtube id link"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:99
+msgid "By "
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:111
+msgid "Read More"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:180
+msgid "ThemeSLR - Blog Posts"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:190
+msgid "Select Blog Category"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:192
+msgid "Please select blog category"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:201
+msgid "Number of posts to show"
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:204
+msgid "Enter number of blog post to show."
+msgstr ""
+
+#: inc/shortcodes/tslr-blog-posts/tslr-blogpost01.php:209
+msgid "Posts per row"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:45
+msgid "ThemeSLR - Button"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:55
+msgid "Button text"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:57
+msgid "Hello"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:65
+msgid "Button url"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:73
+msgid "Button size"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:76
+msgid "Small"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:77
+msgid "Medium"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:78
+msgid "Large"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:79
+msgid "Extra-Large"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:89
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:231
+msgid "Alignment"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:92
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:234
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:134
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:128
+msgid "Left"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:93
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:235
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:135
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:129
+msgid "Center"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:94
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:236
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:136
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:130
+msgid "Right"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:105
+msgid "Background color"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:112
+msgid "Background color - hover"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:120
+msgid "Text color"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:122
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:130
+msgid "Choose text color"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:128
+msgid "Text color - hover"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:136
+msgid "Inline Block"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:138
+msgid "inline-block"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-button/tslr-bootstrap-button.php:139
+msgid "If checked, the button will allow other content next to it"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:32
+msgid "ThemeSLR - List group"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:40
+msgid "Icon library"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:42
+msgid "Font Awesome"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:43
+msgid "Open Iconic"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:44
+msgid "Typicons"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:45
+msgid "Entypo"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:46
+msgid "Linecons"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:49
+msgid "Select icon library."
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:145
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:147
+msgid "List group item heading"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:155
+msgid "List group item description"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:157
+msgid ""
+"Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget "
+"risus varius blandit."
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:163
+msgid "Status"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:166
+msgid "Active"
+msgstr ""
+
+#: inc/shortcodes/tslr-bootstrap-listgroup/tslr-bootstrap-listgroup.php:167
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:119
+msgid "Normal"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:65
+msgid "ThemeSLR - Carousel Everything"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:79
+msgid "Heading title"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:88
+msgid "Background Image"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:91
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:155
+msgid "Default: Semitransparent logo"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:97
+msgid "ThemeSLR - Carousel Slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:107
+msgid "Slide Heading"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:110
+msgid "Type a heading for the current slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:117
+msgid "Slide Heading Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:126
+msgid "Slide Subheading"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:129
+msgid "Type a sub heading for the current slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:136
+msgid "Slide Subheading Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:145
+msgid "Slide Paragraph"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:148
+msgid "Type a paragraph for the current slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:155
+msgid "Slide Paragraph Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:164
+msgid "Slide Button Text"
+msgstr ""
+
+#: inc/shortcodes/tslr-carousel-everything/tslr-carousel-everything.php:173
+msgid "Slide Button Link"
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:52
+msgid "ThemeSLR - Clients (Slider)"
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:62
+msgid "Number of clients"
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:65
+msgid "Enter number of clients to show."
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:70
+msgid "Visible Clients per slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:89
+msgid "Logo Background Overlay"
+msgstr ""
+
+#: inc/shortcodes/tslr-clients/tslr-clients.php:92
+msgid "Client Logo Background Overlay"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:63
+msgid "ThemeSLR - Icon List Item"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:248
+msgid "Icon Size (px)"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:258
+msgid "Icon Margin right (px)"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:268
+msgid "Icon Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:276
+msgid "Label/Title"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:286
+msgid "Label/Icon URL"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:296
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:93
+msgid "Title Font Size"
+msgstr ""
+
+#: inc/shortcodes/tslr-icon-list-item/tslr-icon-list-item.php:306
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:139
+msgid "Title Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:158
+msgid "ThemeSLR - Pricing table"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:168
+msgid "Package period"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:178
+msgid "Package Recommended"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:192
+msgid "Package name"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:202
+msgid "Package subtitle"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:212
+msgid "Package price"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:222
+msgid "Package Image/Icon"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:232
+msgid "Package currency"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:242
+msgid "Package's 1st feature"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:252
+msgid "Package's 2nd feature"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:262
+msgid "Package's 3rd feature"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:272
+msgid "Package's 4th feature"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:282
+msgid "Package's 5th feature"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:292
+msgid "Package button url"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:302
+msgid "Package button text"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:311
+msgid "Title color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:319
+msgid "Border color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:327
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:372
+msgid "Differential package color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:330
+msgid "Choose differential package color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:336
+msgid "Price Value Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:339
+msgid "Choose the price color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:345
+msgid "Price Value Bubble Background"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:348
+msgid "Override the default rose background"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:354
+msgid "Package background color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:357
+msgid "Choose package background color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:363
+msgid "Package hover background color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:366
+msgid "Choose package hover background color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:375
+msgid "Choose differential package hover color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:381
+msgid "Button Background Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:389
+msgid "Button Background Color - Hover"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:397
+msgid "Button Text Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-pricing-tables/tslr-pricing-tables.php:405
+msgid "Button Text Color - Hover"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:39
+msgid "ThemeSLR - Skill counter"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:47
+msgid "Icon class"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:60
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:180
+msgid "Title"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:70
+msgid "Skill value"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:78
+#: inc/shortcodes/tslr-skills/tslr-skills.php:85
+msgid "Bordered"
+msgstr ""
+
+#: inc/shortcodes/tslr-skills/tslr-skills.php:86
+msgid "Without border"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:85
+msgid "TSLR - Smooth Gallery"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:97
+msgid "Gallery Columns"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:106
+msgid "4 Columns"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:107
+msgid "6 Columns"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:112
+msgid "Gallery Images Shape"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:120
+msgid "Rounded"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:121
+msgid "Circle"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:122
+msgid "Thumbnail"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:127
+msgid "Gallery Title Alignment"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:141
+msgid "Gallery Title Text Transform"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:148
+msgid "Lowercase"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:149
+msgid "Uppercase"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:150
+msgid "Capitalize"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:155
+msgid "Extra class name"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:157
+msgid ""
+"If you wish to style particular content element differently, then use this "
+"field to add a class name and then refer to it in your css file."
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:167
+msgid "TSLR - Smooth Gallery Item"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:181
+msgid "Enter title for current gallery item"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:189
+msgid "Link URL"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:190
+msgid "Enter Item's link url"
+msgstr ""
+
+#: inc/shortcodes/tslr-smooth-gallery/tslr-smooth-gallery.php:197
+msgid "Gallery Image"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:100
+msgid "ThemeSLR - Testimonials Slider"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:110
+msgid "Number of testimonials"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:113
+msgid "Enter number of testimonials to show."
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:118
+msgid "Visible Testimonials per slide"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:134
+msgid "Testimonial Content - Text Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:137
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:146
+msgid "Choose testimonial color"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:143
+msgid "Testimonial Content - Background Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-testimonials/tslr-testimonials01.php:152
+msgid "Testimonial Content - Background Image"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:63
+msgid "ThemeSLR - Heading with Title and Subtitle"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:73
+msgid "Section title (Light font-weight)"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:83
+msgid "Section title (Bold font-weight)"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:96
+msgid "(Example: 50) For the default size, leave this empty"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:103
+msgid "Section subtitle"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:113
+msgid "Subitle Font Size"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:116
+msgid "(Example: 18) For the default size, leave this empty"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:124
+msgid "Title / Subtitle Alignment"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:143
+msgid "Light color title for dark section"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:144
+msgid "Dark color title for light section"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:153
+msgid "Subtitle Color"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:157
+msgid "Light color subtitle for dark section"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:158
+msgid "Dark color subtitle for light section"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:163
+msgid "Space Top"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:165
+msgid "Set a top Spacing (px)."
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:171
+msgid "Space Bottom"
+msgstr ""
+
+#: inc/shortcodes/tslr-title-subtitle/tslr-title-subtitle.php:173
+msgid "Set a bottom Spacing (px)."
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:109
+msgid "ThemeSLR - Tweets Slider"
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:119
+msgid "Twitter Username(to show feeds from)"
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:129
+msgid "Number of tweets to show"
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:139
+msgid "Font size(eg: 20px)"
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:149
+msgid "Line Height(eg: 28px)"
+msgstr ""
+
+#: inc/shortcodes/tslr-tweets/tslr-tweets.php:159
+msgid "Color"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:15
+msgid "ThemeSLR - Contact + Social links"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:15
+msgid "ThemeSLR - Contact information + Social icons"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:99 inc/widgets/widgets-theme.php:198
+#: inc/widgets/widgets-theme.php:285 inc/widgets/widgets-theme.php:389
+msgid "Widget Title:"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:104
+msgid "Show contact informations box"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:108
+msgid "Show social icons"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:112
+msgid "* Social Network account must be set from ThemeSLR - Theme Panel."
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:133
+msgid "ThemeSLR - Recent Posts with thumbnails"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:186
+msgid "Recent posts"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:202 inc/widgets/widgets-theme.php:289
+msgid "Number of posts:"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:224
+msgid "ThemeSLR - Post thumbnails slider"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:273
+msgid "Post thumbnails slider"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:313
+msgid "ThemeSLR - Social Share Icons"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:339
+msgid "Follow us: "
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:384
+msgid "Social icons"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:392
+msgid "Check what Social SHARE Buttons do you want to display"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:395
+msgid "Facebook"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:399
+msgid "Twitter"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:403
+msgid "Linkedin"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:407
+msgid "Digg"
+msgstr ""
+
+#: inc/widgets/widgets-theme.php:411
+msgid "Pinterest"
+msgstr ""

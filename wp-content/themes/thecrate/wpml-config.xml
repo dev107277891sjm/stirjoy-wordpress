@@ -1,0 +1,40 @@
+<wpml-config>
+    <custom-fields>
+        <custom-field action="translate">thecrate_header_custom_variant</custom-field>
+        <custom-field action="translate">thecrate_service_subtitle</custom-field>
+        <custom-field action="translate">thecrate_testimonial_bg_color</custom-field>
+        <custom-field action="translate">thecrate_testimonial_border_color</custom-field>
+        <custom-field action="translate">thecrate_custom_header_options_status</custom-field>
+        <custom-field action="translate">thecrate_page_custom_menu</custom-field>
+        <custom-field action="translate">thecrate_client_name</custom-field>
+        <custom-field action="translate">thecrate_project_name</custom-field>
+        <custom-field action="translate">thecrate_project_link</custom-field>
+        <custom-field action="translate">thecrate_project_color</custom-field>
+        <custom-field action="translate">thecrate_custom_footer_options_status</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row1_status</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row1_layout</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row2_status</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row2_layout</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row3_status</custom-field>
+        <custom-field action="translate">thecrate_footer_custom_row3_layout</custom-field>
+        <custom-field action="translate">thecrate_member_position</custom-field>
+        <custom-field action="translate">thecrate_member_email</custom-field>
+        <custom-field action="translate">thecrate_member_phone</custom-field>
+        <custom-field action="translate">thecrate_post_background_color</custom-field>
+        <custom-field action="translate">thecrate_post_border_color</custom-field>
+        <custom-field action="translate">thecrate_post_border_button_color</custom-field>
+        <custom-field action="translate">thecrate_sermon_bg_color</custom-field>
+        <custom-field action="translate">thecrate_service_badge_background_color</custom-field>
+        <custom-field action="translate">thecrate_service_badge_border_color</custom-field>
+        <custom-field action="translate">thecrate_service_badge_icon</custom-field>
+        <custom-field action="translate">thecrate_event_date</custom-field>
+        <custom-field action="translate">thecrate_portfolio_icon</custom-field>
+        <custom-field action="translate">thecrate_select_font</custom-field>
+    </custom-fields>
+    <custom-types>
+        <custom-type translate="1">testimonial</custom-type>
+        <custom-type translate="1">clients</custom-type>
+        <custom-type translate="1">member</custom-type>
+        <custom-type translate="1">service</custom-type>
+    </custom-types>   
+</wpml-config>

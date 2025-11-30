@@ -1,0 +1,275 @@
+/*------------------------------------------------------------------
+[Gutenberg] - [Table of contents]
+- WordPress Gutenberg frontend Custom Styling
+- Buttons
+- Blocks
+- RSS Widget
+- WooCommerce Widgets
+- Widget Headings
+/*------------------------------------------------------------------*/
+
+.single.gutenberg .article-content {
+    max-width: 100%;
+    margin: 0 auto;
+}
+/*FRONTEND COLORS*/
+p.has-small-font-size {
+    font-size: 13px !important;
+    line-height: 23px !important;
+}
+p.has-medium-font-size {
+    font-size: 20px !important;
+    line-height: 36px !important;
+}
+p.has-large-font-size {
+    font-size: 36px !important;
+    line-height: 50px !important;
+}
+p.has-huge-font-size {
+    font-size: 48px !important;
+    line-height: 86px !important;	
+}
+.has-pale-pink-color{
+	color: #F78DA7;
+}
+.has-vivid-red-color{
+	color: #CF2E2E;
+}
+.has-luminous-vivid-orange-color{
+	color: #F56500;
+}
+.has-luminous-vivid-amber-color{
+	color: #F3B200;
+}
+.has-light-green-cyan-color{
+	color: #7BDCB5;
+}
+.has-vivid-green-cyan-color{
+	color: #00D084;
+}
+.has-pale-cyan-blue-color{
+	color: #8DD0FB;
+}
+.has-vivid-cyan-blue-color{
+	color: #0693e3;
+}
+.has-very-light-gray-color{
+	color: #eeeeee;
+}
+.has-cyan-bluish-gray-color{
+	color: #abb8c3;
+}
+.has-very-dark-gray-color{
+	color: #313131;
+}
+figcaption.blocks-gallery-caption {
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
+}
+.wp-block-image figcaption {
+    font-size: 15px;
+    color: #686868;
+}
+blockquote.wp-block-quote.is-large p {
+    font-size: 24px !important;
+    font-style: italic;
+    line-height: 1.6 !important;
+}
+.wp-block-quote cite {
+	font-size: 13px !important;
+	color: #454545 !important;
+    display: block;
+    text-align: center;
+}
+.wp-block-pullquote blockquote {
+    background: transparent;
+    padding: 0 !important;
+    text-align: center;
+}
+.wp-block-pullquote blockquote p, 
+.wp-block-pullquote blockquote cite {
+	color: #686868 !important;
+}
+.wp-block-pullquote blockquote p {
+	    font-size: 28px !important;
+    line-height: 1.6 !important;
+}
+.wp-block-cover .wp-block-cover-text {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #686868;
+}
+.wp-block-gallery .blocks-gallery-item figure {
+    margin-bottom: 0 !important;
+}
+.wp-block-gallery .blocks-gallery-item figcaption {
+    background: rgba(0, 0, 0, .7) !important;
+    padding: 15px!important;
+    line-height: 160%;
+    font-weight: 300;
+}
+p.wp-block-cover-text {
+    color: rgba(255, 255, 255, .7) !important;
+}
+body figure.wp-block-image.alignwide,
+body .wp-block-cover.alignwide {
+    width: auto;
+    max-width: 1000%;
+    margin-right: calc(25% - 25vw);
+    margin-left: calc(25% - 25vw);
+}
+body figure.wp-block-image.alignfull,
+body .wp-block-cover.alignfull {
+    width: auto;
+    max-width: 1000%;
+    margin-right: calc(50% - 50vw);
+    margin-left: calc(50% - 50vw);
+}
+/*Buttons*/
+.wp-block-button.is-style-outline a.wp-block-button__link:hover{
+    color: #fff;
+}
+
+.wp-block-button {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.wp-block-button.alignleft {
+    margin-top: 0;
+}
+.wp-block-button.is-style-outline a.wp-block-button__link {
+    border: 2px solid !important;
+}
+.missing-themeslr-framework h2 {
+    margin: 35px 0;
+}
+blockquote footer, blockquote small, blockquote .small {
+    background: transparent;
+    text-align: center;
+}
+td#today a {
+    color: #fff;
+}
+nav.wp-calendar-nav {
+    padding-top: 6px;
+}
+#wp-calendar td a {
+    font-weight: bold;
+}
+#wp-calendar td, #wp-calendar th {
+    text-align: center;
+}
+
+/*Blocks*/
+footer.wp-block-latest-comments__comment-meta {
+    background: transparent;
+}
+.wp-block-latest-comments__comment{
+    margin-bottom: 10px;
+}
+ol.wp-block-latest-comments {
+    padding: 0;
+}
+nav.wp-calendar-nav {
+    text-align: left;
+}
+.wp-block-tag-cloud .tag-cloud-link {
+    font-weight: 500;
+    line-height: normal;
+}
+.wp-block-tag-cloud {
+    overflow: hidden;
+}
+.widget_block .wp-block-latest-comments,
+.widget_block .wp-block-categories-list.wp-block-categories,
+.widget_block .wp-block-calendar,
+.widget_block .wp-block-archives-list.wp-block-archives,
+.widget_block .wp-block-latest-posts.wp-block-latest-posts__list,
+.widget_block .wp-block-page-list,
+.widget_block .components-placeholder,
+.widget_block .wp-block-social-links,
+.widget_block .wp-block-tag-cloud,
+.widget_block .wp-block-search__text-button.wp-block-search{
+    margin-bottom: 40px;
+}
+.wp-block-tag-cloud .tag-cloud-link:hover{
+    color: #fff !important;
+}
+.wp-block-search .wp-block-search__input {
+    padding-left: 15px;
+}
+footer.wp-block-latest-comments__comment-meta, .wp-block-latest-comments__comment-excerpt {
+    margin-left: 0 !important;
+}
+
+table th, table td{
+    padding: 9px !important;
+}
+.single article .article-content p.wp-block-cover-image-text {
+    color: #fff;
+}
+.wp-block-group.has-background .wp-block-button{
+    margin-bottom: 15px;
+}
+.wp-block-group.has-background {
+    padding: 30px;
+    margin-bottom: 15px;
+}
+p.has-text-color.has-background.has-very-light-gray-color {
+    color: #fff;
+}
+.entry-content.page-image-alignment p:last-of-type img {
+    clear: both;
+    margin-top: 20px;
+}
+
+/*RSS Widget*/
+.widget_rss .rssSummary {
+    margin: 12px 0;
+}
+.widget_rss a.rsswidget {
+    color: #000;
+    font-weight: 600;
+}
+.widget_rss img.rss-widget-icon {
+    margin-top: -3px;
+}
+.widget_rss li {
+    color: #565656;
+    list-style: outside none none;
+    margin-bottom: 25px;
+}
+.widget_rss ul {
+    padding: 0;
+}
+
+/*WooCommerce Widgets*/
+.wc-block-product-search .wc-block-product-search__field {
+    padding: 6px 20px;
+}
+.wc-block-product-search .wc-block-product-search__button {
+    border: 0 none;
+}
+
+/*Widget Headings*/
+.sidebar-content h1,
+.sidebar-content h2,
+.sidebar-content h3,
+.sidebar-content h4,
+.sidebar-content h5,
+.sidebar-content h6 {
+    color: #000;
+    font-weight: 600;
+}
+.widget_block a.wp-block-latest-comments__comment-link, 
+.widget_block a.wp-block-latest-comments__comment-author {
+    font-weight: 300;
+    color: #000;
+    line-height: 140%;
+}
+.single article .article-content p.has-text-align-center {
+    color: #fff;
+}

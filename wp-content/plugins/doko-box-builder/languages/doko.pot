@@ -1,0 +1,713 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: DokoBuilder : DIY Product Bundle for WooCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-12 04:01+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.2; wp-6.0.1\n"
+"X-Domain: doko"
+
+#: public/class-hs-doko-public.php:633
+msgid " Build Another Bundle"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1342
+msgid ""
+" Leave card intentionally blank and we'll tuck the card in the bow for you "
+"to do what you need"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1346
+msgid " No note or card needed! Just a to/from is fine!"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1335
+msgid "160 characters remaining"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:992 admin/class-hs-doko-admin.php:1829
+msgid "Action :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1116 admin/class-hs-doko-admin.php:1137
+msgid "Add a gift message"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:444
+msgid "Add background image to steps"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1055
+msgid "Add card to box"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:484 admin/class-hs-doko-admin.php:1826
+msgid "Add Rule"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:867
+msgid "Add Screen "
+msgstr ""
+
+#: public/class-hs-doko-public.php:1042
+msgid "Add to box"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1351
+msgid "ADD TO CART"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1793
+msgid "Add to cart"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:779 admin/class-hs-doko-admin.php:1391
+msgid "After add to box button"
+msgstr ""
+
+#: public/class-hs-doko-public.php:345
+msgid ""
+"An error occurred while loading this page, please write to the site "
+"administrator."
+msgstr ""
+
+#: public/class-hs-doko-public.php:680
+msgid "Back"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:442
+msgid "Background Image :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:778 admin/class-hs-doko-admin.php:1390
+msgid "Before add to box button"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1243
+msgid "Box Cart Contents"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1258
+msgid "Box Total"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:336 admin/class-hs-doko-admin.php:351
+msgid "Bundle"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:166 admin/class-hs-doko-admin.php:1156
+msgid "Bundle Card Page"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1148
+msgid "Bundle Card Page (PRO Version)"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:161 admin/class-hs-doko-admin.php:1155
+msgid "Bundle Cart Content"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1147
+msgid "Bundle Cart Content (PRO Version)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1497
+msgid "Bundle name"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:156 admin/class-hs-doko-admin.php:1146
+msgid "Bundle Products"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:357 admin/class-hs-doko-admin.php:371
+msgid "Bundle Rule"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:232
+msgid "Bundle Rules"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1210
+msgid "Bundle Screen Title :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1624
+msgid "Bundle Shortcodes"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:543
+msgid "Bundle where this rule will apply :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:335 admin/class-hs-doko-admin.php:345
+msgid "Bundles"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:356 admin/class-hs-doko-admin.php:366
+msgid "Bundles Rules"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1264
+msgid "Categories"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:644 admin/class-hs-doko-admin.php:1238
+msgid "Categories to display :"
+msgstr ""
+
+#: core/homescriptone-formulus.php:169
+msgid "Choose an option"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1174
+msgid "Choose Bundle Screen disposition :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:994
+msgid "Choose the action to execute if this rule is triggered"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:545
+msgid "Choose the bundle to associate to this rule."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:976
+msgid "Choose the rule to associate to this step"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:956
+msgid "Choose the step where you would like this rule to apply"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1050
+msgid "Choose the step you would like to redirect for this action"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:615 admin/class-hs-doko-admin.php:1214
+msgid "CHOOSE YOUR BOX COLOR"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1303
+msgid "Choose YOUR CARD"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1559 admin/class-hs-doko-admin.php:1590
+#: admin/class-hs-doko-admin.php:1856
+msgid "Click to toggle"
+msgstr ""
+
+#: public/class-hs-doko-public.php:682
+msgid "Complete Box"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1441
+msgid "Copy this shortcode and paste it into a new page you've created :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:448
+msgid "Custom CSS for bundle :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1163
+msgid "Define a slug to easily identify this screen"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1213
+msgid ""
+"Define the bundle screen title. It can be a descriptive text highlighting "
+"what your customers must do on this page :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:782
+msgid ""
+"Define the position at which the quantity button should be displayed in each "
+"step page."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1381
+msgid "Define the position at which the quantity button should be displayed."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1035
+msgid ""
+"Define the product amount limit in this step ( don't include currency in the "
+"field )"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1020
+msgid "Define the product number limit in this step"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:646 admin/class-hs-doko-admin.php:1241
+msgid ""
+"Define the products categories, your customers are allowed to pick to fill "
+"this step in the bundle."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:661 admin/class-hs-doko-admin.php:1256
+msgid ""
+"Define the products tags, your customers are allowed to pick to fill this "
+"step in the bundle."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:636 admin/class-hs-doko-admin.php:1230
+msgid ""
+"Define the products, your customers are allowed to pick to fill this step in "
+"the bundle."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1176
+msgid "Define the screen disposition, it supports the following disposition : "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1340
+msgid "Description for gift message section :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:740
+msgid ""
+"Description to use on the latest step page after the last step title section"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:618
+msgid "Display according to :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:721
+msgid "Display the bundle contents into the cart and checkout page"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:235
+msgid "Documentation"
+msgstr ""
+
+#. Name of the plugin
+msgid "DokoBuilder : The Ultimate dynamic bundle builder for WooCommerce"
+msgstr ""
+
+#: public/class-hs-doko-public.php:479
+msgid "Done!"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1589
+msgid "Drag and drop, or click to set admin variation order"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1728
+msgid "Dynamic Rule :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1823
+msgid "Dynamic Rules :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:339
+msgid "Edit Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:360
+msgid "Edit Bundle Rule"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:681
+msgid "Enable auto redirect to next page :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:769
+msgid "Enable/Disable a quantity field for each product in each step page"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1358
+msgid "Enable/Disable a quantity field for each product in the steps"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:751
+msgid "Enable/Disable additional add to box button below the product card"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1716
+msgid "Enable/Disable Dynamic Rules"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1307
+msgid "Enable/Disable gift message :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1273
+msgid "Enable/Disable pagination :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:200
+msgid "Enter your categorie(s) name(s)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:199
+msgid "Enter your product(s) name(s)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1645
+msgid "equals"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:404
+msgid "First Screen setup"
+msgstr ""
+
+#: public/class-hs-doko-public.php:978 public/class-hs-doko-public.php:1127
+msgid "Gift Message for Step "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1797
+msgid "Go to screen "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1201
+msgid "Hide"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://ultiwp.com"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://ultiwp.com/plugins/doko"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1656
+msgid "If products count"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1657
+msgid "If total products count"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:752
+msgid ""
+"In some WooCommerce themes, the add to cart option is custom and not shown, "
+"to reduce the bounce rate on the builder page, enable this option to fix it, "
+"by default it's set to no."
+msgstr ""
+
+#. Description of the plugin
+msgid "Increase sales by letting your customers create custom bundles."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1651
+msgid "is"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1652
+msgid "is different"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1644
+msgid "is less or equal to"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1643
+msgid "is less than"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1647
+msgid "is more or equal to"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1646
+msgid "is more than"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1032
+msgid "Limit product amount for the action above :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1017
+msgid "Limit product number for the action above :"
+msgstr ""
+
+#: templates/single-product/doko-products.php:126
+msgid "Load more"
+msgstr ""
+
+#: public/class-hs-doko-public.php:126
+msgid "Loading"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:699
+msgid "Message to display, if no products is added to the box."
+msgstr ""
+
+#: public/class-hs-doko-public.php:1249
+msgid "Name"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:337 admin/class-hs-doko-admin.php:338
+#: admin/class-hs-doko-admin.php:340
+msgid "New Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:358 admin/class-hs-doko-admin.php:359
+#: admin/class-hs-doko-admin.php:361
+msgid "New Bundle Rule"
+msgstr ""
+
+#: public/class-hs-doko-public.php:146 public/class-hs-doko-public.php:681
+msgid "Next"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:690 admin/class-hs-doko-admin.php:726
+#: admin/class-hs-doko-admin.php:749 admin/class-hs-doko-admin.php:767
+#: admin/class-hs-doko-admin.php:1282 admin/class-hs-doko-admin.php:1316
+#: admin/class-hs-doko-admin.php:1368
+msgid "No"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1205
+msgid "no"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:343
+msgid "No Bundle found"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:344
+msgid "No Bundle in the trash"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:364
+msgid "No Bundle Rule found"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:365
+msgid "No Bundle Rule in the trash"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:697
+msgid "No products message :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1292
+msgid "Number of products per page :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1303
+msgid ""
+"Number of products to display per page, this is useful if your categories "
+"has a lot of products."
+msgstr ""
+
+#: public/class-hs-doko-public.php:1304
+msgid "Our team handwrites each and every note to keep."
+msgstr ""
+
+#: public/class-hs-doko-public.php:436
+msgid "Packaging"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1810 admin/class-hs-doko-admin.php:1825
+#: admin/class-hs-doko-admin.php:1831
+msgid "Pick the screen where this rule will apply"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:781 admin/class-hs-doko-admin.php:1380
+msgid "Position of the quantity field"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1251
+msgid "Price"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:121
+msgid "Price (High to Low)"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:120
+msgid "Price (Low to High)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:634 admin/class-hs-doko-admin.php:1227
+msgid "Products to display :"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1250
+msgid "Quantity"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:683
+msgid ""
+"Redirect automatically to next step, if customers add a product to the box."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1558 admin/class-hs-doko-admin.php:1588
+#: admin/class-hs-doko-admin.php:1855
+msgid "Remove"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:444
+msgid "Remove background image"
+msgstr ""
+
+#: core/homescriptone-formulus.php:56
+msgid "required"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:974
+msgid "Rules :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1161
+msgid "Screen Name :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1808
+msgid "Screen Selector :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:342
+msgid "Search Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:363
+msgid "Search Bundle Rule"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1200
+msgid "Show"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1191
+msgid "Show / Hide Bundle Screen Title :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1217
+msgid "Show Products on this screen based on :"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1276
+msgid "Sort by Options"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1236
+msgid "Start selecting items to fill your box"
+msgstr ""
+
+#: public/class-hs-doko-public.php:478
+msgid "Step"
+msgstr ""
+
+#. %d: Step number.
+#: public/class-hs-doko-public.php:426 public/class-hs-doko-public.php:459
+msgid "Step %d"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:954
+msgid "Step Name :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1047
+msgid "Step to go :"
+msgstr ""
+
+#: public/class-hs-doko-public.php:1437
+msgid "Stock levels of product "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:659 admin/class-hs-doko-admin.php:1253
+msgid "Tags to display :"
+msgstr ""
+
+#: public/class-hs-doko-public.php:359
+msgid "This bundle is not available to the public yet."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:576
+msgid "This refers to the first navigation screen of the bundle builder : "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:606
+msgid "Title"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1326
+msgid "Title for gift message section :"
+msgstr ""
+
+#. %s: strong tag
+#: admin/class-hs-doko-admin.php:611
+#, php-format
+msgid ""
+"Title to show on top of the bundle selector.%1$1sEg:%2$2s CHOOSE YOUR BOX "
+"COLOR "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:732
+msgid "Title to use on the latest step page"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1117 admin/class-hs-doko-admin.php:1138
+msgid ""
+"To include different messages for different recipients, please contact our "
+"support."
+msgstr ""
+
+#: public/class-hs-doko-public.php:679 public/class-hs-doko-public.php:1259
+msgid "Total :"
+msgstr ""
+
+#. Author of the plugin
+msgid "UltiWP"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:341
+msgid "View Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:362
+msgid "View Bundle Rule"
+msgstr ""
+
+#: public/class-hs-doko-public.php:629
+msgid "View Cart"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1193
+msgid "Whether it displays a screen title or not :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1322
+msgid "Whether to allow user to leave gift message."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:1288
+msgid "Whether to use a pagination on page loading a lot of products."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:689 admin/class-hs-doko-admin.php:725
+#: admin/class-hs-doko-admin.php:748 admin/class-hs-doko-admin.php:766
+#: admin/class-hs-doko-admin.php:1281 admin/class-hs-doko-admin.php:1315
+#: admin/class-hs-doko-admin.php:1367
+msgid "Yes"
+msgstr ""
+
+#: public/class-hs-doko-public.php:150
+#, php-format
+msgid "You can't add more than %s products into the box."
+msgstr ""
+
+#: public/class-hs-doko-public.php:151
+#, php-format
+msgid "You reached the limit of %s for this box."
+msgstr ""
+
+#: public/class-hs-doko-public.php:148
+msgid ""
+"Your bundle is added to the cart, you will redirect to cart in few moments"
+msgstr ""

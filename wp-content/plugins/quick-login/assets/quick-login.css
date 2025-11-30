@@ -1,0 +1,217 @@
+
+/* Quick Login */
+
+.quick-login-clear {
+	clear: both;
+	overflow: hidden;
+}
+
+.quick-login-separator {
+	text-align: center;
+	position: relative;
+	margin: 1rem;
+}
+
+.quick-login-separator:before {
+	position: absolute;
+	content: "";
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: #ddd;
+}
+
+.quick-login-separator span {
+	color: #72777c;
+	display: inline-block;
+	border-radius: 3px;
+	padding: 0.2rem 0.5rem;
+	background: #fff;
+	position: relative;
+	text-transform: uppercase;
+}
+
+.quick-login-label {
+	margin-bottom: 0.5rem !important;
+}
+
+.quick-login-buttons {
+	margin-bottom: 0.5rem;
+}
+
+.quick-login-button {
+	display: block;
+	padding: 0.5rem 1rem;
+	border-radius: 3px;
+	color: #fff;
+	text-decoration: none;
+	line-height: 24px;
+	background: var(--quick-login-color, #ccc);
+	transition: transform 0.2s ease;
+	margin-bottom: 0.5rem;
+	cursor: pointer;
+	max-width: 20rem;
+}
+
+.quick-login-icon {
+	display: inline-block;
+	padding: 0.5rem;
+	border-radius: 3px;
+	color: #fff;
+	text-decoration: none;
+	line-height: 24px;
+	background: var(--quick-login-color, #ccc);
+	transition: transform 0.2s ease;
+	margin-right: 0.5rem;
+	cursor: pointer;
+}
+
+.quick-login-icon.quick-login-icon-mini {
+	padding: 0.3rem;
+}
+
+.quick-login-button:hover,
+.quick-login-icon:hover {
+	transform: scale(1.012);
+	color: #fff;
+}
+
+.quick-login-button:active,
+.quick-login-button:focus,
+.quick-login-button:visited,
+.quick-login-icon:active,
+.quick-login-icon:focus,
+.quick-login-icon:visited {
+	color: #fff;
+	box-shadow: none;
+}
+
+.quick-login-button svg,
+.quick-login-icon svg {
+	float: left;
+	width: 24px;
+	height: 24px;
+	fill: #fff;
+}
+
+.quick-login-icon-mini svg {
+	width: 20px;
+	height: 20px;
+}
+
+.quick-login-button span {
+	margin-left: 0.8rem;
+}
+
+.quick-login .quick-login-avatar {
+	position: absolute;
+	top: -10px;
+	right: -5px;
+	border-radius: 50%;
+	box-shadow: 0px 1px 3px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Quick Login User providers */
+
+.quick-login-user-provider {
+	background-color: var(--quick-login-color);
+	border-radius: 5px;
+	width: 230px;
+	padding: 0.5rem;
+	float: left;
+	margin: 0 1rem 1rem 0;
+	color: #fff;
+	cursor: default;
+	min-height: 50px;
+	max-height: 50px;
+	overflow: hidden;
+	transition: max-height 0.2s ease-out;
+	box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, .05);
+}
+
+.quick-login-user-provider.expanded {
+	max-height: 500px;
+}
+
+.quick-login-user-provider-heading {
+	line-height: 16px;
+	margin-bottom: 0.6rem;
+}
+
+.quick-login-user-provider-content {
+	
+}
+
+.quick-login-user-provider-content ul {
+	margin-bottom: 0;
+}
+
+.quick-login-user-provider-user {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.quick-login-user-provider a {
+	text-decoration: none;
+}
+
+.quick-login-user-provider svg {
+	width: 16px;
+	height: 16px;
+	fill: #fff;
+	float: left;
+	margin-right: 0.4rem;
+}
+
+.quick-login-user-provider-unlinked {
+	background-color: #ddd;
+	color: #666;
+}
+
+.quick-login-user-provider-unlinked svg {
+	fill: #666;
+}
+
+.quick-login-user-provider-linked .quick-login-user-provider-heading a {
+	color: pink;
+	border-bottom: 1px dotted currentColor;
+	float: right;
+}
+
+.quick-login-user-provider-profile {
+	color: #fff;
+	line-height: 24px;
+}
+
+.quick-login-user-provider-more {
+	float: right;
+	background: #fff;
+	border: 0;
+	padding: 0;
+	line-height: 1rem;
+	width: 1rem;
+	text-align: center;
+	border-radius: 50%;
+	opacity: 0.8;
+	color: #666;
+	margin-top: calc((24px - 1rem) / 2);
+	cursor: pointer;
+	transition: opacity 0.2s ease-in;
+}
+
+.quick-login-user-provider-more:hover {
+	opacity: 1;
+}
+
+a.quick-login-user-provider-profile {
+	text-decoration: underline;
+}
+
+.quick-login-user-provider-profile img {
+	float: left;
+	border-radius: 50%;
+	margin-right: 0.4rem;
+}

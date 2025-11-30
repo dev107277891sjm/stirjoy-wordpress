@@ -1,0 +1,13 @@
+{
+    "name": "elula/minimum-order-amount",
+    "description": "Minimum Order Amount for WooCommerce",
+    "type": "wordpress-plugin",
+    "require": {
+    },
+    "config": {
+      "allow-plugins": {
+          "dealerdirect/phpcodesniffer-composer-installer": true
+      }
+    }
+    
+}

@@ -1,0 +1,24 @@
+<wpml-config>
+	<admin-texts>
+		<key name="wps_wsp_upgrade_downgrade_btn_text" />
+	</admin-texts>
+	 <custom-fields>
+        <custom-field action="copy">wps_wsp_enbale_certain_month</custom-field>
+        <custom-field action="copy">wps_wsp_week_sync</custom-field>
+        <custom-field action="copy">wps_wsp_month_sync</custom-field>
+        <custom-field action="copy">wps_wsp_year_sync</custom-field>
+        <custom-field action="copy">wps_sfw_variation_enable</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_number</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_interval</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_expiry_number</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_expiry_interval</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_initial_signup_price</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_free_trial_number</custom-field>
+        <custom-field action="copy">wps_sfw_variation_subscription_free_trial_interval</custom-field>
+        <custom-field action="copy">wps_wsp_variation_enbale_certain_month</custom-field>
+        <custom-field action="copy">wps_wsp_variation_week_sync</custom-field>
+        <custom-field action="copy">wps_wsp_variation_month_sync</custom-field>
+        <custom-field action="copy">wps_wsp_variation_year_sync</custom-field>
+        <custom-field action="copy">wps_wsp_variation_certain_date_enable_year_number</custom-field>
+    </custom-fields>
+</wpml-config>

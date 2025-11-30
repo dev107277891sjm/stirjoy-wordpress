@@ -1,0 +1,101 @@
+/**
+ * All of the CSS for your common functionality should be
+ * included in this file.
+ */
+input#authnet-card-cvc {
+    display: block;
+}
+/* Css for Avada Theme only */
+.theme-Avada .single_variation_wrap .avada-variation .woocommerce-variation-price .price{
+    display: block;
+}
+
+
+.wps_prorate_price_tooltip::before {
+    font-family: 'dashicons';
+    content: "\f223"; /* Display a question mark or any other icon you prefer */
+    color: #333;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.wps-wsp-close-popup:hover {
+    cursor: pointer;
+  }
+
+  .subscription-edit-container.wps-has-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+}
+
+.subscription-edit-container.wps-has-content .wps-wsp-shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form .wps-wsp-close-popup {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-family: 'dashicons';
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form table {
+    width: 100%;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form h2 {
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 600;
+    padding-right:45px;
+    margin: 0 0 15px;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form select {
+    width: 100%;
+    min-width: 120px;
+    min-height: 40px;
+    line-height: 1.25;
+    cursor: pointer;
+    border-radius: 5px;
+    background: transparent;
+    padding: 5px;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form input[type=number] {
+    width: 100%;
+    min-height: 40px;
+    line-height: 1.25;
+    background: transparent;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 5px;
+    max-width: 70px;
+}
+
+.wps-has-content form#wps-wps-subscription-edit-form select:focus {
+    outline: none;
+}

@@ -1,0 +1,11 @@
+ci/ export-ignore
+.gitignore export-ignore
+.gitlab-ci.yml export-ignore
+.gitlab-ci.yml.bak export-ignore
+changelog.txt export-ignore
+phpcs.xml export-ignore
+# public/js/hs-doko-public.js export-ignore
+# public/js/hs-doko-rules.js export-ignore
+# public/js/hs-doko-snackbar.js export-ignore
+# public/js/hs-doko-utils.js export-ignore
+# public/js/hs-doko-modal.js export-ignore

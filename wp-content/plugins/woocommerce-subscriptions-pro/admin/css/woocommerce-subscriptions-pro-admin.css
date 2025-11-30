@@ -1,0 +1,335 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+
+/* License CSS */
+.wps-wsp-license-wrap {
+	margin-top: 30px;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text {
+	border: solid 2px #ccc;
+	margin-top: 10px;
+	padding: 10px 15px;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text #wps_wsp_license_form .submit {
+	padding: 0px 5px !important;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text table.wps-wsp-form-table tr {
+	padding: 0;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text table.wps-wsp-form-table {
+	width: 100%;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text table.wps-wsp-form-table tr th {
+	width: 30%;
+	text-align: left;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text table.wps-wsp-form-table tr td {
+	width: 100%;
+	display: block;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text table.wps-wsp-form-table tr #wps_wsp_license_key {
+	height: 38px;
+	width: 100%;
+	max-width: 380px !important;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text p.submit {
+	padding: 20px 10px !important;
+}
+
+.wps-wsp-license-wrap h1 {
+	font-size: 22px !important;
+	background-color: #f1f1f1;
+	padding: 10px 10px;
+	border-radius: 10px 0px;
+}
+
+.wps-wsp-license-wrap .wps_wsp_license_text {
+	border: solid 2px #ccc;
+	margin-top: 10px;
+	padding: 10px 15px;
+}
+
+.wps-wsp-license-wrap form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.wps-wsp-license-wrap form .wps_wsp_license_form-col-right {
+	flex: 0 0 60%;
+	max-width: 60%
+}
+
+.wps-wsp-license-wrap form .wps_wsp_license_form-col-left {
+	flex: 0 0 40%;
+	max-width: 40%
+}
+
+.wps-wsp-license-wrap form .wps_wsp_license_form-col-right #wps-wsp-ajax-loading-gif img {
+	margin-top: -9px;
+}
+
+.wps_sfw_subscription_table_inner_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 20px;
+}
+
+.wps_sfw_subscription_table_inner_wrap h3 {
+	line-height: 1;
+}
+
+.wps_wsp_manual_inner_wrap {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.wps_wsp_manual_inner_wrap input {
+	width: 100%;
+	max-width: 150px;
+}
+
+.wps_wsp_manual_inner_wrap select {
+	width: 100%;
+	max-width: 100px;
+}
+
+#wps_wsp_billing_schedule label {
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+.wp-admin.wp-core-ui .select2-container--default .select2-results .select2-results__option--highlighted[aria-selected],
+.wp-admin.wp-core-ui .select2-container--default .select2-results .select2-results__option--highlighted[data-selected] {
+	background-color: #2271b1;
+}
+
+@media only screen and (max-width: 768px) {
+	.wps-wsp-license-wrap form .wps_wsp_license_form-col-right {
+		flex: 0 0 40%;
+		max-width: 40%
+	}
+
+	.wps-wsp-license-wrap form .wps_wsp_license_form-col-left {
+		flex: 0 0 60%;
+		max-width: 60%
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.wps-wsp-license-wrap form .wps_wsp_license_form-col-right {
+		flex: 0 0 30%;
+		max-width: 30%
+	}
+
+	.wps-wsp-license-wrap form .wps_wsp_license_form-col-left {
+		flex: 0 0 70%;
+		max-width: 70%
+	}
+}
+
+@media only screen and (max-width: 490px) {
+	.wps-wsp-license-wrap form ::placeholder {
+		opacity: 0;
+	}
+}
+
+
+/* popup css */
+.wps-wsp_popup-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 99999;
+}
+
+.wps-wsp_popup-overlay .popup-content {
+	background: #fff;
+	padding: 20px;
+	width: 400px;
+	border-radius: 10px;
+	text-align: center;
+	position: relative;
+}
+
+.wps-wsp_popup-overlay .close-popup {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.wps-wsp_popup-overlay .wps_wsp_sub_popup_wrapper {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin: 15px 0;
+}
+
+.wps-wsp_popup-overlay .wps_wsp_sub_popup_wrapper label {
+	flex: 0 0 120px;
+	text-align: left;
+}
+
+.wps-wsp_popup-overlay input[type="text"],
+.wps-wsp_popup-overlay input[type="number"],
+.wps-wsp_popup-overlay input[type="date"] {
+	width: 100%;
+	flex: 1 0 50%;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.wps-wsp_popup-overlay button {
+	padding: 10px 20px;
+	background-color: #0073aa;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+.wps-wsp_popup-overlay button:hover {
+	background-color: #005177;
+}
+
+.wps-wsp-advanced-section-form h3 {
+	margin: 0 0 15px;
+	font-size: 20px;
+	background-color: #F2F2F1;
+	padding: 8px 15px;
+	border-radius: 12px;
+	position: relative;
+	cursor: pointer;
+}
+
+.wps-wsp-advanced-section-form h3::before {
+	position: absolute;
+	content: "\f347";
+	top: 50%;
+	right: 15px;
+	transform: translateY(-50%);
+	font-size: 24px;
+	line-height: 20px;
+	font-family: dashicons;
+}
+
+.wps-wsp-advanced-section-form .wps-form-group {
+	opacity: 0;
+	height: 0;
+	/* Initial height */
+	overflow: hidden;
+	transition: opacity 0.4s ease-in-out, height 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
+	padding: 0 15px;
+	margin: 0;
+}
+
+.wps-wsp-advanced-section-form .wps-form-group.wps_wsp_active_section {
+	opacity: 1;
+	height: auto;
+	/* Set to auto when expanded */
+	padding: 10px 15px;
+	/* Restore padding */
+	margin: 0 0 15px;
+}
+
+
+.wps-form-group-save {
+	position: sticky;
+	bottom: 0;
+	background: #fff;
+	padding: 15px 0;
+}
+
+.wps-form-group-save .wps-form-group__control {
+	padding: 0;
+}
+
+/* export functionality */
+
+/* Modal Overlay */
+#wps_wsp_export_modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	z-index: 9999;
+}
+
+/* Modal Content */
+.wps_wsp_modal_content {
+	background: #fff;
+	max-width: 400px;
+	width: calc(100% - 30px);
+	top: 50%;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	padding: 20px;
+	position: absolute;
+	margin: 0;
+	border-radius: 5px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Heading */
+.wps_wsp_modal_content h2 {
+	margin: 0 0 20px;
+	font-size: 20px;
+	font-weight: 600;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 8px;
+	line-height: 1.25;
+
+}
+
+.wps_wsp_modal_content .wps_form_pop_item {
+	margin: 0 0 15px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.wps_wsp_modal_content .wps_form_pop_item label {
+	flex: 0 0 120px;
+}
+
+.wps_wsp_modal_content .wps_form_pop_item select,
+.wps_wsp_modal_content .wps_form_pop_item input[type=text] {
+	flex: 1;
+	min-width: 150px;
+}
+
+.wps_wsp_modal_content .wps_form_pop_item button {
+	flex: 1;
+}
+
+.wps_wsp_modal_content .wps_form_pop_item.wps_form_pop_actions {
+	margin: 30px 0 0;
+}
+
+/* export functionality */

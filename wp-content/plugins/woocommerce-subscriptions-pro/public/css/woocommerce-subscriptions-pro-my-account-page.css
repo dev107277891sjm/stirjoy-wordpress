@@ -1,0 +1,32 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+ .woocommerce-MyAccount-content .wps_wsp_coupon_error_msg {
+ 	background-color: red;
+ 	color: #ffffff;
+ 	font-weight: 700;
+ 	letter-spacing: 0.3px;
+ 	padding: 10px 10px;
+ }
+
+ .woocommerce-MyAccount-content .wps_wsp_coupon_success_msg {
+ 	background-color: green;
+ 	color: #ffffff;
+ 	font-weight: 700;
+ 	letter-spacing: 0.3px;
+ 	padding: 10px 10px;
+ }
+ .wps-wsp-my-aacount-ajax-loading-gif {
+    display: inline-block;
+    vertical-align: middle;
+}
+.wps-wsp-my-aacount-ajax-loading-gif img {
+	height: 30px;
+	width: 30px;
+}
+
+table.shop_table.wps_sfw_order_details {
+	width: 100% !important;
+}

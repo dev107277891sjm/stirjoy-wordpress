@@ -1,0 +1,1139 @@
+ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+
+.doko-icone-remove i{
+	font-size: 20px;
+	color: #000;
+	cursor: pointer;
+}
+.doko-icone-remove{
+	position: absolute;
+	right: -4%;
+	top: -14%;
+}
+.doko-footer-navigation li, .doko-box-container li,  .doko-box-contents li{
+	position: relative;
+}
+
+
+/*section 1 choix des boites ou box*/
+.hs-dk-box-options{
+	display: flex;
+}
+
+.hs-dk-scope{
+	display: block;
+	margin: 20px;
+	/*padding: 30px;*/
+	/* width: 50%; */
+	line-height: normal;
+	text-align: center;
+	border: none;
+}
+.hs-dk-packaging-option{
+	position: relative;
+	display: block;
+	margin: 0 auto;
+	text-decoration: none;
+}
+
+.hs-dk-btn-text{
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	line-height: 45px;
+	font-weight: 600;
+	padding: 0 20px;
+	width: 100%;
+	display: inline-block;
+	font-size: 10px;
+	margin: 0;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	background-color: #000;
+	color: #fff;
+}
+
+.hs-dk-box-img{
+	/*height: 450px; !* les valeurs de height et width seront récupérés dynamiquement, depuis les options de WP. *!*/
+	/*width: 50%;*/
+	margin: auto;
+	border: 2px solid black;
+	margin-bottom: 10px;
+}
+
+/**********************section 2 ajout des produits dans la boite***********************/
+.hs-dk-title{
+	display: flex;
+	justify-content: center;
+	padding: 20px;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.hs-dk-btn-size{
+	position: relative;
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	line-height: 43px;
+	color: #000;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 2px;
+	text-align: center;
+	text-transform: uppercase;
+	background: 0 0;
+	border: none;
+	outline: 0;
+	z-index: 2;
+	cursor: pointer;
+	overflow: hidden;
+	white-space: nowrap;
+	background: #f5f5f5;
+}
+
+.hs-dk-box-size-btn.petit{
+	width: 35%;
+	/*background: #fdf0e2;
+	border: solid 1px #fff;*/
+}
+
+.hs-dk-box-size-btn.moyen{
+	width: 30%;
+	/*background: #fad7b2;
+	border: solid 1px #fff;*/
+}
+
+.hs-dk-box-size-btn.grand{
+	width: 35%;
+	/*background: #f6bf83;
+	border: solid 1px #fff;*/
+}
+.hs-dk-customer-size-box .hs-dk-wrapper-size{
+	display: flex;
+}
+
+.hs-dk-customer-size-box .hs-dk-wrapper-size > .hs-dk-mask-size{
+	position: absolute;
+	top: 2px;
+	left: auto;
+	right: 2px;
+	bottom: 2px;
+	display: block;
+	margin: 0;
+	width: auto;
+	background: #fcfcfc;
+	z-index: 1;
+}
+.hs-dk-customer-size-box .hs-dk-wrapper-size::after{
+	content: '';
+	display: table;
+	clear: both;
+}
+
+/*box content*/
+.hs-dk-customer-box-content{
+	display: flex;
+	width: 100%;
+	border: 1px solid #ddd;
+	/*display: table;
+	width: 100%;
+	border: 1px solid #ddd;*/
+}
+.hs-dk-customer-box-image-wrapper{
+	width: 60%;
+}
+.hs-dk-customer-box-list-wrapper{
+	border-left: 1px solid #ddd;
+	padding: 20px;
+}
+.hs-dk-customer-box-content .hs-dk-customer-box-image-wrapper {
+	padding: 25px;
+}
+.hs-dk-customer-box-btn{
+	position: relative;
+	text-align: center;
+	padding: 10px;
+	vertical-align: top;
+	border: 1px solid;
+	margin-bottom: 20px;
+}
+.hs-dk-btn-box{
+	line-height: 25px;
+	white-space: normal;
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.hs-dk-box-images li{
+	position: relative;
+	margin: 7px;
+	/*padding: 10px;
+	width: 15%;*/
+	display: inline-block;
+	width: 147px;
+	text-align: center;
+}
+.hs-dk-box-select{
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	z-index: 2;
+	width: 30%;
+	height: 115px;
+}
+.hs-dk-customer-box-btn:hover{
+	background-color: rgba(253,240,226,.3);
+}
+
+.hs-dk-list-title{
+	margin: 0 0 10px 0;
+	padding: 0;
+	font-size: 16px;
+	text-align: center;
+	border: none;
+}
+
+.hs-dk-list-item li{
+	display: flex;
+	justify-content: space-around;
+	position: relative;
+	margin: 16px 0;
+	padding: 0;
+	font-weight: 700;
+}
+
+.hs-dk-list-button{
+	display: block;
+	margin: 0;
+	padding: 12px 11px;
+	margin-left: -20px;
+	width: calc(100% + 40px);
+	font-weight: 600;
+	font-size: 15px;
+	text-align: center;
+	background: #fafafa;
+	border: none;
+	outline: 0;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+.hs-dk-list-subtotal{
+	padding: 22px 19px;
+	text-align: center;
+}
+.hs-dk-list-subtotal div span{
+	font-size: 19px;
+	font-weight: 700;
+}
+.hs-dk-list-subtotal button{
+	display: block;
+	margin: 15px 0 0 0;
+	width: 100%;
+	padding: 14px;
+	border: none;
+	background-color: #000;
+	color: white;
+	text-transform: uppercase;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+/**/
+.hs-dk-custom-box-filters{
+	display: flex;
+	justify-content: space-between;
+	padding: 25px 0;
+}
+
+.hs-dk-custom-box-filters select{
+	border: 1px solid #ccc;
+	border-radius: 0;
+	outline: 0;
+	background-color: white !important;
+}
+
+.hs-dk-custom-box-filters-seach{
+	display: block;
+	margin: 0 0 1em;
+	background-color: transparent;
+	padding: 11px;
+	border: 1px solid #ccc;
+	border-radius: 0;
+	outline: 0;
+	width: 100%;
+	margin-left: 20px;
+}
+.hs-dk-custom-items{
+	margin: 0;
+	padding: 10px;
+	border-top: 1px solid #ddd;
+}
+
+/*******************Your cards***************/
+.hs-dk-cards-option{
+	/* width: 100%;
+	height: auto;
+	display: flex;*/
+	text-align: center;
+}
+
+.hs-dk-cards-ul{
+	display: inline-block;
+	padding: 0;
+	width: 86%;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.hs-dk-cards-ul span{
+	font-size: 17px;
+	list-style: none;
+	display: flex;
+	justify-content: center;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.hs-dk-cards-li{
+	display: inline-block;
+	width: 206px;
+	margin: 19px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+}
+
+.hs-dk-cards-img{
+	height: 204px;
+	display: inline-block;
+	width: 100%;
+	background-repeat: no-repeat !important;
+	background-size: 100% !important;
+	background-position: center !important;
+}
+
+
+/****************Responsive**************************/
+@media (max-width: 1200px) {
+	.hs-dk-scope {
+		padding: 10px;
+	}
+}
+@media only screen and (max-width: 1024px) and (orientation: landscape) {
+
+	.hs-dk-custom-box-filters-select select{
+
+		width: 100% !important;
+		margin: auto;
+	}
+	.hs-dk-custom-box-filters-select{
+		margin: 20px 0;
+	}
+	.hs-dk-custom-box-filters-seach{
+		margin-left: 0px;
+		width: 97%;
+	}
+	.hs-dk-custom-box-filters {
+		display: inherit;}
+}
+@media only screen and (max-width: 900px) and (orientation: portrait) {
+	.hs-dk-custom-box-filters-select select{
+
+		width: 100% !important;
+		margin: auto;
+	}
+	.hs-dk-custom-box-filters-select{
+		margin: 20px 0;
+	}
+	.hs-dk-custom-box-filters-seach{
+		margin-left: 0px;
+		width: 97%;
+	}
+	.hs-dk-custom-box-filters {
+		display: inherit;
+	}
+	.hs-dk-customer-box-content{
+		width: auto;
+	}
+
+	.hs-dk-btn-text{
+			width: 66%;
+	}
+	.hs-dk-box-options {
+			display: inherit;
+	}
+}
+@media (max-width: 767px) and (orientation: landscape){
+	
+
+	.hs-dk-btn-text{
+		width: 50%;
+	}
+}
+
+@media (max-width: 767px) {
+	.doko_style_to_hide{
+		display: none;
+	}
+
+	
+	ul.doko-box-contents{
+		overflow-x: unset !important;
+		padding-bottom: 0px !important;
+	}
+
+	.hs-dk-menu-box{
+		/*display: inherit;*/
+		background-color: white;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.hs-dk-box-images li{
+		margin: 9px 32px;
+		width: 147px;
+		text-align: center;
+	}
+
+	.hs-dk-scope {
+		margin-top: 30px !important;
+	}
+	.hs-dk-scope {
+		display: block;
+		margin: 0;
+		padding: inherit;
+		width: auto;
+	}
+	.hs-dk-box-options {
+		display: inherit;
+	}
+	.hs-dk-title {
+		font-size: 20px;
+	}
+	.hs-dk-custom-box-filters-seach {
+		width: 86%;
+		margin-left: 10px;
+	}
+	.hs-dk-custom-box-filters-select{
+		margin: 15px 0;
+	}
+	.hs-dk-custom-box-filters {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+
+	.hs-dk-cards-li {
+		width: 286px;
+		margin-bottom: 1px;
+		margin-left: 1px;
+	}
+	.hs-dk-customer-box-content {
+		display: inherit;
+		width: auto;
+	}
+	.hs-dk-customer-box-content .hs-dk-customer-box-image-wrapper {
+		padding: 12px;
+	}
+
+	.hs-dk-customer-box-image-wrapper {
+		width: auto;
+	}
+	.hs-dk-btn-box {
+		font-size: 12px;
+	}
+	.hs-dk-box-images li {
+		padding: 10px;
+		width: auto;
+	}
+
+	.hs-dk-customer-box-list-wrapper {
+		width: auto;
+	}
+	.hs-dk-list-item li {
+		font-size: 16px;
+		font-weight: 600;
+	}
+	.hs-dk-list-item li .name{
+		padding: 0 10px;
+	}
+
+	.hs-dk-custom-box-filters select{
+		width: 100%;
+		background-color: white !important;
+		padding: 8px 10px;
+		margin-bottom : 10px;
+	}
+
+}
+
+
+/* Grid display into the configurator. */
+.grid-container {
+	display: flex;
+	column-gap: 70px;
+	flex-wrap: wrap;
+	row-gap: 30px;
+	background-color: grey;
+	padding: 10px;
+}
+
+.grid-item {
+	background-color: rgba(255, 255, 255, 0.8);
+	border: 1px solid rgba(0, 0, 0, 0.8);
+	padding: 20px;
+	font-size: 30px;
+	text-align: center;
+
+}
+
+
+
+.hs-dk-products-to-add-to-box{
+	padding: 10px;
+}
+
+.box-images {
+	position: relative;
+	/*display: flex;*/
+	list-style: none;
+	font-size: 0;
+	line-height: 0;
+	border-top: none;
+	display: inline-block;
+	width: 100%;
+	}
+	.box-images li {
+	width: calc(25% - 10px);
+	float: left;
+	margin: 5px;
+}
+
+/**********************************************/
+.hs-dk-menu-fix{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background: white;
+	border-top: 1px solid #ccc;
+	transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	z-index: 12;
+}
+.hs-dk-menu-box{
+	display: flex;
+	justify-content: space-between;
+}
+.hs-dk-menu-fix-btn{
+	display: block;
+	margin: 0;
+	padding: 10px 15px;
+	height: auto;
+	line-height: 20px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
+.hs-dk-menu-btn-container{
+	padding: 0 10px;
+}
+.hs-dk-menu-fix-btn{
+	font-weight: 900;
+	background: white;
+	border: 2px double;
+}
+#hs-dk-menu-btn-fix1{
+	font-weight: 900;
+	background: black;
+	color: white;
+	border: 2px double;
+}
+.hs-dk-menu-box-img-fix-li{
+	position: relative;
+	margin: 5px;
+	display: inline-block;
+	width: 55px;
+	text-align: center;
+	list-style: none;
+}
+
+
+.doko-footer-navigation, .doko-btn-navigation, .doko-box-container{
+	display: inline-flex !important;
+	list-style: none !important;
+	margin: 10px !important;
+	padding: 0 0 0px 1em !important;
+}
+
+.doko-footer-navigation li, .doko-btn-navigation li, .doko-box-container li {
+	margin-right: 10px;
+}
+.doko-box-contents li{
+	margin-right: 20px;
+}
+
+/* .hs-dk-menu-box-img-fix{
+	display: block;
+	height: 0px;
+}
+	 */
+
+
+	ul.doko-box-container, ul.doko-box-contents, ul.doko-card-page {
+		margin: unset;
+	}
+
+@media only screen and (max-width: 767px) {
+	.hs-dk-menu-box-img-fix{
+		display: flex;
+		max-height: 300px; /* adjust as needed */
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch; /* for smooth iOS scrolling */
+	}
+	.hs-dk-menu-btn-content-fix{
+		display: flex;
+	}
+
+}
+
+.hentry .entry-content a{
+	text-decoration: none !important;
+}
+
+a.doko-remove-product{
+	color: black;
+}
+
+.doko-qty-exposant{
+	position: absolute;
+	top: -5px;
+	right: 40px;
+
+	height: 20px;
+	width: auto;
+	min-width: 20px;
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 700;
+	border-radius: 10px;
+	text-align: center;
+	color: #000;
+	background: #fff;
+	border: solid 1px rgba(0,0,0,.3);
+	z-index: 10;
+}
+
+.doko-right-sup-exposant {
+	right: -9px;
+	position: absolute;
+	top: -5px;
+	right: 0px;
+
+	height: 20px;
+	width: auto;
+	min-width: 20px;
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 700;
+	border-radius: 10px;
+	text-align: center;
+	color: #000;
+	background: #fff;
+	border: solid 1px rgba(0,0,0,.3);
+	z-index: 10;
+}
+
+.doko-ok{
+	position: absolute;
+	top: -5px;
+	height: 20px;
+	width: auto;
+	min-width: 20px;
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 700;
+	border-radius: 10px;
+	text-align: center;
+	color: #000;
+	background: #fff;
+	border: solid 1px rgba(0,0,0,.3);
+	z-index: 10;
+}
+
+.hs-dk-categories {
+	width: 100%;
+	}
+
+
+	.doko-step-title {
+	margin: 10px 0;
+	padding: 0;
+	line-height: 1.5;
+	text-align: center;
+	text-transform: uppercase;
+	border-top: none;
+	border-bottom: none;
+}
+
+
+.doko-step-description {
+	text-align: center;
+	margin: 30px 0;
+	}
+
+	#build-complete {
+	padding: 0 0 80px;
+	}
+
+	.status-icon::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 58px;
+	height: 58px;
+	border-radius: 50%;
+	border: 4px solid #eaeaea;
+	z-index: 0;
+	-webkit-transform: translate(-50%,-50%);
+	-moz-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	-webkit-transition: border .5s ease;
+	-moz-transition: border .5s ease;
+	-ms-transition: border .5s ease;
+	-o-transition: border .5s ease;
+	transition: border .5s ease;
+	}
+
+
+	#build-complete .status-icon {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 60px;
+	line-height: 60px;
+	font-size: 48px;
+	color: #000;
+	border-radius: 50%;
+	-webkit-transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	-moz-transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	-ms-transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	-o-transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	transition: all .25s cubic-bezier(.25,.46,.45,.94);
+	}
+
+	.build-page {
+	text-align: center;
+	}
+
+
+	#doko-giftbox-progress-bar {
+	padding-top: 40px;
+	}
+
+	.wrapper, .charge_rabbit, .sky-pilot {
+	*zoom: 1;
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 0 15px;
+	}
+
+	.steps {
+	display: table;
+	margin-top: -5px;
+	width: 100%;
+	table-layout: fixed;
+	}
+
+	.steps .step {
+	display: table-cell;
+	margin: 0 20px;
+	padding: 0 5px;
+	text-align: center;
+	vertical-align: top;
+	}
+
+	.bar {
+	border-bottom: solid 2px #eaeaea;
+	}
+
+	.steps .step a .icon {
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background: white;
+	border: solid 2px #ddd;
+		border-top-color: rgb(221, 221, 221);
+		border-right-color: rgb(221, 221, 221);
+		border-bottom-color: rgb(221, 221, 221);
+		border-left-color: rgb(221, 221, 221);
+	border-radius: 50%;
+	}
+
+	.steps .step a .icon {
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background: white;
+	border: solid 2px #ddd;
+	border-top-color: rgb(221, 221, 221);
+	border-right-color: rgb(221, 221, 221);
+	border-bottom-color: rgb(221, 221, 221);
+	border-left-color: rgb(221, 221, 221);
+	border-radius: 50%;
+}
+
+.steps .step a .label {
+	margin-top: 5px;
+	color: inherit;
+	font-weight: 700;
+	font-style: normal;
+	text-transform: uppercase;
+	}
+
+
+	.steps .step a .description {
+	color: inherit;
+	font-weight: 400;
+	text-transform: none;
+	}
+
+	.steps .step a.completed .icon , .steps .step a.active_tab_link .icon {
+	border-color: #000;
+	}
+
+
+	.steps .step a .icon {
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background: white;
+	border: solid 2px #ddd;
+		border-top-color: rgb(221, 221, 221);
+		border-right-color: rgb(221, 221, 221);
+		border-bottom-color: rgb(221, 221, 221);
+		border-left-color: rgb(221, 221, 221);
+	border-radius: 50%;
+	}
+
+	#doko-giftbox-progress-bar {
+	padding-top: 40px;
+	}
+
+	.steps .step a .icon span {
+	display: none;
+	}
+
+	.steps .step a {
+	color: black;
+	}
+
+	.woocommerce-loop-product__title.completed , .woocommerce-loop-product__title.active_tab_link{
+	color:#774400 !important;
+	}
+
+	.steps .step a.completed .icon, .steps .step a.active_tab_link .icon {
+	border-color: #774400;
+	}
+
+		/* @media (max-width: 480px) {
+		#doko-giftbox-progress-bar .steps .step a .description {
+			display: none;
+			}
+		} */
+
+
+	.doko-not-clickable {
+	pointer-events: none;
+	user-select: none;
+	color: inherit;
+	text-decoration: none;
+	}
+
+
+a[href^="#doko-add-to-box"].woocommerce-LoopProduct-link.woocommerce-loop-product__link  {
+	pointer-events: none;
+}
+
+.post.product.type-product{
+	position : unset !important;
+}
+
+.products.columns-3{
+	position: unset !important;
+}
+
+	li.product{
+	position : unset !important;
+	}
+
+
+	.doko-load-more-container {
+	height: 200px;
+	position: relative;
+	}
+
+	.doko-load-more-vertical-center {
+	margin: 0;
+	position: absolute;
+	top: 20%;
+	left: 40%;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	}
+
+
+	input[type="number"] {
+	max-width: 200px;
+	width: 100%;
+	box-sizing: border-box;
+	}
+
+	input.input-text.doko-bundle-qty{
+	max-width: 40%;
+	}
+
+	a[href^="#doko-add-to-box"] > span.formulus-input-wrapper > input.doko-bundle-qty  {
+	pointer-events: auto !important;
+}
+
+div.doko-quantity-field input{
+	max-width: 100% !important;
+}
+
+li.doko-button-rb{
+	display: ruby;
+}
+
+div.selected-box{
+	width: 50px;
+	height: 66px;
+}
+
+
+.box-color{
+	height : initial;
+	top : 10%;
+	width: inherit;
+}
+
+.doko_infoButton {
+	border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    background-color: #076bd2;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+}
+
+.woocommerce-filters-date__text {
+    font-size: 12px;
+    font-size: .75rem;
+    font-weight: 100;
+    text-transform: uppercase;
+    text-align: center;
+    color: #757575;
+    width: 100%;
+    margin: 0;
+    padding: 1em;
+    background-color: #fff;
+}
+
+.woocommerce-filters-date__content .components-popover__content, .woocommerce-filters-filter__content .components-popover__content {
+    width: 320px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 0;
+}
+
+.woocommerce-filters-date__tabs {
+    height: calc(100% - 42px);
+    border-top: 1px solid #ccc;
+}
+
+.bubbleInfo {
+    position: relative;
+}
+
+.popup {
+    position: absolute;
+    display: none; /* keeps the popup hidden if no JS available */
+}
+
+
+
+div#doko_total_bundle_details {
+    width: 600px;
+    height: 500px;
+    color: black;
+   
+    overflow: auto;
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted
+	black;}
+	
+	.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;}
+	
+	.tooltip:hover .tooltiptext {
+	visibility: visible;}
+
+	.doko_wrapper_btn_variations{
+		display: none;
+	}
+
+	img.doko-modal-img {
+		width: 200px;
+	}
+
+/* Tooltip Styling */
+.tooltip {
+	display: none;
+	position: absolute;
+	bottom: 120%; /* Places it above the button */
+	background-color: #333;
+	color: white;
+	padding: 8px 12px;
+	border-radius: 5px;
+	white-space: nowrap;
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+}
+
+/* Tooltip Arrow */
+.tooltip-arrow {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 8px solid #333;
+}
+
+/* ul.doko-box-contents {
+    max-width: 70%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 17px;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    flex-wrap: nowrap;
+} */
+
+ul.doko-box-contents {
+    width: 600px; /* Restrict width */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scrollbar-width: auto; /* Thin scrollbar */
+    padding: 17px;
+    justify-content: flex-start; /* Ensure items align from the start */
+    align-items: center;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    white-space: nowrap; /* Prevent text breaking into new lines */
+	scroll-behavior: smooth;
+}
+
+/* Ensure the list items do not wrap and stay in a single row */
+.doko-box-contents li {
+    flex-shrink: 0; /* Prevents items from shrinking */
+}
+
+.doko-box-contents {
+    display: inline-flex !important;
+    list-style: none !important;
+}
+
+/* Custom Scrollbar (for WebKit browsers) */
+ul.doko-box-contents::-webkit-scrollbar {
+    height: 6px; /* Thin scrollbar */
+}
+
+ul.doko-box-contents::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar color */
+    border-radius: 3px;
+}
+
+ul.doko-box-contents::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Scroll track background */
+}
+
+button.doko-page-btn {
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Prevents text from spilling out */
+    text-overflow: ellipsis; /* Adds "..." if the text overflows */
+    display: inline-block; /* Ensures button behaves like a block */
+    max-width: 100%; /* Ensures it doesn't overflow the parent */
+}
+
+a.doko-remove {
+    cursor: pointer !important;
+}
+
+
+/* .hs-dk-menu-fix {
+    height: 74px;
+} */
+
+img.doko-modal-img-preview {
+    width: 50px;
+}
+
+.doko_total_details {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.doko_total_details td,
+.doko_total_details th {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.doko_total_details tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+.doko_total_details {
+  position: relative; /* or 'absolute' or 'fixed' depending on layout */
+  z-index: 120;
+  background: white; /* Ensure it doesn’t look transparent */
+}

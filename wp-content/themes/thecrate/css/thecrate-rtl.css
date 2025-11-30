@@ -1,0 +1,295 @@
+/*RTL GENERAL STYLING*/
+html[dir="rtl"] .vc_btn3-container.vc_btn3-left,
+html[dir="rtl"] .sidebar-content .widget_recent_comments li, 
+html[dir="rtl"] .sidebar-content .widget_pages li, 
+html[dir="rtl"] .sidebar-content .widget_meta li, 
+html[dir="rtl"] .sidebar-content .widget_categories li, 
+html[dir="rtl"] .sidebar-content .widget_archive li, 
+html[dir="rtl"] .sidebar-content .widget_nav_menu li, 
+html[dir="rtl"] .sidebar-content .widget_nav_menu a,
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6,
+html[dir="rtl"] p,
+html[dir="rtl"] .text-left h1,
+html[dir="rtl"] .text-left h2,
+html[dir="rtl"] .text-left h3,
+html[dir="rtl"] .text-left h4,
+html[dir="rtl"] .text-left h5,
+html[dir="rtl"] .text-left h6,
+html[dir="rtl"] .text-left p,
+html[dir="rtl"] body .text-left h1,
+html[dir="rtl"] body .text-left h2,
+html[dir="rtl"] body .text-left h3,
+html[dir="rtl"] body .text-left h4,
+html[dir="rtl"] body .text-left h5,
+html[dir="rtl"] body .text-left h6,
+html[dir="rtl"] body .text-left p,
+html[dir="rtl"] blockquote,
+html[dir="rtl"] ol,
+html[dir="rtl"] ul,
+html[dir="rtl"] .wpcf7-form input,
+html[dir="rtl"] .wpcf7-form textarea,
+html[dir="rtl"] ol li,
+html[dir="rtl"] ul li,
+html[dir="rtl"] select,
+html[dir="rtl"] .wpb_single_image.vc_align_left,
+html[dir="rtl"] body{
+	text-align: right !important;
+	direction: rtl;
+}
+
+
+html[dir="rtl"] body .main-content ul,
+html[dir="rtl"] body .main-content ol {
+    padding-left: 0px;
+    padding-right: 40px;
+}
+html[dir="rtl"] body ol,
+html[dir="rtl"] body ul{
+	padding-right: 0;
+}
+html[dir="rtl"] .text-center,
+html[dir="rtl"] .text-center p,
+html[dir="rtl"] .text-center h1,
+html[dir="rtl"] .text-center h2,
+html[dir="rtl"] .text-center h3,
+html[dir="rtl"] .text-center h4,
+html[dir="rtl"] .text-center h5,
+html[dir="rtl"] .text-center h6,
+html[dir="rtl"] .text_center,
+html[dir="rtl"] .text_center p,
+html[dir="rtl"] .text_center h1,
+html[dir="rtl"] .text_center h2,
+html[dir="rtl"] .text_center h3,
+html[dir="rtl"] .text_center h4,
+html[dir="rtl"] .text_center h5,
+html[dir="rtl"] .text_center h6{
+    text-align: center !important;
+}
+/*OWL CAROUSEL FIX*/
+html[dir="rtl"] .owl-wrapper-outer,
+html[dir="rtl"] .owl-carousel,
+html[dir="rtl"] .bx-wrapper{
+    direction: ltr;
+}
+html[dir="rtl"] .owl-carousel .owl-item { 
+    direction: rtl; 
+}
+/*VC_SLIDER FIX*/
+html[dir="rtl"] .vc_slide.vc_images_carousel{
+    direction: ltr;
+}
+html[dir="rtl"] .vc_slide.vc_images_carousel li{ 
+    direction: rtl; 
+}
+
+/*WOOCOMMERCE FIXES*/
+html[dir="rtl"] .woocommerce.single-product .compare.button {
+    margin-left: 10px;
+}
+html[dir="rtl"] .single-product.woocommerce span.onsale{
+    left: auto;
+    right: 0;
+}
+html[dir="rtl"] body .menu.nav-effect.nav-menu > .menu-item,
+html[dir="rtl"] body .menu.nav-effect.nav-menu {
+    float: right !important;
+}
+html[dir="rtl"] .woocommerce #review_form #respond{
+    float: right;
+}
+html[dir="rtl"] .woocommerce .related ul.products.columns-4 {
+    padding-right: 0;
+}
+html[dir="rtl"] .woocommerce-result-count {
+    margin-right: 15px !important;
+}
+
+html[dir="rtl"] .breadcrumb a::after {
+    margin-right: 5px;
+}
+html[dir="rtl"] .footer .container .copyright span {
+    margin-left: 15px;
+}
+html[dir="rtl"] footer .contact-details i,
+html[dir="rtl"] .single-post-tags > span {
+    margin-left: 5px;
+}
+
+
+html[dir="rtl"] .single-post-tags > span,
+html[dir="rtl"] .tagcloud > a {
+    float: right;
+    direction: rtl;
+}
+html[dir="rtl"] .sidebar-content .widget-title::after, #reply-title::after {
+    left: auto;
+    right: 0;
+}
+
+
+/*WIDGETS*/
+html[dir="rtl"] .widget .vc_col-md-9.post-details {
+    padding-right: 0;
+}
+
+
+
+/*SHORTCODES*/
+
+/*TITLE/SUBTITLE SHORTCODE*/
+html[dir="rtl"] .text_left .section-border {
+    background-position: right !important;
+}
+html[dir="rtl"] .text_left .section-subtitle,
+html[dir="rtl"] .text_left .section-title{
+    text-align: right !important;
+    direction: rtl;
+}
+
+
+/*SKILLS SHORTCODE*/
+.stats-content .skill-count{
+    text-align: right !important;
+}
+
+
+/*PERCENTAGE SHORTCODE*/
+html[dir="rtl"] span.label_percentage {
+    margin-left: 10px;
+}
+
+
+/*BLOG POSTS SHORTCODE*/
+html[dir="rtl"] .blog-posts-shortcode.blog-posts .post-excerpt .more-link i{
+	margin-right: 10px;
+}
+html[dir="rtl"] .post-category-comment-date span.post-author {
+    margin-left: 15px;
+}
+
+/*TABS SHORTCODE*/
+.tabs-shortcode .menu span:nth-child(2) {
+    text-align: right !important;
+    display: block;
+}
+
+/*SEARCH NO RESULTS FORM ALIGNMENT*/
+html[dir="rtl"] .no-results .search-form {
+    text-align: right;
+}
+
+/*OTHER RULES*/
+html[dir="rtl"] .title-subtile-holder .section-subtitle{
+    margin-right: 0;
+}
+html[dir="rtl"] .title-subtile-holder h1.section-title,
+html[dir="rtl"] .title-subtile-holder .section-subtitle{
+    text-align: right !important;
+}
+
+html[dir="rtl"] .list-view .post-details .post-category-comment-date span.post-date{
+    display: inline-table;
+}
+html[dir="rtl"] .lvca-portfolio-wrap .lvca-portfolio .lvca-portfolio-item .lvca-project-image .lvca-image-info .lvca-entry-info .lvca-terms{
+    margin-right: 15px;
+}
+html[dir="rtl"] .lvca-services.lvca-style1 .lvca-service .lvca-icon-wrapper span,
+html[dir="rtl"] .lvca-services.lvca-style1 .lvca-service .lvca-service-text,
+html[dir="rtl"] .wpcf7-form p.text-center,
+html[dir="rtl"] .lvca-portfolio-wrap .lvca-portfolio .lvca-portfolio-item .lvca-project-image .lvca-image-info .lvca-entry-info,
+html[dir="rtl"] body .lvca-entry-text-wrap,
+html[dir="rtl"] .lvca-odometers .lvca-odometer,
+html[dir="rtl"] .text-center p.copyright,
+.lvca-team-members.lvca-style1 .lvca-team-member .lvca-team-member-text,
+html[dir="rtl"] .list-view .post-details .post-excerpt p,
+html[dir="rtl"] .tslr-blog-posts-shortcode .text-center{
+    text-align: right !important;
+}
+html[dir="rtl"] .widget_thecrate_recent_entries_with_thumbnail .post-thumbnail {
+    float: right;
+    padding-margin: 10px;
+}
+html[dir="rtl"] .widget_thecrate_recent_entries_with_thumbnail .post-details-no-thumbnail {
+    float: right;
+    padding-right: 0;
+}
+html[dir="rtl"] .widget.widget_thecrate_recent_entries_with_thumbnail .vc_col-md-9.post-details{
+    padding-right: 10px;
+    padding-left: 0px;
+}
+html[dir="rtl"] body .main-content .widget_thecrate_recent_entries_with_thumbnail ul {
+    padding-right: 0;
+}
+html[dir="rtl"] body footer ul.share-social-links {
+    float: right;
+}
+html[dir="rtl"] body footer ul.share-social-links li a {
+    text-align: center;
+}
+html[dir="rtl"] .lvca-odometers .lvca-odometer .lvca-number{
+    float: right;
+}
+html[dir="rtl"] img.alignleft {
+    text-align: right;
+    float: right;
+}
+html[dir="rtl"] .page #give_purchase_form_wrap p.form-row, 
+html[dir="rtl"] .page .give-submit-button-wrap .give-submit, 
+html[dir="rtl"] .page [id^="give-user-login-submit"] .give-submit, 
+html[dir="rtl"] .page form[id*="give-form"] #give-final-total-wrap 
+html[dir="rtl"] .give-donation-total-label, 
+html[dir="rtl"] .page form[id*="give-form"] #give-final-total-wrap .give-final-total-amount, 
+html[dir="rtl"] .page form[id*=give-form] .give-donation-amount .give-currency-symbol, 
+html[dir="rtl"] .page form[id*=give-form] .give-donation-amount #give-amount, 
+html[dir="rtl"] .page form[id*=give-form] .give-donation-amount #give-amount-text, 
+html[dir="rtl"] .page #give-donation-level-button-wrap > li{
+    float: right;
+}
+
+/*NAVIGATION MENU*/
+html[dir="rtl"] #navbar .tslr-icon-list-item{
+    text-align: right;
+}
+html[dir="rtl"] #navbar .sub-menu {
+    left: auto;
+    right: 0;
+}
+/*WOOCOMMERCE*/
+html[dir="rtl"] .woocommerce ul.products li.product .button{
+    margin-right: 15px;
+}
+html[dir="rtl"] .woocommerce ul.products li.product .price,
+html[dir="rtl"] .woocommerce ul.products li.product .woocommerce-loop-product__title{
+    padding-right: 15px;
+}
+html[dir="rtl"] .woocommerce .products .star-rating{
+    margin-right: 15px;
+}
+html[dir="rtl"] header .top-header .left-side a:last-child,
+html[dir="rtl"] .list-view .post-details .post-excerpt p .more-link {
+    float: right;
+}
+/*LIST WIDGET Arrow > to Arrow <*/
+html[dir="rtl"] body .main-content .widget ul{
+    padding-right: 0;
+}
+html[dir="rtl"] .sidebar-content .widget_recent_comments li::before, 
+html[dir="rtl"] .sidebar-content .widget_pages li::before, 
+html[dir="rtl"] .sidebar-content .widget_meta li::before, 
+html[dir="rtl"] .sidebar-content .widget_categories li::before, 
+html[dir="rtl"] .sidebar-content .widget_archive li::before, 
+html[dir="rtl"] .sidebar-content .widget_nav_menu li::before, 
+html[dir="rtl"] .widget_recent_entries li::before {
+    left: auto;
+    content: "\f177";
+    font-family: fontawesome;
+    margin-left: 8px;
+    right: 0;
+    float: right;
+    margin-right: 0;
+}

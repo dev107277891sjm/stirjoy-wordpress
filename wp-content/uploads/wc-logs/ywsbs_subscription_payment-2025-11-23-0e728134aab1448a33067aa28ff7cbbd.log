@@ -1,0 +1,48 @@
+2025-11-23T00:36:52+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T00:36:52+00:00 NOTICE Start Payment Renews cron at 2025-11-23 00:36:52 CONTEXT: {"_legacy":true}
+2025-11-23T00:36:52+00:00 NOTICE Search renew order with date < 2025-11-22 00:36:52 CONTEXT: {"_legacy":true}
+2025-11-23T00:36:52+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T00:36:52+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T00:36:52+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE Start Payment Renews cron at 2025-11-23 04:34:48 CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE Search renew order with date < 2025-11-22 04:34:48 CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T04:34:48+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE Start Payment Renews cron at 2025-11-23 08:35:00 CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE Search renew order with date < 2025-11-22 08:35:00 CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T08:35:00+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE Start Payment Renews cron at 2025-11-23 12:38:52 CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE Search renew order with date < 2025-11-22 12:38:52 CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T12:38:52+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE Start Payment Renews cron at 2025-11-23 16:45:03 CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE Search renew order with date < 2025-11-22 16:45:03 CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T16:45:03+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE Start Payment Renews cron at 2025-11-23 18:28:20 CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE Search renew order with date < 2025-11-22 18:28:20 CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T18:28:20+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE Start Payment Renews cron at 2025-11-23 20:36:55 CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE Search renew order with date < 2025-11-22 20:36:55 CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T20:36:55+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE Start Payment Renews cron at 2025-11-23 22:53:19 CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE Search renew order with date < 2025-11-22 22:53:19 CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE Found 0 new renew orders CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE Found 0 failed renew orders CONTEXT: {"_legacy":true}
+2025-11-23T22:53:19+00:00 NOTICE ======================= CONTEXT: {"_legacy":true}

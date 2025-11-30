@@ -1,0 +1,243 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DokoBuilder : DIY Product Bundle for WooCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-28 11:01+0000\n"
+"PO-Revision-Date: 2022-08-28 11:08+0000\n"
+"Last-Translator: \n"
+"Language-Team: French (France)\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.2; wp-6.0.1\n"
+"X-Domain: doko"
+
+#: public/class-hs-doko-public.php:434
+msgid "Add to box"
+msgstr ""
+
+#: public/class-hs-doko-public.php:144
+msgid ""
+"An error occurred while loading this page, please write to the site "
+"administrator."
+msgstr ""
+
+#: public/class-hs-doko-public.php:266
+msgid "Back"
+msgstr ""
+
+#: public/class-hs-doko-public.php:385 public/class-hs-doko-public.php:452
+msgid "Box Contents"
+msgstr ""
+
+#: public/class-hs-doko-public.php:202
+msgid "Box contents"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:237 admin/class-hs-doko-admin.php:252
+msgid "Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:612
+msgid "Bundle name"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:236 admin/class-hs-doko-admin.php:246
+msgid "Bundles"
+msgstr ""
+
+#: public/class-hs-doko-public.php:213
+msgid "Categories"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:371 admin/class-hs-doko-admin.php:448
+#: admin/class-hs-doko-admin.php:522
+msgid "Categories to display :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:340
+msgid "CHOOSE YOUR BOX COLOR"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:491
+msgid "CHOOSE YOUR CARD"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:417
+msgid "CHOOSE YOUR ITEMS"
+msgstr ""
+
+#: public/class-hs-doko-public.php:268
+msgid "Complete Box"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:556
+msgid "Copy this shortcode and paste it into your page:"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:373 admin/class-hs-doko-admin.php:450
+#: admin/class-hs-doko-admin.php:524
+msgid ""
+"Define the products categories, your customers are allowed to pick to fill "
+"this step in the bundle."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:363 admin/class-hs-doko-admin.php:440
+#: admin/class-hs-doko-admin.php:514
+msgid ""
+"Define the products, your customers are allowed to pick to fill this step in "
+"the bundle."
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:345 admin/class-hs-doko-admin.php:422
+#: admin/class-hs-doko-admin.php:496
+msgid "Display according to :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:165
+msgid "Documentation"
+msgstr ""
+
+#. Name of the plugin
+msgid "DokoBuilder : DIY Product Bundle for WooCommerce"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:240
+msgid "Edit Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:149
+msgid "Enter your categorie(s) name(s)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:148
+msgid "Enter your product(s) name(s)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:272
+msgid "First Screen setup"
+msgstr ""
+
+#. Author of the plugin
+msgid "HomeScript"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://homescriptone.com"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://plugins.homescriptone.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Increase sales by letting your customers create custom bundles."
+msgstr ""
+
+#: public/class-hs-doko-public.php:100
+msgid "Loading"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:238 admin/class-hs-doko-admin.php:239
+#: admin/class-hs-doko-admin.php:241
+msgid "New Bundle"
+msgstr ""
+
+#: public/class-hs-doko-public.php:114 public/class-hs-doko-public.php:267
+msgid "Next"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:244
+msgid "No Bundle found"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:245
+msgid "No Bundle in the trash"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:88
+msgid "Price (High to Low)"
+msgstr ""
+
+#: core/class-hs-doko-utils.php:87
+msgid "Price (Low to High)"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:361 admin/class-hs-doko-admin.php:438
+#: admin/class-hs-doko-admin.php:512
+msgid "Products to display :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:243
+msgid "Search Bundle"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:284
+msgid "Second Screen Setup"
+msgstr ""
+
+#: public/class-hs-doko-public.php:225
+msgid "Sort by Options"
+msgstr ""
+
+#: public/class-hs-doko-public.php:195
+msgid "Start selecting items to fill your box"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:296
+msgid "Third Screen Setup"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:318
+msgid "This refers to the first navigation screen of the bundle builder : "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:395
+msgid "This refers to the second navigation screen of the bundle builder : "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:469
+msgid "This refers to the third navigation screen of the bundle builder : "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:324
+msgid "Title"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:401 admin/class-hs-doko-admin.php:475
+msgid "Title :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:326
+msgid ""
+"Title to show on top of the bundle selector.<br/> <strong>Eg:</strong> "
+"CHOOSE YOUR BOX COLOR "
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:477
+msgid ""
+"Title to show on top of the bundle selector.<br/> <strong>Eg:</strong> "
+"CHOOSE YOUR CARD"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:403
+msgid ""
+"Title to show on top of the bundle selector.<br/> <strong>Eg:</strong> "
+"CHOOSE YOUR ITEMS"
+msgstr ""
+
+#: public/class-hs-doko-public.php:265
+msgid "Total :"
+msgstr ""
+
+#: admin/class-hs-doko-admin.php:242
+msgid "View Bundle"
+msgstr ""
+
+#: public/class-hs-doko-public.php:116
+msgid ""
+"Your bundle is added to the cart, you will redirect to cart in few moments"
+msgstr ""

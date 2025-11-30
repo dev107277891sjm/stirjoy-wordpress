@@ -1,0 +1,365 @@
+/**
+ * Wholesale Portal Styles
+ *
+ * @package Stirjoy_Child
+ * @since 1.0.0
+ */
+
+/* Wholesale Hero */
+.wholesale-hero {
+    background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.wholesale-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.wholesale-hero .hero-subtitle {
+    font-size: 20px;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Benefits Section */
+.wholesale-benefits {
+    padding: 80px 20px;
+    background: #f8f9fa;
+}
+
+.wholesale-benefits h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.benefit-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.benefit-icon {
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.benefit-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Ideal For Section */
+.wholesale-ideal-for {
+    padding: 80px 20px;
+}
+
+.wholesale-ideal-for h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.ideal-for-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.ideal-for-item {
+    padding: 30px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.ideal-for-item:hover {
+    border-color: #4CAF50;
+}
+
+.ideal-for-item h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.ideal-for-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* How It Works */
+.wholesale-how-it-works {
+    padding: 80px 20px;
+    background: #f8f9fa;
+}
+
+.wholesale-how-it-works h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 auto 20px;
+}
+
+.step h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.step p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Registration Form */
+.wholesale-registration {
+    padding: 80px 20px;
+}
+
+.wholesale-registration h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.registration-intro {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 50px;
+}
+
+.wholesale-form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.form-note {
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+    margin-top: 20px;
+}
+
+/* FAQ Section */
+.wholesale-faq {
+    padding: 80px 20px;
+    background: #f8f9fa;
+}
+
+.wholesale-faq h2 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.faq-item h4 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.faq-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* CTA Section */
+.wholesale-cta {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #4CAF50 0%, #2196F3 100%);
+    color: white;
+    text-align: center;
+}
+
+.wholesale-cta h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.wholesale-cta p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+}
+
+.stirjoy-btn-large {
+    padding: 18px 50px;
+    font-size: 18px;
+}
+
+.cta-contact {
+    margin-top: 30px;
+    font-size: 16px;
+}
+
+.cta-contact a {
+    color: white;
+    text-decoration: underline;
+    margin: 0 10px;
+}
+
+/* Wholesale Badge */
+.wholesale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #FF9800;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wholesale-hero h1 {
+        font-size: 32px;
+    }
+    
+    .wholesale-hero .hero-subtitle {
+        font-size: 16px;
+    }
+    
+    .wholesale-benefits h2,
+    .wholesale-ideal-for h2,
+    .wholesale-how-it-works h2,
+    .wholesale-registration h2,
+    .wholesale-faq h2,
+    .wholesale-cta h2 {
+        font-size: 28px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .wholesale-form {
+        padding: 30px 20px;
+    }
+    
+    .benefits-grid,
+    .ideal-for-grid,
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+

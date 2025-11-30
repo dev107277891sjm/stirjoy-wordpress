@@ -1,0 +1,847 @@
+# Copyright (C) 2025 ThemeHigh
+# This file is distributed under the same license as the Multiple Shipping Addresses for WooCommerce (Address Book) - PRO plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Multiple Shipping Addresses for WooCommerce (Address Book) - PRO 2.2.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-multiple-addresses-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-02-28T06:39:45+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: woocommerce-multiple-addresses-pro\n"
+
+#. Plugin Name of the plugin
+msgid "Multiple Shipping Addresses for WooCommerce (Address Book) - PRO"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://themehigh.com/product/woocommerce-multiple-addresses-pro/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Lets you save multiple addresses, as well as ship different products to as many multiple addresses in a single purchase."
+msgstr ""
+
+#. Author of the plugin
+msgid "ThemeHigh"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://themehigh.com/"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:121
+msgid "Please select a Custom Section"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:122
+msgid "Please select a Default Section"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:123
+msgid "Select default section"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:124
+msgid "Select custom section"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:125
+msgid "Select default field"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:126
+msgid "Select custom field"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:127
+msgid "Choose the user types"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:128
+msgid "Cancel"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:129
+msgid "Update Address"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:130
+msgid "Add address"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:131
+msgid "Additional Billing Address"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:132
+msgid "Additional Shipping Address"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:149
+msgid "WooCommerce Multiple Addresses"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:149
+msgid "Manage Address"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:161
+msgid "WooCommerce"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:173
+msgid "Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:191
+msgid "View plugin documentation"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:191
+msgid "Docs"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:192
+msgid "Visit premium customer support"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:192
+msgid "Premium support"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:398
+msgid "Additional Billing Addresses"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:399
+msgid "ADD NEW BILLING ADDRESS"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:403
+msgid "Additional Shipping Addresses"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:404
+msgid "ADD NEW SHIPPING ADDRESS"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:601
+#: src/admin/THWMA_Admin.php:715
+#: src/includes/utils/THWMA_Utils.php:680
+#: src/includes/utils/THWMA_Utils.php:773
+#: src/thpublic/THWMA_Public_MyAccount.php:359
+#: src/thpublic/THWMA_Public_MyAccount.php:363
+#: src/thpublic/THWMA_Public_MyAccount.php:448
+msgid "Home"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:622
+msgid "EDIT"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:624
+#: src/thpublic/THWMA_Public_MyAccount.php:457
+msgid "Are you sure you want to delete this address?"
+msgstr ""
+
+#: src/admin/THWMA_Admin.php:626
+#: src/thpublic/THWMA_Public.php:1958
+#: src/thpublic/THWMA_Public.php:2018
+#: src/thpublic/THWMA_Public.php:2019
+#: src/thpublic/THWMA_Public.php:2039
+#: src/thpublic/THWMA_Public_MyAccount.php:471
+#: src/thpublic/THWMA_Public_shipping.php:614
+#: src/thpublic/THWMA_Public_shipping.php:615
+#: src/thpublic/THWMA_Public_shipping.php:2307
+#: src/thpublic/THWMA_Public_shipping.php:2308
+#: src/thpublic/THWMA_Public_shipping.php:2787
+#: src/thpublic/THWMA_Public_shipping.php:2844
+#: src/thpublic/THWMA_Public_shipping.php:2845
+#: src/thpublic/THWMA_Public_shipping.php:2869
+msgid "Delete"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Order_Settings.php:95
+msgid "Shipping status"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings.php:41
+#: src/admin/THWMA_Admin_Settings.php:48
+msgid "General Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings.php:42
+#: src/admin/THWMA_Admin_Settings.php:49
+msgid "Advanced Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings.php:43
+msgid "Custom Section Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings.php:44
+#: src/admin/THWMA_Admin_Settings.php:50
+msgid "Plugin License"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:74
+msgid "Administrator"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:75
+msgid "Author"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:76
+msgid "Contributor"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:77
+msgid "Customer"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:78
+msgid "Editor"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:79
+msgid "Shop manager"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:80
+msgid "Subscriber"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:94
+msgid "Address Autofill"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:95
+msgid "Enable Address Autofill"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:96
+msgid "Google Maps API Key"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:98
+msgid "Address Format"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:100
+msgid "Address Format Overrides"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:101
+msgid "Other Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:105
+msgid "Disable Address Management(Add/ Edit/ Delete) for Selected User Types"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:107
+msgid "Select User Types"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:108
+msgid "Additional CSS"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:109
+msgid "Add Custom Styles"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:126
+#: src/admin/THWMA_Admin_Settings_custom.php:179
+#: src/admin/THWMA_Admin_Settings_General.php:520
+msgid "Settings successfully reset"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:154
+#: src/admin/THWMA_Admin_Settings_custom.php:222
+#: src/admin/THWMA_Admin_Settings_custom.php:254
+#: src/admin/THWMA_Admin_Settings_custom.php:286
+#: src/admin/THWMA_Admin_Settings_custom.php:302
+#: src/admin/THWMA_Admin_Settings_General.php:358
+msgid "Your changes were saved."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:156
+#: src/admin/THWMA_Admin_Settings_Advanced.php:373
+#: src/admin/THWMA_Admin_Settings_custom.php:224
+#: src/admin/THWMA_Admin_Settings_custom.php:256
+#: src/admin/THWMA_Admin_Settings_custom.php:288
+#: src/admin/THWMA_Admin_Settings_custom.php:304
+#: src/admin/THWMA_Admin_Settings_General.php:360
+msgid "Your changes were not saved due to an error (or you made none!)."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:195
+msgid "Click here to get your API Key"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:250
+#: src/admin/THWMA_Admin_Settings_custom.php:116
+#: src/admin/THWMA_Admin_Settings_General.php:834
+msgid "Are you sure you want to reset to default settings? all your changes will be deleted."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:251
+#: src/admin/THWMA_Admin_Settings_General.php:835
+msgid "Save changes"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:252
+msgid "Reset to Default"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:293
+msgid "Backup and Import Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:295
+msgid "Plugin Settings Data"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:296
+msgid "You can transfer the saved settings data between different installs by copying the text inside the text box. To import data from another install, replace the data in the text box with the one from another install and click \"Import Settings\"."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:331
+msgid "Import Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_Advanced.php:370
+msgid "Your Settings Updated."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:103
+msgid "Billing"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:104
+msgid "Shipping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:115
+msgid "+ Add"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:118
+msgid "Reset Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:375
+msgid "+ Add new mapping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:379
+msgid "Enable"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:381
+msgid "Disable"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:488
+msgid "Are you sure you want to delete your changes?"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:489
+msgid " Save changes"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_custom.php:491
+msgid "Remove"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:113
+msgid "Used to save values in database. Name must begin with a lowercase letter."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:114
+msgid "Handling fee for products shipping addresses different from checkout shipping address."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:115
+msgid "The street address for your business location."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:116
+msgid "An additional, optional address line for your business location."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:117
+msgid "The city in which your business is located."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:118
+msgid "The country and state or province, if any, in which your business is located."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:119
+msgid "The postal code, if any, in which your business is located."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:120
+msgid "Set time duration for guest users to save their addresses (enter Days in DD, Hours in HH and Minutes in MM format)"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:123
+msgid "Drop Down"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:124
+msgid "Pop Up"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:128
+msgid "Above the form"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:129
+msgid "Below the form"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:132
+msgid "Button"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:133
+msgid "Link"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:159
+msgid "Minute"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:160
+msgid "Hour"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:161
+msgid "Day"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:168
+#: src/admin/THWMA_Admin_Settings_General.php:177
+msgid "Enable multiple addresses"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:169
+#: src/admin/THWMA_Admin_Settings_General.php:178
+msgid "Display type"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:170
+#: src/admin/THWMA_Admin_Settings_General.php:179
+msgid "Display position"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:171
+#: src/admin/THWMA_Admin_Settings_General.php:180
+msgid "Display style"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:172
+#: src/admin/THWMA_Admin_Settings_General.php:181
+msgid "Display text"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:172
+#: src/includes/utils/THWMA_Utils.php:194
+#: src/includes/utils/THWMA_Utils.php:275
+#: src/includes/utils/THWMA_Utils.php:367
+msgid "Billing with a different address"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:173
+#: src/admin/THWMA_Admin_Settings_General.php:182
+msgid "Address limit"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:181
+#: src/includes/utils/THWMA_Utils.php:202
+#: src/includes/utils/THWMA_Utils.php:282
+#: src/includes/utils/THWMA_Utils.php:374
+msgid "Shipping to a different address"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:187
+msgid "Background color"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:188
+msgid "Text color"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:189
+msgid "Button padding"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:193
+msgid "Allow products to be shipped to different locations within an order"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:194
+msgid "Exclude certain products from multi-shipping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:196
+msgid "Exclude certain categories from multi-shipping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:198
+msgid "Multi-shipping for product variations"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:199
+msgid "Manage each shipping status within the order"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:200
+msgid "Add the same products distinctly to the cart"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:201
+msgid "Handling fee"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:203
+msgid "Notification email to customers when a shipping status changes"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:208
+msgid "Multi store pick-up"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:211
+#: src/admin/THWMA_Admin_Settings_General.php:218
+msgid "Address line 1"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:212
+#: src/admin/THWMA_Admin_Settings_General.php:219
+msgid "Address line 2"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:213
+#: src/admin/THWMA_Admin_Settings_General.php:220
+msgid "City"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:214
+#: src/admin/THWMA_Admin_Settings_General.php:221
+msgid "Country / State"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:215
+#: src/admin/THWMA_Admin_Settings_General.php:222
+msgid "Postcode / ZIP"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:228
+msgid "Enable multi-shipping for guest users"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:229
+msgid "Set time duration"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:235
+msgid "Label for multiple address picking URL"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:235
+msgid "Ship to different address"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:236
+msgid "Label for add shipping address URL"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:236
+msgid "Show saved shipping addresses"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:237
+msgid "Label for multiple shipping Checkbox"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:237
+msgid "Do you want to ship to multiple addresses?"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:241
+msgid "Billing Address Properties"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:243
+msgid "Shipping Address Properties"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:245
+msgid "Button Styles Properties"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:249
+#: src/admin/THWMA_Admin_Utils.php:118
+msgid "Multiple Shipping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:251
+msgid "Store Pick-up Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:253
+#: src/admin/THWMA_Admin_Utils.php:120
+msgid "Guest Users"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:254
+msgid "Store Address1"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:255
+msgid "Store Address2"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:258
+msgid "Display Text Settings"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_General.php:836
+msgid "Reset to default"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_License.php:78
+msgid "You need to have a valid License in order to get upgrades or support for this plugin."
+msgstr ""
+
+#: src/admin/THWMA_Admin_Settings_License.php:84
+#: src/admin/THWMA_Admin_Settings_License.php:91
+msgid "Save Changes"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Utils.php:117
+msgid "Billing/Shipping"
+msgstr ""
+
+#: src/admin/THWMA_Admin_Utils.php:121
+msgid "Manage Text"
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:116
+#: src/includes/utils/THWMA_Api.php:137
+#: src/includes/utils/THWMA_Api.php:166
+#: src/includes/utils/THWMA_Api.php:205
+msgid "Invalid user ID."
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:171
+#: src/includes/utils/THWMA_Api.php:210
+msgid "The type specified is not valid; it should be either \"billing\" or \"shipping.\""
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:177
+#: src/includes/utils/THWMA_Api.php:322
+msgid "Invalid requist body"
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:179
+#: src/includes/utils/THWMA_Api.php:324
+msgid "Invalid keys: "
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:216
+msgid "Invalid Delete key"
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:257
+msgid "Sorry, you cannot list resources."
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:270
+msgid "Sorry, you are not allowed to create resources."
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:285
+msgid "Sorry, you are not allowed to delete this resource."
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:328
+msgid "Something is missing in the requist body, should follow the JSON format like '[field_name] : {...}'"
+msgstr ""
+
+#: src/includes/utils/THWMA_Api.php:330
+msgid "Missing required keys 'shipping' "
+msgstr ""
+
+#: src/thpublic/templates/myaccount/my-address.php:27
+#: src/thpublic/templates/myaccount/my-address.php:32
+msgid "Billing address"
+msgstr ""
+
+#: src/thpublic/templates/myaccount/my-address.php:28
+msgid "Shipping address"
+msgstr ""
+
+#: src/thpublic/templates/myaccount/my-address.php:57
+msgid "You have not set up this type of address yet."
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:225
+msgid "Billing Addresses"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:226
+#: src/thpublic/THWMA_Public_shipping.php:590
+#: src/thpublic/THWMA_Public_shipping.php:2760
+msgid "Shipping Addresses"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:227
+msgid "Addresses"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:525
+#: src/thpublic/THWMA_Public.php:551
+msgid "Address Type"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:526
+#: src/thpublic/THWMA_Public.php:552
+msgid "Home/Office/Other"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1364
+#: src/thpublic/THWMA_Public.php:1370
+msgid "Choose Different Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1499
+msgid "Default Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1512
+msgid "Choose saved address&hellip;"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1618
+#: src/thpublic/THWMA_Public.php:1674
+#: src/thpublic/THWMA_Public.php:1979
+#: src/thpublic/THWMA_Public.php:2066
+#: src/thpublic/THWMA_Public_shipping.php:636
+#: src/thpublic/THWMA_Public_shipping.php:2330
+#: src/thpublic/THWMA_Public_shipping.php:2807
+#: src/thpublic/THWMA_Public_shipping.php:2892
+msgid "Choose This Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1649
+msgid "Default "
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1709
+#: src/thpublic/THWMA_Public.php:1712
+#: src/thpublic/THWMA_Public.php:2105
+#: src/thpublic/THWMA_Public_shipping.php:662
+#: src/thpublic/THWMA_Public_shipping.php:2929
+msgid "No saved addresses found"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1834
+#: src/thpublic/THWMA_Public_shipping.php:3294
+msgid "Choose an option"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1916
+#: src/thpublic/THWMA_Public_MyAccount.php:197
+#: src/thpublic/THWMA_Public_MyAccount.php:216
+#: src/thpublic/THWMA_Public_MyAccount.php:495
+#: src/thpublic/THWMA_Public_shipping.php:583
+#: src/thpublic/THWMA_Public_shipping.php:2653
+#: src/thpublic/THWMA_Public_shipping.php:2743
+#: src/thpublic/THWMA_Public_shipping.php:2748
+msgid "Add new address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public.php:1956
+#: src/thpublic/THWMA_Public.php:1959
+#: src/thpublic/THWMA_Public.php:2021
+#: src/thpublic/THWMA_Public.php:2022
+#: src/thpublic/THWMA_Public.php:2037
+#: src/thpublic/THWMA_Public.php:2040
+#: src/thpublic/THWMA_Public_shipping.php:2785
+#: src/thpublic/THWMA_Public_shipping.php:2788
+#: src/thpublic/THWMA_Public_shipping.php:2847
+#: src/thpublic/THWMA_Public_shipping.php:2848
+#: src/thpublic/THWMA_Public_shipping.php:2867
+#: src/thpublic/THWMA_Public_shipping.php:2870
+msgid "Default"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_billing.php:206
+#: src/thpublic/THWMA_Public_billing.php:320
+msgid "Billing Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_billing.php:314
+#: src/thpublic/THWMA_Public_shipping.php:523
+msgid "Add New Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:123
+msgid "Address Added Successfully."
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:125
+msgid "Address Changed Successfully."
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:179
+msgid "Additional billing addresses"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:180
+msgid "Additional shipping addresses"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:467
+msgid "Edit"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_MyAccount.php:477
+#: src/thpublic/THWMA_Public_MyAccount.php:486
+msgid "Set as default"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_shipping.php:419
+#: src/thpublic/THWMA_Public_shipping.php:529
+msgid "Shipping Address"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_shipping.php:2348
+#: src/thpublic/THWMA_Public_shipping.php:3563
+msgid "Product"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_shipping.php:2349
+#: src/thpublic/THWMA_Public_shipping.php:3564
+msgid "Quantity"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_shipping.php:2350
+#: src/thpublic/THWMA_Public_shipping.php:3565
+msgid "Sent to"
+msgstr ""
+
+#: src/thpublic/THWMA_Public_shipping.php:3318
+msgid "Select Address"
+msgstr ""

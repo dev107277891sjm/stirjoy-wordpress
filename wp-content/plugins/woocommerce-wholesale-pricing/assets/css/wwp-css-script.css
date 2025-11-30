@@ -1,0 +1,613 @@
+/*  Wholesale For WooCommerce 1.4.0 */
+#wwp_switch_modal_container {
+	padding: 15px;
+}
+
+form#wwp_switch_form {
+	text-align: center;
+}
+
+#TB_ajaxContent {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#wwp_modal_btns {}
+
+#wwp_modal_footer {
+	font-size: 12px;
+	width: 100%;
+	border-top: 1px solid #eeeeee;
+}
+
+.wwp_b2b_btn,
+.wwp_b2c_btn {
+	margin: 15px;
+	width: 150px;
+	margin-bottom: 35px;
+}
+
+/* FormBuilder CSS */
+
+.formbuilder-required {
+	border-bottom: 0 !important;
+	color: #e2401c;
+}
+
+.rendered-form .btn-group>.btn {
+	position: relative;
+	float: left;
+}
+
+.rendered-form .formbuilder-autocomplete-list {
+	background-color: #fff;
+	display: none;
+	list-style: none;
+	padding: 0;
+	border-width: 0 1px 1px;
+	position: absolute;
+	z-index: 20;
+	max-height: 200px;
+	overflow-y: auto;
+	margin: 0px;
+	border: 1px solid gray;
+	-webkit-box-shadow: 1px 2px 12px -8px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 1px 2px 12px -8px rgba(0, 0, 0, 0.75);
+	box-shadow: 1px 19px 28px -24px rgba(0, 0, 0, 0.75);
+}
+
+.rendered-form .formbuilder-autocomplete-list li {
+	display: none;
+	cursor: default;
+	padding: 5px;
+	margin: 0;
+	transition: background-color 200ms ease-in-out;
+}
+
+.rendered-form .formbuilder-autocomplete-list li:hover,
+.rendered-form .formbuilder-autocomplete-list li.active-option {
+	background-color: rgba(0, 0, 0, 0.075);
+}
+
+.form-group .formbuilder-required {
+	color: #c10000;
+}
+
+.rendered-form *[tooltip] {
+	position: relative;
+}
+
+.rendered-form *[tooltip]:hover::after {
+	background: rgba(0, 0, 0, 0.9);
+	border-radius: 5px 5px 5px 0;
+	bottom: 23px;
+	color: #fff;
+	content: attr(tooltip);
+	padding: 10px 5px;
+	position: absolute;
+	z-index: 98;
+	left: 2px;
+	width: 230px;
+	text-shadow: none;
+	font-size: 12px;
+	line-height: 1.5em;
+}
+
+.rendered-form *[tooltip]:hover::before {
+	border: solid;
+	border-color: #222 transparent;
+	border-width: 6px 6px 0;
+	bottom: 17px;
+	content: "";
+	left: 2px;
+	position: absolute;
+	z-index: 99;
+}
+
+.tooltip-element {
+	color: #fff;
+	background: #000;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	display: inline-block;
+	text-align: center;
+	line-height: 16px;
+	margin: 0 5px;
+	font-size: 12px;
+}
+
+.rendered-form .formbuilder-checkbox-inline,
+.rendered-form .formbuilder-radio-inline {
+	margin-right: 8px;
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 0;
+}
+
+.rendered-form .formbuilder-checkbox-inline label input[type="text"],
+.rendered-form .formbuilder-radio-inline label input[type="text"] {
+	margin-top: 0;
+}
+
+.rendered-form .formbuilder-checkbox-inline:first-child,
+.rendered-form .formbuilder-radio-inline:first-child {
+	padding-left: 0;
+}
+
+input#access_store_pass {
+	width: 100%;
+}
+
+.woocommerce-form-access_store {
+	margin: 5px 0;
+}
+
+#wholeslaer_acess {
+	width: 100%;
+	text-align: center;
+	background-color: #000000;
+	color: white;
+	font-weight: 700;
+	position: fixed;
+	z-index: 9999;
+}
+
+#wholeslaer_acess input {
+	padding: 5px 16px;
+	border-radius: 20px;
+	margin: 5px;
+	line-height: 17px;
+}
+
+.back_to_retailer_form {
+	margin: 0px;
+	padding: 0px;
+}
+
+#wholesale_tire_price tbody tr.active td {
+	color: black;
+	background-color: #cc7cf5;
+}
+
+.wwp_attachment_container {
+	max-width: 300px;
+}
+
+.wwp_requisition_list h2 {
+	display: inline-block;
+}
+
+.add_new_list {
+	float: right;
+}
+
+div#table_id_wrapper {
+	border: 1px solid #f2f2f2;
+	padding: 15px;
+	border-radius: 6px;
+}
+
+button.open_list {
+	font-size: 12px;
+	border: 1px solid #c3c3c3;
+}
+
+
+
+#TB_title {
+	border-bottom: 1px solid #767676 !important;
+	height: 29px !important;
+	background-color: #8053b4 !important;
+	color: white !important;
+}
+
+.tb-close-icon {
+	color: #ffffff !important;
+}
+
+div#TB_window {
+	/* overflow: hidden; */
+	border-radius: 6px;
+}
+
+button.delete_list {
+	font-size: 12px;
+	border: 1px solid #c3c3c3;
+}
+
+.wwp_product_title {
+	display: flex;
+}
+
+.wwp_product_title span.dashicons.dashicons-trash {
+	margin-top: 8px;
+	margin-right: 3px;
+	margin-left: -6px;
+}
+
+.wwp_table_row:hover span.dashicons.dashicons-trash {
+	color: #c50d00;
+}
+
+.wwp_requisition_list_main .modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 40px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index: 999;
+}
+
+.wwp_requisition_list_main .modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 600px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 10px;
+	overflow: hidden;
+	margin-bottom: 40px;
+}
+
+.wwp_requisition_list_main .close {
+	color: white;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	right: 11px;
+	position: absolute;
+}
+
+.wwp_requisition_list_main .close:hover,
+.wwp_requisition_list_main .close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.wwp_requisition_list_main .modal-header {
+	padding: 2px 16px;
+	color: white;
+	background-color: #8053b4 !important;
+	display: inline-flex;
+	width: 100%;
+}
+
+.wwp_requisition_list_main .modal-header h3 {
+	color: white;
+	margin: 0px;
+}
+
+.wwp_requisition_list_main .modal-body {
+	padding: 2px 16px;
+}
+
+.wwp_requisition_list_main .wwp_requisition_list_new {
+	padding-bottom: 10px;
+}
+
+.wwp_requisition_list_main table:not(.has-background) th {
+	background-color: #ffffff;
+}
+
+.wwp_requisition_list_main th.wwp_table_qty_header {
+	background-color: white !important;
+}
+
+.wwp_requisition_list_main .wwp_requisition_list_table .select2-container .select2-selection--single {
+	height: 40px;
+}
+
+.wwp_requisition_list_main .wwp_requisition_list_table .select2-container--default .select2-selection--single .select2-selection__rendered {
+	line-height: 36px;
+}
+
+.wwp_requisition_list_main .wwp_requisition_list_table .select2-container--default .select2-selection--single .select2-selection__arrow {
+	top: 6px;
+}
+
+.wwp_requisition_list_main .wwp_product_subtotal {
+	text-align: center;
+	line-height: 43px;
+}
+
+.wwp_requisition_list_main .wwp_requisition_list_new input.form-control {
+	max-width: 55px;
+	border-radius: 3px;
+}
+
+.wwptotalamount {
+	padding-bottom: 20px;
+	border-bottom: 1px solid #b3b3b3;
+}
+
+.totalamountpopup {
+	float: right;
+	line-height: 47px;
+	font-size: 20px;
+}
+
+.wwp_totalcoloum {
+	padding-top: 20px;
+}
+
+.totalamountpopup span.wwp_price {
+	font-weight: 700;
+}
+
+.wwp_product_qty input.form-control {
+	text-align: center;
+}
+
+#myModal .loader {
+	border: 7px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 7px solid #b511ff;
+	border-bottom: 7px solid #540079;
+	width: 60px;
+	height: 60px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+	margin: 0 auto;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	display: none;
+}
+
+th.wwp_search_by_header {
+	padding-left: 0px;
+}
+
+.wwp_table_subtotal_header .tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.wwp_table_subtotal_header .tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: #8053b4;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	top: -5px;
+	right: 105%;
+}
+
+.wwp_table_subtotal_header .tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+th.wwp_table_subtotal_header {
+	display: flex;
+}
+
+th.wwp_table_subtotal_header span.dashicons.dashicons-info {
+	font-size: 13px;
+	margin-top: 6px;
+}
+
+span.select2-selection__clear {
+	font-size: 0;
+}
+
+span.select2-selection__clear:before {
+	content: 'Clear X';
+	background-color: #918f8f;
+	border-radius: 6px;
+	color: white;
+	font-size: 13px;
+	position: absolute;
+	right: -16px;
+	z-index: 99999999999999;
+	margin: 0px;
+	padding: 0px;
+	top: 5px;
+	padding-right: 3px;
+	padding-left: 3px;
+	line-height: 28px;
+}
+
+.wwp_variation_wrap {
+	display: inline-block;
+	width: 100%;
+}
+
+.wwp_variation_lable {
+	float: left;
+	padding: 8px;
+	min-width: 73px;
+	border-radius: 12%;
+	border: 1px solid #dfdfdf;
+	text-align: center;
+	text-transform: capitalize;
+}
+
+input.wwp_quantitys {
+	float: right;
+	max-width: 50px;
+}
+
+.wwp_quantity_box {
+	float: right;
+	display: inline-flex;
+}
+
+button.minus,
+button.plus {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.wwp_quantitys::-webkit-outer-spin-button,
+.wwp_quantitys::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+.wwp_quantitys[type=number] {
+	-moz-appearance: textfield;
+}
+
+input.wwp_quantitys {
+	float: none;
+	margin: 0;
+	display: inline-block;
+	text-align: center;
+}
+
+.wwp_variation_table_enable form.variations_form.cart .quantity .qty , .wwp_variation_table_enable form.variations_form.cart .woocommerce-variation-price {
+	display:none;
+}
+.wwp_variation_table_enable form.variations_form.cart .single_variation_wrap  .woocommerce-variation-availability {
+	display:none;
+}
+
+.wwp_variation_wrap.wwp_disable_variation,.wwp_variation_wrap.wwp_disable_variation .wwp_quantity_box {
+    opacity: 0.6;
+	pointer-events:none;
+	color: #f96060;
+}
+ 
+.wwp_variation_wrap.wwp_disable_variation .wwp_variation_lable {
+    border: 1px solid #e76f6f;
+}
+.wwp_quantity_box_availability_html {
+    width: 100%;
+    float: left;
+}
+
+.g-recaptcha {
+    display: inline-block;
+    -webkit-transform: scale(.9);
+    transform: scale(.9);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    margin-bottom: 0.3rem;
+}
+
+.woo-login-captcha { 
+	display: none!important;
+}
+
+.wwp_group_announcement_table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.wwp_group_announcement_table, .wwp_group_announcement_table th, .wwp_group_announcement_table td {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+.wwp_group_announcement_table th {
+	background-color: #f4f4f4;
+	text-align: left;
+}
+
+a.popup-trigger {
+	color: #6c63ff;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.wwp-new-label {
+	background-color: green;
+	color: white;
+	font-size: 12px;
+	padding: 2px 4px;
+	margin-left: 5px;
+	border-radius: 3px;
+}
+
+.wwp-announcement-popup-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.wwp-announcement-popup {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	width: 400px;
+}
+
+.wwp-announcement-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.wwp-close-popup {
+	cursor: pointer;
+	font-size: 18px;
+}
+
+.woocommerce-MyAccount-navigation-link--group-announcement {
+	width: 102%;
+}
+
+.wwp_wholesaler_registration_form .parent .chzn-drop, .wholesaler_shipping_address .parent .chzn-drop, .wwp_form_css_row  {
+	display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+	margin: 5px 0;
+}
+
+.wwp_wholesaler_registration_form .parent .chzn-drop select, .wwp_form_css_row input, .wwp-password-wrapper input, .wwp_form_css_row select{
+    width: 100%;
+	padding: 5px;
+	margin-top: 5px;
+}
+.wwp_form_css_row .radio-group input, .wwp-shipping-address input { 
+	width: auto !important;
+}
+.wwp_form_css_row input { 
+	width: 98%;
+}
+.wwp-shipping-address { 
+	flex-direction: row;
+}
+#wwp_wholesaler_copy_billing_address{
+	margin: 7px;
+}
+
+p + h2 {
+    margin-top: 0 !important;
+}
+
+.wwp-password-wrapper {
+    position: relative;
+}
+.wwp-password-toggle, .wwp-confirm-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+}

@@ -1,0 +1,149 @@
+.wps_active {
+    display: none !important;
+}
+
+@media only screen and (max-width: 1030px) {
+    .dimensions_field input[type="text"] {
+        width: 100% !important;
+    }
+}
+
+@media only screen and (min-width: 1070px) {
+
+    .wps_sfw_variation_subscription_number_field .woocommerce-help-tip,
+    .wps_sfw_variation_subscription_expiry_field .woocommerce-help-tip,
+    .wps_sfw_variation_subscription_free_trial_field .woocommerce-help-tip {
+        margin-left: auto !important;
+    }
+
+    .wps_sfw_variation_subscription_free_trial_field,
+    .wps_sfw_variation_subscription_number_field,
+    .wps_sfw_variation_subscription_expiry_field {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .wps_sfw_variation_subscription_free_trial_field label,
+    .wps_sfw_variation_subscription_number_field label,
+    .wps_sfw_variation_subscription_expiry_field label {
+        flex: 0 0 100%;
+        max-width: calc(100% - 25px);
+    }
+
+    .wps_sfw_variation_subscription_free_trial_field input[type="number"],
+    .wps_sfw_variation_subscription_number_field input[type="number"],
+    .wps_sfw_variation_subscription_expiry_field input[type="number"] {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .wps_sfw_variation_subscription_free_trial_field select,
+    .wps_sfw_variation_subscription_number_field select,
+    .wps_sfw_variation_subscription_expiry_field select {
+        max-width: 100%;
+        flex: 0 0 50%;
+    }
+}
+
+.wps-enable-week p,
+.wps-enable-month p {
+    max-width: 100% !important;
+}
+
+.wps-enable-year {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.wps-enable-year label {
+    display: block;
+    flex: 0 0 100%;
+    margin: 5px 0;
+}
+
+.wps-enable-year select,
+.wps-enable-year input[type="number"] {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .variable_pricing .form-row-first,
+    .variable_pricing .form-row-last {
+        width: 100% !important;
+        float: none;
+    }
+}
+
+/*added for simple product*/
+#wps_wsp_certain_date_enable_year_number {
+    width: auto;
+}
+
+/*fixing issues for pro*/
+
+.wps_sfw_variation_onetime_purchase_field.form-row label {
+    display: inline-flex;
+    margin-bottom: 5px;
+}
+
+.wps_sfw_variation_onetime_purchase_field label span {
+    margin: 4px 15px 4px 0px;
+}
+
+.wps_sfw_one_time_purchase-wrap {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.wps_sfw_one_time_purchase-wrap span {
+    margin-right: 10px;
+}
+div#wps_sfw_product_target_section .form-field label {
+    padding-right: 10px;
+}
+
+@media screen and (max-width: 782px) {
+    .wps_sfw_variation_onetime_purchase_field.form-row label {
+        margin-bottom: 15px;
+    }
+
+    .wps_sfw_variation_onetime_purchase_field label span {
+        line-height: 28px;
+    }
+
+    .wps_sfw_variation_onetime_purchase_field label input[type=checkbox],
+    .wps_sfw_one_time_purchase-wrap input[type=checkbox] {
+        width: 30px !important;
+        height: 30px;
+    }
+
+    .wps_sfw_variation_onetime_purchase_field label input[type=checkbox]:before,
+    .wps_sfw_one_time_purchase-wrap input[type=checkbox]:before {
+        width: 28px;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+
+@media screen and (max-width: 420px) {
+
+    .wps_sfw_one_time_purchase-wrap {
+        padding: 10px 20px;
+    }
+
+    .wps_sfw_variation_onetime_purchase_field label input[type=checkbox],
+    .wps_sfw_one_time_purchase-wrap input[type=checkbox] {
+        width: 25px !important;
+        height: 25px;
+    }
+
+    .wps_sfw_variation_onetime_purchase_field label input[type=checkbox]:before,
+    .wps_sfw_one_time_purchase-wrap input[type=checkbox]:before {
+        width: 25px;
+    }
+}

@@ -1,0 +1,296 @@
+*** Wholesale For WooCommerce ***
+
+2025-09-16 - version 2.7.0
+* New - Cart total discount on type ( Amount or Quantity ).
+* New - Cart global discount ( Amount or Quantity ).
+* New - SKU in bulk wholesale pricing.
+* New - Hide category from non wholesale user.
+* New - Added show/hide icon on registration password field.
+* New - Private store cookie interval.
+* New - Filter to add header in user notification reject ( "wwp_wholesale_rejected_request_header_user" ).
+* New - Filter to hide price conditionaly ( "wwp_conditionally_hide_price" ).
+* New - Filter to hide price conditionaly for subscription product ( "wwp_conditionally_hide_subs_price" ).
+* New - Filter to hide add to cart button conditionaly for shop page ( "wwp_hide_cart_button_on_shop" ).
+* New - Filter to hide add to cart button conditionaly for single page ( "wwp_hide_cart_button_on_single_page" ).
+* New - Exclude product caregory from wholesale global discount.
+* New - Filter to check for minsubtotal refresh ( "wwp_check_subtotal" ).
+* New - Filter for minsubtotal errors ( "wwp_hook_for_min_subtotal" ).
+* New - Filter for Product Addon ( "wpp_apply_discount_on_product_addon" ).
+* Fix - Woocommerce block cart ui fix.
+* Fix - Warning when no role is selected in the coupon.
+* Fix - Private store password on block checkout.
+* Fix - Registration form static ui.
+* Fix - When user edit my-account security fix.
+* Update - Compatibility with block Payment Gateway setting.
+
+2025-06-10 - version 2.6.1
+* Fix - Product visibility for non wholesaler and guest user.
+* Fix - Code improvement.
+
+2025-04-30 - version 2.6.0
+* New - Hide Add to cart button.
+* New - Hide Price.
+* New - Simple Subscriptions tier.
+* New - Variable Subscriptions tier.
+* New - Filter to change the registration text ( "change_wwp_register_text" ).
+* New - Filter to add header in user notification ( "wwp_wholesale_new_request_header_user" ).
+* New - Compatibility with User Registration for WooCommerce (WPExperts).
+
+2025-01-16 - version 2.5.0
+* Fix - Categories discounts.
+* Fix - Bulk order table fix.
+* Fix - When save user extra field data.
+* Fix - Compatibilty for product bundle.
+* Fix - Dashboard graph.
+* Fix - When manual Order create.
+* Fix - When multiple file upload.
+* Fix - Filter by role on order table.
+* New - Filter added to check page ( "wwp_check_page_for_inclusive_tax" ).
+* New - Filter added to get price ( "wwp_check_product_price" ).
+* New - Filter added to for tax price ( "wwp_change_price" ).
+* New - Action for user data on submit register ( "wwp_insert_user_data" ).
+* New - User role on registeration page.
+* New - Add user in the group.
+* New - Admin notification enable/disable.
+* Update - Added filter to improve page load time ( "product_transient_time_loads" ).
+* Update - Remove calculation on shop page for variable product to improve page load.
+* Update - Tier table load on variation select instead of page load.
+
+2024-09-19 - version 2.4.7
+* Fix - Compatibility issue with Currency Switcher for WooCommerce.
+
+2024-08-09 - version 2.4.6
+* Fix - Sales summary graph on dashboard.
+
+2024-07-01 - version 2.4.5
+* Fix - Fatal Error When Variation price is not defined.
+* Fix - Extra Fields display on Wholesale Upgrade Tab.
+* Fix - Extra fields library updated.
+* Fix - UI modified default fields.
+* Fix - Improvised product settings checkbox labels.
+* Fix - Undefined function is_user_logged_in() in parse_query.
+* Fix - Variable Subscriptions on product Data not saving.
+* Fix - stripslashes function E_ERROR.
+
+2024-05-21 - version 2.4.0
+* New - Min Order Total on Cart.
+* New - Display Wholesale Prices to Non-logged-in users.
+* New - Option to disable the Strike Through price.
+* New - Integration with reCaptcha for WooCommerce .
+* New - Integrated Google reCaptcha V2 and V3.
+* Fix - C4WP Integration modified.
+* Fix - Display Wholesale Price with and without tax on shop and cart/checkout page.
+* Fix - Step Quantity was dependent on Enforce Minimum Quantity rules.
+
+2023-12-20 - Version 2.3.0
+* New - Added REST API endpoints.
+* New - Admin emails Recipient(s)
+* New - Settings to make the Registration Field Required or Optional.
+* New - WooCommerce Currency Switcher Compatibility Hook.
+* Update - Declared compatibility with the cart/checkout Blocks.
+* Update - Declared compatibility with HPOS.
+* Update - Localize all strings for translations.
+* Fix - Minicart pricing issue.
+* Fix - PHP warnings when upgrade user to wholesaler role.
+* Fix - Extra fields not saving in woocommerce order.
+* Fix - Form builder stuck on loading when enter inline style or HTML tags.
+
+2023-11-10 - Version 2.2.4.2
+* Fix - Fixed 2nd parameter deprecated get_terms. 
+
+2023-11-08 - Version 2.2.4.1
+* Update - Enhanced code optimization and strengthened security measures.
+
+2023-05-25 - Version 2.2.4
+* Fix - Security check issue Fix on checkout.
+* Fix - Invalid email address issue Fix on checkout.
+* New - Wholesaler request delete on user delete action.
+* Fix - Wholesale orders were not showing in wholesale dashboard.
+* Fix - Wholesale enabled button UI Fix on admin products list.
+
+2023-05-11 - Version 2.2.3
+* Fix - security check nonce issue on checkout.
+
+2023-05-04 - Version 2.2.2
+* Fix - vulnerability issue on wp_verify_nonce.
+* Fix - WooCommerce checkout error.
+
+2023-05-02 - Version 2.2.1
+* Fix - 504 on shop and category pages in pre_get_posts.
+* Fix - vulnerability issue on wp_verify_nonce.
+* Fix - Form builder checkbox value not displaying in admin.
+
+2022-12-04 - Version 2.2.0
+* New -  Variation table
+* New -  Request Sample
+* New -  Registration form multiple file upload
+* Fix -  Google capcha Update
+
+2022-09-26 - Version 2.1.0
+* New -  Requisition List
+* Fix -  UI Fixes
+
+2021-2-25 - Version 2.0.0
+* New -  Payment Methods
+* New -  Step Quantity
+* New -  Product Attachments
+* New -  Wholesale Coupon
+
+2021-2-24 - Version 1.9.1
+* Update - Tested with WordPress 5.9 Version
+
+2021-12-7 - Version 1.9.0
+* New -  Wholesale Reports
+* New -  Wholesaler Specific Tax Type
+* New -  Backend Wholesale Product On lable added
+
+2021-10-15 - Version 1.8.5
+* New -  Compatibility with Product Addon
+* New -  Compatibility with Product Bundle
+* New -  Compatibility with Product Vendor
+* Fix - Upgrade account 404 page Fixed
+* Fix - Manual Wholesale Order Backend Load product.
+
+2021-06-26 - Version 1.8.0
+* New -  Wholesale Tier pricing
+* New -  Manual Wholesale Order Backend
+* New -  Wholesale Registration Conform Password field Add
+* New -  Wholesale Order Email Notification
+* New -  Cart Total Discount
+* Update - Filter wholesale order
+
+2021-07-24 - Version 1.7.1
+* Fix - Wholesaler Role object issue Fixed.
+
+2021-06-03 - Version 1.7.0
+* New - Import Column Wholesale Price, Quantity, User Role
+* New - Export Column Wholesale Price, Quantity, User Role
+* New - Mix and Match Products For WooCommerce Support
+* New - Invoice Payment Gateway For WooCommerce Support
+* Update - Wholesale role detectable with wpml language switch.
+* Update - Minimum Quantity Dropdown
+
+2021-03-30 - Version 1.6.0
+* Update - Wholesale UI/UX 
+* Update - PHP Code Optimization
+* Update - Wholesaler tax display
+
+2021-01-12 - Version 1.5.0
+* New - Wholesalers/Non-Wholesaler Orders Filters
+* New - Wholesale Only Password Protected Stores
+* New - Override registration form on my-account page
+* New - Currency Switcher compatibility
+* Update - Form Builder Optimization
+* Update - Registration Page Redirect
+* Update - error messages
+
+2020-10-29 - Version 1.4.0
+* New - Custom fields Form Builder
+* New - Registration form redirects after registration form submission.
+* New - Restrict products from non-wholesale users
+* New - Hide retail price and save price Labels
+* New - Hide product from the visitor
+* New - Hide product from users having a customer role
+* Update - Wholesale prices in related product
+* Update - Registration Form validation
+* Update - Registration Form Select Country Dropdown 
+* Update - WooCommerce Tax sufFixes display in wholesale price
+
+2020-06-2 - Version 1.3.4
+* Update - Warnings and Notices
+
+2020-06-2 - Version 1.3.3
+* Update - Hide Price
+* Update - Capabilities functionality
+
+2020-05-29 - Version 1.3.2
+* New - Wholesaler Tax id Option in billing section.
+* Update - Tax Exempt For User Role 
+* Update - Disable Shipping Method
+
+2020-05-05 - Version 1.3.1
+* New - Custom css section add.
+* New - Email on Rejection.
+* New - Email on New User Registration.
+* New - Login to see prices.
+* Update - Registration Form styling.
+* Update - Email template tags.
+* Update - Translation Update.
+* Update - Wholesale User Role
+
+2020-04-24 - Version 1.3.0
+* New - WooCommerce Subscriptions Integration
+* New - Restrict product visibility 
+* New - Restrict whole product categories 
+* New - Disabled coupons codes
+
+2020-04-12 - Version 1.2.0
+* New - Category based discounts for user roles.
+* New - Global discounts for user roles.
+* New - Disable specific payment methods for specific user roles.
+* New - Disable specific shipping methods for specific user roles.
+* New - Five custom registration fields.
+* New - tags for email notification tags to pull user data.
+* New - Enable/Disable Wholesaler on add to cart minimum quantity as a ragular price
+
+2020-03-03 - Version 1.1.11
+* New - Default Multi User Role Dropdown in Settings.
+* Update - Wholesale User Role
+
+2020-02-24 - Version 1.1.9
+* Fix - Specific User Role Product Percentage Issue.
+
+2020-02-17 - Version 1.1.8
+* New - Wholesale registration reCAPTCHA support.
+* Update - Variable Product minimum quantity lable.
+* Fix - Approve Wholesale user request.
+
+2020-01-30 - Version 1.1.7
+* Fix - Email language issue Fixed.
+* Update - Wholesaler email notification.
+* Update - Multiple theme support add.
+* Update - Add filters. 
+
+2020-01-01 - Version 1.1.6
+* Fix - Single user default role module.
+* Update - Stock quantity Update.
+* Update - Decimal value allows on product.
+* Update - User role Code optimize.
+
+2019-12-23 - Version 1.1.5
+* Fix - Decimal value issue.
+* Fix - Undefined variable issue.
+* Update - variable product price label.
+* Update - required tax field or image field validation.
+
+2019-11-25 - Version 1.1.4
+* Fix - Default role issue assigned from WordPress settings.
+* New - File upload field next to tax id.
+
+2019-11-12 - Version 1.1.3
+* Fix - Request approval notifications issue.
+* Fix - Shipping address copy from billing address issue on registration page.
+
+2019-11-07 - Version 1.1.2
+* Fix - Quantity based price issue.
+
+2019-11-01 - Version 1.1.1
+* Fix - Settings text color issue.
+* Fix - Regular price & wholesaler price issue.
+
+2019-10-29 - Version 1.0.4
+* Fix - Bulk settings issue.
+* New - Tax exempt for wholesaler.
+* New - Compatible with Bulk Shop For WooCommerce plugin.
+
+2019-10-16 - Version 1.0.3
+* Fix - Settings text color issue.
+
+2019-10-16 - Version 1.0.2
+* Fix - Settings text color issue.
+
+2019-10-16 - Version 1.0.1
+* Fix - Setup URL issue.
+
+2019-08-27 - Version 1.0.0
+* Initial release.
