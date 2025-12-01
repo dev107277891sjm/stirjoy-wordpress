@@ -319,5 +319,105 @@
             $(".postid-8480 .fixed-sidebar-menu.fixed-sidebar-menu-minicart").addClass('open');
         }, 500);
 
+        /**
+         * Delivery Calendar Navigation (AJAX)
+         */
+        function initCalendarNavigation() {
+            // Use more specific selector to ensure we only catch calendar buttons
+            $(document).on('click', '.delivery-calendar .calendar-nav-btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Calendar button clicked');
+                
+                var $button = $(this);
+                var $calendar = $button.closest('.delivery-calendar');
+                
+                if (!$calendar.length) {
+                    console.error('Calendar container not found');
+                    return;
+                }
+                
+                // Try both .data() and .attr() methods
+                var month = $button.data('month') || parseInt($button.attr('data-month'), 10);
+                var year = $button.data('year') || parseInt($button.attr('data-year'), 10);
+                
+                if (!month || !year || isNaN(month) || isNaN(year)) {
+                    console.error('Missing or invalid month/year data', {
+                        month: month,
+                        year: year,
+                        button: $button,
+                        dataMonth: $button.data('month'),
+                        attrMonth: $button.attr('data-month'),
+                        dataYear: $button.data('year'),
+                        attrYear: $button.attr('data-year')
+                    });
+                    return;
+                }
+                
+                // Check if stirjoyData is available
+                if (typeof stirjoyData === 'undefined') {
+                    console.error('stirjoyData is not defined');
+                    alert('Calendar navigation is not available. Please refresh the page.');
+                    return;
+                }
+                
+                // Disable buttons during loading
+                $calendar.find('.calendar-nav-btn').prop('disabled', true).css('opacity', '0.6');
+                
+                $.ajax({
+                    url: stirjoyData.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'stirjoy_get_calendar_month',
+                        nonce: stirjoyData.nonce,
+                        month: month,
+                        year: year
+                    },
+                    success: function(response) {
+                        if (response && response.success && response.data && response.data.html) {
+                            // Wrap HTML in a temporary container to parse it
+                            var $temp = $('<div>').html(response.data.html);
+                            
+                            // Update calendar navigation
+                            var $navHtml = $temp.find('.calendar-navigation');
+                            if ($navHtml.length) {
+                                $calendar.find('.calendar-navigation').html($navHtml.html());
+                            }
+                            
+                            // Update calendar grid
+                            var $gridHtml = $temp.find('.calendar-grid');
+                            if ($gridHtml.length) {
+                                $calendar.find('.calendar-grid').html($gridHtml.html());
+                            }
+                            
+                            // Update data attributes
+                            if (response.data.month && response.data.year) {
+                                $calendar.attr('data-current-month', response.data.month);
+                                $calendar.attr('data-current-year', response.data.year);
+                            }
+                        } else {
+                            console.error('Invalid response:', response);
+                            alert('An error occurred while loading the calendar. Please try again.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        if (xhr.responseText) {
+                            console.error('Response:', xhr.responseText);
+                        }
+                        alert('An error occurred while loading the calendar. Please try again.');
+                    },
+                    complete: function() {
+                        // Re-enable buttons
+                        $calendar.find('.calendar-nav-btn').prop('disabled', false).css('opacity', '1');
+                    }
+                });
+            });
+        }
+        
+        // Initialize calendar navigation
+        initCalendarNavigation();
+
     });
 })(jQuery);

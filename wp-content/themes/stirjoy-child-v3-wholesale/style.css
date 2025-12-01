@@ -1191,6 +1191,195 @@ footer p.card-icons {
     gap: 4px;
     font-size: 14px;
 }
+
+/* Delivery Calendar Styles */
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar {
+    border-radius: 14px;
+    border: solid 1px #ddd;
+    padding: 24px;
+    margin-bottom: 24px;
+    background: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-nav-btn:hover {
+    background: #2d5a27;
+    color: #fff;
+    border-color: #2d5a27;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-month-year {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    min-width: 180px;
+    text-align: center;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-grid {
+    margin-bottom: 20px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day-header {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    padding: 8px 4px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 4px;
+    position: relative;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.empty {
+    border: none;
+    background: transparent;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.today {
+    border: 2px solid #2d5a27;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day .day-number {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    z-index: 1;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day .calendar-icon {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    z-index: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.cutoff-date {
+    background: #d4edda;
+    border-color: #a8d5a8;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.cutoff-date .calendar-icon {
+    color: #2d5a27;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date .day-number {
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date .calendar-icon {
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.cutoff-color {
+    background: #d4edda;
+    border-color: #a8d5a8;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.delivery-color {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.paused-color {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-info {
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-info p {
+    margin: 4px 0;
+}
+
 .woocommerce-dashboard .my-account-content .right-block {
     width: 32%;
 }

@@ -295,3 +295,193 @@ function update_customer_info() {
     wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_update_customer_info', 'update_customer_info' );
+
+/**
+ * AJAX handler for delivery calendar navigation
+ */
+function stirjoy_get_calendar_month() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    // Use WordPress timezone for default month/year
+    $month = isset( $_POST['month'] ) ? intval( $_POST['month'] ) : intval( current_time( 'n' ) );
+    $year = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : intval( current_time( 'Y' ) );
+    
+    // Get user subscription data
+    global $wpdb;
+    $user_id = get_current_user_id();
+    $is_hpos = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+    
+    if ( $is_hpos ) {
+        $table = $wpdb->prefix . 'wc_orders';
+        $meta_table = $wpdb->prefix . 'wc_orders_meta';
+        $id_field = 'id';
+        $type_field = 'type';
+        $order_id_field = 'order_id';
+    } else {
+        $table = $wpdb->prefix . 'posts';
+        $meta_table = $wpdb->prefix . 'postmeta';
+        $id_field = 'ID';
+        $type_field = 'post_type';
+        $order_id_field = 'post_id';
+    }
+    
+    $sql = "
+        SELECT DISTINCT {$table}.{$id_field}
+        FROM {$table}
+        INNER JOIN {$meta_table} AS meta ON meta.{$order_id_field} = {$table}.{$id_field}
+        WHERE meta.meta_key = 'wps_customer_id'
+        AND meta.meta_value = %s
+        AND {$table}.{$type_field} = 'wps_subscriptions'
+        ORDER BY {$table}.{$id_field} DESC LIMIT 1
+    ";
+    
+    $subscription_ids = $wpdb->get_col( $wpdb->prepare( $sql, $user_id ) );
+    
+    $last_subscription_id = 0;
+    $wps_status = false;
+    $parent_order = false;
+    $wps_schedule_start = 0;
+    
+    if ( ! empty( $subscription_ids ) && is_array( $subscription_ids ) ) {
+        $last_subscription_id = $subscription_ids[0];
+        $wps_status = wps_sfw_get_meta_data( $last_subscription_id, 'wps_subscription_status', true );
+        $wps_schedule_start = wps_sfw_get_meta_data( $last_subscription_id, 'wps_schedule_start', true );
+        $parent_order_id = wps_sfw_get_meta_data( $last_subscription_id, 'wps_parent_order', true );
+        $parent_order = wc_get_order( $parent_order_id );
+    }
+    
+    // Calculate calendar dates
+    $calendar_cutoff_dates = array();
+    $calendar_delivery_dates = array();
+    
+    if ( $last_subscription_id > 0 && $wps_status === 'active' ) {
+        $subscription_number = wps_sfw_get_meta_data( $last_subscription_id, 'wps_sfw_subscription_number', true );
+        $subscription_interval = wps_sfw_get_meta_data( $last_subscription_id, 'wps_sfw_subscription_interval', true );
+        $subscription_number = ! empty( $subscription_number ) ? intval( $subscription_number ) : 1;
+        $subscription_interval = ! empty( $subscription_interval ) ? $subscription_interval : 'month';
+        
+        $base_timestamp = current_time( 'timestamp' );
+        if ( $parent_order && is_a( $parent_order, 'WC_Order' ) ) {
+            $order_created_at = $parent_order->get_date_created();
+            if ( $order_created_at ) {
+                $base_timestamp = $order_created_at->getTimestamp();
+            }
+        } elseif ( ! empty( $wps_schedule_start ) && is_numeric( $wps_schedule_start ) ) {
+            $base_timestamp = $wps_schedule_start;
+        }
+        
+        for ( $i = 0; $i < 12; $i++ ) {
+            if ( $subscription_interval === 'month' ) {
+                $cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number ) . ' month', $base_timestamp );
+            } elseif ( $subscription_interval === 'week' ) {
+                $cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number * 7 ) . ' days', $base_timestamp );
+            } elseif ( $subscription_interval === 'day' ) {
+                $cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number ) . ' days', $base_timestamp );
+            } else {
+                $cutoff_timestamp = strtotime( '+' . $i . ' month', $base_timestamp );
+            }
+            
+            if ( $cutoff_timestamp >= strtotime( 'first day of this month', current_time( 'timestamp' ) ) ) {
+                $delivery_timestamp = strtotime( '+5 days', $cutoff_timestamp );
+                
+                $calendar_cutoff_dates[] = array(
+                    'date' => date( 'Y-m-d', $cutoff_timestamp ),
+                );
+                
+                $calendar_delivery_dates[] = array(
+                    'date' => date( 'Y-m-d', $delivery_timestamp ),
+                );
+            }
+        }
+    }
+    
+    // Generate calendar HTML
+    $first_day = mktime( 0, 0, 0, $month, 1, $year );
+    $days_in_month = date( 't', $first_day );
+    $day_of_week = date( 'w', $first_day );
+    $prev_month = $month == 1 ? 12 : $month - 1;
+    $prev_year = $month == 1 ? $year - 1 : $year;
+    $next_month = $month == 12 ? 1 : $month + 1;
+    $next_year = $month == 12 ? $year + 1 : $year;
+    $month_name = date( 'F Y', $first_day );
+    $today_date = current_time( 'Y-m-d' );
+    
+    ob_start();
+    ?>
+    <div class="calendar-navigation">
+        <button type="button" class="calendar-nav-btn calendar-prev" data-month="<?= esc_attr( $prev_month ) ?>" data-year="<?= esc_attr( $prev_year ) ?>">‹</button>
+        <span class="calendar-month-year"><?= esc_html( $month_name ) ?></span>
+        <button type="button" class="calendar-nav-btn calendar-next" data-month="<?= esc_attr( $next_month ) ?>" data-year="<?= esc_attr( $next_year ) ?>">›</button>
+    </div>
+    <div class="calendar-grid">
+        <div class="calendar-header">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+        </div>
+        <div class="calendar-days">
+            <?php
+            for ( $i = 0; $i < $day_of_week; $i++ ) {
+                echo '<div class="calendar-day empty"></div>';
+            }
+            
+            for ( $day = 1; $day <= $days_in_month; $day++ ) {
+                $date_str = sprintf( '%04d-%02d-%02d', $year, $month, $day );
+                $is_cutoff = false;
+                $is_delivery = false;
+                $is_today = ( $date_str === $today_date );
+                
+                foreach ( $calendar_cutoff_dates as $cutoff ) {
+                    if ( $cutoff['date'] === $date_str ) {
+                        $is_cutoff = true;
+                        break;
+                    }
+                }
+                
+                foreach ( $calendar_delivery_dates as $delivery ) {
+                    if ( $delivery['date'] === $date_str ) {
+                        $is_delivery = true;
+                        break;
+                    }
+                }
+                
+                $day_class = 'calendar-day';
+                $day_icon = '';
+                
+                if ( $is_today ) {
+                    $day_class .= ' today';
+                }
+                
+                if ( $is_cutoff ) {
+                    $day_class .= ' cutoff-date';
+                    $day_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path></svg>';
+                } elseif ( $is_delivery ) {
+                    $day_class .= ' delivery-date';
+                    $day_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon"><circle cx="12" cy="12" r="10"></circle></svg>';
+                }
+                
+                echo '<div class="' . esc_attr( $day_class ) . '">';
+                if ( $day_icon ) {
+                    echo $day_icon;
+                }
+                echo '<span class="day-number">' . esc_html( $day ) . '</span>';
+                echo '</div>';
+            }
+            ?>
+        </div>
+    </div>
+    <?php
+    $calendar_html = ob_get_clean();
+    
+    wp_send_json_success( array(
+        'html' => $calendar_html,
+        'month' => $month,
+        'year' => $year
+    ) );
+}
+add_action( 'wp_ajax_stirjoy_get_calendar_month', 'stirjoy_get_calendar_month' );
+add_action( 'wp_ajax_nopriv_stirjoy_get_calendar_month', 'stirjoy_get_calendar_month' );

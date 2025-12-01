@@ -230,6 +230,169 @@ if($last_subscription_id > 0){
 			</div>
 		</div>
 
+		<?php
+		// Calculate delivery calendar dates
+		$calendar_cutoff_dates = array();
+		$calendar_delivery_dates = array();
+		// Use WordPress timezone for current month/year
+		$current_month = isset( $_GET['cal_month'] ) ? intval( $_GET['cal_month'] ) : intval( current_time( 'n' ) );
+		$current_year = isset( $_GET['cal_year'] ) ? intval( $_GET['cal_year'] ) : intval( current_time( 'Y' ) );
+		
+		if ( $last_subscription_id > 0 && $wps_status === 'active' ) {
+			// Get subscription interval
+			$subscription_number = wps_sfw_get_meta_data( $last_subscription_id, 'wps_sfw_subscription_number', true );
+			$subscription_interval = wps_sfw_get_meta_data( $last_subscription_id, 'wps_sfw_subscription_interval', true );
+			$subscription_number = ! empty( $subscription_number ) ? intval( $subscription_number ) : 1;
+			$subscription_interval = ! empty( $subscription_interval ) ? $subscription_interval : 'month';
+			
+			// Get base timestamp from order or schedule start
+			$base_timestamp = current_time( 'timestamp' );
+			if ( $parent_order && is_a( $parent_order, 'WC_Order' ) ) {
+				$order_created_at = $parent_order->get_date_created();
+				if ( $order_created_at ) {
+					$base_timestamp = $order_created_at->getTimestamp();
+				}
+			} elseif ( ! empty( $wps_schedule_start ) && is_numeric( $wps_schedule_start ) ) {
+				$base_timestamp = $wps_schedule_start;
+			}
+			
+			// Calculate next 12 months of delivery dates
+			for ( $i = 0; $i < 12; $i++ ) {
+				// Calculate cutoff date based on subscription interval
+				if ( $subscription_interval === 'month' ) {
+					$cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number ) . ' month', $base_timestamp );
+				} elseif ( $subscription_interval === 'week' ) {
+					$cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number * 7 ) . ' days', $base_timestamp );
+				} elseif ( $subscription_interval === 'day' ) {
+					$cutoff_timestamp = strtotime( '+' . ( $i * $subscription_number ) . ' days', $base_timestamp );
+				} else {
+					// Default to monthly
+					$cutoff_timestamp = strtotime( '+' . $i . ' month', $base_timestamp );
+				}
+				
+				// Only include dates that are in the future or current month
+				if ( $cutoff_timestamp >= strtotime( 'first day of this month', current_time( 'timestamp' ) ) ) {
+					// Delivery is 5 days after cutoff
+					$delivery_timestamp = strtotime( '+5 days', $cutoff_timestamp );
+					
+					$calendar_cutoff_dates[] = array(
+						'date' => date( 'Y-m-d', $cutoff_timestamp ),
+						'display' => date( 'F d, Y', $cutoff_timestamp ),
+					);
+					
+					$calendar_delivery_dates[] = array(
+						'date' => date( 'Y-m-d', $delivery_timestamp ),
+						'display' => date( 'F d, Y', $delivery_timestamp ),
+					);
+				}
+			}
+		}
+		
+		// Generate calendar
+		$first_day = mktime( 0, 0, 0, $current_month, 1, $current_year );
+		$days_in_month = date( 't', $first_day );
+		$day_of_week = date( 'w', $first_day ); // 0 = Sunday, 6 = Saturday
+		$prev_month = $current_month == 1 ? 12 : $current_month - 1;
+		$prev_year = $current_month == 1 ? $current_year - 1 : $current_year;
+		$next_month = $current_month == 12 ? 1 : $current_month + 1;
+		$next_year = $current_month == 12 ? $current_year + 1 : $current_year;
+		$month_name = date( 'F Y', $first_day );
+		?>
+		
+		<div class="delivery-calendar" data-current-month="<?= esc_attr( $current_month ) ?>" data-current-year="<?= esc_attr( $current_year ) ?>">
+			<div class="block-title">Delivery Calendar</div>
+			<div class="calendar-navigation">
+				<button type="button" class="calendar-nav-btn calendar-prev" data-month="<?= esc_attr( $prev_month ) ?>" data-year="<?= esc_attr( $prev_year ) ?>">‹</button>
+				<span class="calendar-month-year"><?= esc_html( $month_name ) ?></span>
+				<button type="button" class="calendar-nav-btn calendar-next" data-month="<?= esc_attr( $next_month ) ?>" data-year="<?= esc_attr( $next_year ) ?>">›</button>
+			</div>
+			<div class="calendar-grid">
+				<div class="calendar-header">
+					<div class="calendar-day-header">Sun</div>
+					<div class="calendar-day-header">Mon</div>
+					<div class="calendar-day-header">Tue</div>
+					<div class="calendar-day-header">Wed</div>
+					<div class="calendar-day-header">Thu</div>
+					<div class="calendar-day-header">Fri</div>
+					<div class="calendar-day-header">Sat</div>
+				</div>
+				<div class="calendar-days">
+					<?php
+					// Empty cells for days before the first day of the month
+					for ( $i = 0; $i < $day_of_week; $i++ ) {
+						echo '<div class="calendar-day empty"></div>';
+					}
+					
+					// Days of the month
+					// Use WordPress timezone for today's date
+					$today_date = current_time( 'Y-m-d' );
+					for ( $day = 1; $day <= $days_in_month; $day++ ) {
+						$date_str = sprintf( '%04d-%02d-%02d', $current_year, $current_month, $day );
+						$is_cutoff = false;
+						$is_delivery = false;
+						$is_today = ( $date_str === $today_date );
+						
+						// Check if this date is a cutoff date
+						foreach ( $calendar_cutoff_dates as $cutoff ) {
+							if ( $cutoff['date'] === $date_str ) {
+								$is_cutoff = true;
+								break;
+							}
+						}
+						
+						// Check if this date is a delivery date
+						foreach ( $calendar_delivery_dates as $delivery ) {
+							if ( $delivery['date'] === $date_str ) {
+								$is_delivery = true;
+								break;
+							}
+						}
+						
+						$day_class = 'calendar-day';
+						$day_icon = '';
+						
+						if ( $is_today ) {
+							$day_class .= ' today';
+						}
+						
+						if ( $is_cutoff ) {
+							$day_class .= ' cutoff-date';
+							$day_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path></svg>';
+						} elseif ( $is_delivery ) {
+							$day_class .= ' delivery-date';
+							$day_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon"><circle cx="12" cy="12" r="10"></circle></svg>';
+						}
+						
+						echo '<div class="' . esc_attr( $day_class ) . '">';
+						if ( $day_icon ) {
+							echo $day_icon;
+						}
+						echo '<span class="day-number">' . esc_html( $day ) . '</span>';
+						echo '</div>';
+					}
+					?>
+				</div>
+			</div>
+			<div class="calendar-legend">
+				<div class="legend-item">
+					<div class="legend-color cutoff-color"></div>
+					<span>Cutoff Date</span>
+				</div>
+				<div class="legend-item">
+					<div class="legend-color delivery-color"></div>
+					<span>Estimated Delivery</span>
+				</div>
+				<div class="legend-item">
+					<div class="legend-color paused-color"></div>
+					<span>Paused Delivery</span>
+				</div>
+			</div>
+			<div class="calendar-info">
+				<p>Payment processed at midnight</p>
+				<p>3-5 business days after cutoff</p>
+			</div>
+		</div>
+
 		<div class="upcoming-deliveries">
 			<div class="block-title">Upcoming Deliveries</div>
 			<?php if ( $parent_order && is_a( $parent_order, 'WC_Order' ) && $parent_order_id > 0 ): ?>
