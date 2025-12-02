@@ -419,5 +419,70 @@
         // Initialize calendar navigation
         initCalendarNavigation();
 
+        /**
+         * Delivery Calendar Day Click Handler - Show Modal
+         */
+        $(document).on('click', '.delivery-calendar .calendar-day:not(.empty)', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var $day = $(this);
+            var dateStr = $day.data('date');
+            var formattedDate = $day.data('formatted-date');
+            
+            if (!dateStr || !formattedDate) {
+                return;
+            }
+            
+            // Show modal
+            var $modal = $('#delivery-options-modal');
+            $modal.find('#modal-selected-date').text(formattedDate);
+            $modal.find('.delivery-option-card').data('selected-date', dateStr);
+            $modal.fadeIn(300);
+        });
+
+        /**
+         * Close Modal Handlers
+         */
+        $(document).on('click', '.delivery-options-modal-overlay, .delivery-options-cancel-btn', function(e) {
+            e.preventDefault();
+            $('#delivery-options-modal').fadeOut(300);
+        });
+
+        /**
+         * Prevent modal content clicks from closing modal
+         */
+        $(document).on('click', '.delivery-options-modal-content', function(e) {
+            e.stopPropagation();
+        });
+
+        /**
+         * Delivery Option Selection
+         */
+        $(document).on('click', '.delivery-option-card', function(e) {
+            e.preventDefault();
+            var $card = $(this);
+            var action = $card.data('action');
+            var selectedDate = $card.data('selected-date');
+            
+            if (!action || !selectedDate) {
+                return;
+            }
+            
+            // Handle the action (move box or order extra box)
+            console.log('Selected action:', action, 'for date:', selectedDate);
+            
+            // TODO: Implement AJAX call to handle the action
+            // For now, just show an alert
+            if (action === 'move-box') {
+                alert('Moving monthly box to ' + selectedDate);
+            } else if (action === 'extra-box') {
+                alert('Ordering extra box for ' + selectedDate);
+            }
+            
+            // Close modal
+            $('#delivery-options-modal').fadeOut(300);
+        });
+
     });
 })(jQuery);

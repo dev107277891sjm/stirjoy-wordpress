@@ -363,7 +363,11 @@ if($last_subscription_id > 0){
 							$day_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="calendar-icon"><circle cx="12" cy="12" r="10"></circle></svg>';
 						}
 						
-						echo '<div class="' . esc_attr( $day_class ) . '">';
+						// Format date for display (e.g., "Monday, November 10, 2025")
+						$date_timestamp = mktime( 0, 0, 0, $current_month, $day, $current_year );
+						$formatted_date = date( 'l, F j, Y', $date_timestamp );
+						
+						echo '<div class="' . esc_attr( $day_class ) . '" data-date="' . esc_attr( $date_str ) . '" data-formatted-date="' . esc_attr( $formatted_date ) . '" style="cursor: pointer;">';
 						if ( $day_icon ) {
 							echo $day_icon;
 						}
@@ -390,6 +394,29 @@ if($last_subscription_id > 0){
 			<div class="calendar-info">
 				<p>Payment processed at midnight</p>
 				<p>3-5 business days after cutoff</p>
+			</div>
+		</div>
+
+		<!-- Delivery Options Modal -->
+		<div id="delivery-options-modal" class="delivery-options-modal" style="display: none;">
+			<div class="delivery-options-modal-overlay"></div>
+			<div class="delivery-options-modal-content">
+				<h2>Delivery Options</h2>
+				<p class="selected-date" id="modal-selected-date"></p>
+				
+				<div class="delivery-options-list">
+					<div class="delivery-option-card" data-action="move-box">
+						<div class="option-title">Move Monthly Box to This Date</div>
+						<div class="option-description">Your regular monthly box will be rescheduled to this date</div>
+					</div>
+					
+					<div class="delivery-option-card" data-action="extra-box">
+						<div class="option-title">Order Extra Box</div>
+						<div class="option-description">Order an additional box for this date (your regular box remains scheduled)</div>
+					</div>
+				</div>
+				
+				<button type="button" class="delivery-options-cancel-btn">Cancel</button>
 			</div>
 		</div>
 

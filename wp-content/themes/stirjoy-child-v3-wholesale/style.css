@@ -1282,6 +1282,10 @@ footer p.card-icons {
     transition: all 0.2s ease;
 }
 
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day:hover {
+    border: 2px solid #2d5a27;
+}
+
 .woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.empty {
     border: none;
     background: transparent;
@@ -1378,6 +1382,110 @@ footer p.card-icons {
 
 .woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-info p {
     margin: 4px 0;
+}
+
+/* Delivery Options Modal Styles */
+.delivery-options-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delivery-options-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+.delivery-options-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+}
+
+.delivery-options-modal-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.delivery-options-modal-content .selected-date {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0 0 24px 0;
+}
+
+.delivery-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.delivery-option-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.delivery-option-card:hover {
+    background: #e67e22;
+}
+
+.delivery-option-card:hover .option-title{
+    color: white;
+}
+
+.delivery-option-card .option-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.delivery-option-card .option-description {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.delivery-options-cancel-btn {
+    width: 100%;
+    padding: 12px 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delivery-options-cancel-btn:hover {
+    background: #e67e22;
+    color:white;
 }
 
 .woocommerce-dashboard .my-account-content .right-block {
