@@ -485,3 +485,83 @@ function stirjoy_get_calendar_month() {
 }
 add_action( 'wp_ajax_stirjoy_get_calendar_month', 'stirjoy_get_calendar_month' );
 add_action( 'wp_ajax_nopriv_stirjoy_get_calendar_month', 'stirjoy_get_calendar_month' );
+
+/**
+ * AJAX: Add product to cart
+ */
+function stirjoy_add_to_cart() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+    $quantity = isset( $_POST['quantity'] ) ? absint( $_POST['quantity'] ) : 1;
+    
+    if ( ! $product_id ) {
+        wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
+    }
+    
+    $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity );
+    
+    if ( $cart_item_key ) {
+        wp_send_json_success( array(
+            'message' => 'Product added to cart',
+            'cart_item_key' => $cart_item_key,
+            'cart_count' => WC()->cart->get_cart_contents_count(),
+            'cart_total' => WC()->cart->get_cart_subtotal()
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => 'Failed to add product to cart' ) );
+    }
+}
+add_action( 'wp_ajax_stirjoy_add_to_cart', 'stirjoy_add_to_cart' );
+add_action( 'wp_ajax_nopriv_stirjoy_add_to_cart', 'stirjoy_add_to_cart' );
+
+/**
+ * AJAX: Remove product from cart
+ */
+function stirjoy_remove_from_cart() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+    
+    if ( ! $product_id ) {
+        wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
+    }
+    
+    // Find cart item key for this product
+    $cart = WC()->cart->get_cart();
+    $removed = false;
+    
+    foreach ( $cart as $cart_item_key => $cart_item ) {
+        if ( $cart_item['product_id'] == $product_id ) {
+            WC()->cart->remove_cart_item( $cart_item_key );
+            $removed = true;
+            break;
+        }
+    }
+    
+    if ( $removed ) {
+        wp_send_json_success( array(
+            'message' => 'Product removed from cart',
+            'cart_count' => WC()->cart->get_cart_contents_count(),
+            'cart_total' => WC()->cart->get_cart_subtotal()
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => 'Product not found in cart' ) );
+    }
+}
+add_action( 'wp_ajax_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart' );
+add_action( 'wp_ajax_nopriv_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart' );
+
+/**
+ * AJAX: Get cart info for header update
+ */
+function stirjoy_get_cart_info() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    wp_send_json_success( array(
+        'count' => WC()->cart->get_cart_contents_count(),
+        'total' => WC()->cart->get_cart_subtotal()
+    ) );
+}
+add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
+add_action( 'wp_ajax_nopriv_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );

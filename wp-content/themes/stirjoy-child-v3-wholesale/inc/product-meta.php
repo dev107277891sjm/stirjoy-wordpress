@@ -58,6 +58,19 @@ function stirjoy_add_product_meta_fields() {
         'type' => 'text',
     ));
     
+    woocommerce_wp_text_input( array(
+        'id' => '_serving_size',
+        'label' => __( 'Serving Size', 'stirjoy-child' ),
+        'placeholder' => '2',
+        'type' => 'number',
+        'custom_attributes' => array(
+            'step' => '1',
+            'min' => '1',
+        ),
+        'desc_tip' => true,
+        'description' => __( 'Number of servings per meal', 'stirjoy-child' ),
+    ));
+    
     echo '</div>';
 }
 add_action( 'woocommerce_product_options_general_product_data', 'stirjoy_add_product_meta_fields' );
@@ -66,7 +79,7 @@ add_action( 'woocommerce_product_options_general_product_data', 'stirjoy_add_pro
  * Save custom product fields
  */
 function stirjoy_save_product_meta_fields( $post_id ) {
-    $fields = array( '_prep_time', '_cook_time', '_calories', '_protein' );
+    $fields = array( '_prep_time', '_cook_time', '_calories', '_protein', '_serving_size' );
     
     foreach ( $fields as $field ) {
         if ( isset( $_POST[ $field ] ) ) {

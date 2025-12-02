@@ -484,5 +484,174 @@
             $('#delivery-options-modal').fadeOut(300);
         });
 
+        /**
+         * ========================================
+         * Customize Your Box - Shop Page
+         * ========================================
+         */
+        
+        /**
+         * Category Tab Filtering
+         */
+        $('.category-tab').on('click', function(e) {
+            e.preventDefault();
+            
+            var $tab = $(this);
+            var category = $tab.data('category');
+            
+            // Update active tab
+            $('.category-tab').removeClass('active');
+            $tab.addClass('active');
+            
+            // Filter sections
+            if (category === 'all') {
+                $('.meal-category-section').show();
+            } else {
+                $('.meal-category-section').hide();
+                $('.meal-category-section[data-category="' + category + '"]').show();
+            }
+            
+            // Reset search
+            $('#meal-search').val('');
+            $('.meal-product-card').show();
+        });
+        
+        /**
+         * Real-time Search Filtering
+         */
+        $('#meal-search').on('input', function() {
+            var searchTerm = $(this).val().toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                $('.meal-product-card').show();
+                return;
+            }
+            
+            $('.meal-product-card').each(function() {
+                var $card = $(this);
+                var searchText = $card.data('search-text') || '';
+                
+                if (searchText.indexOf(searchTerm) !== -1) {
+                    $card.show();
+                } else {
+                    $card.hide();
+                }
+            });
+        });
+        
+        /**
+         * Add to Cart Button
+         */
+        $(document).on('click', '.add-to-cart-btn', function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            var $card = $button.closest('.meal-product-card');
+            
+            // Disable button during request
+            $button.prop('disabled', true).addClass('loading');
+            
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_add_to_cart',
+                    product_id: productId,
+                    quantity: 1,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Update button to Remove
+                        $button.replaceWith(
+                            '<button type="button" class="button remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                        );
+                        
+                        // Update card data
+                        $card.attr('data-in-cart', '1');
+                        
+                        // Update Your Box header
+                        updateYourBoxHeader();
+                    } else {
+                        alert(response.data.message || 'Error adding to cart');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                },
+                complete: function() {
+                    $button.prop('disabled', false).removeClass('loading');
+                }
+            });
+        });
+        
+        /**
+         * Remove from Cart Button
+         */
+        $(document).on('click', '.remove-from-cart-btn', function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            var $card = $button.closest('.meal-product-card');
+            
+            // Disable button during request
+            $button.prop('disabled', true).addClass('loading');
+            
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_remove_from_cart',
+                    product_id: productId,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Update button to Add
+                        $button.replaceWith(
+                            '<button type="button" class="button add-to-cart-btn" data-product-id="' + productId + '">' +
+                            '<span class="plus-icon">+</span> Add</button>'
+                        );
+                        
+                        // Update card data
+                        $card.attr('data-in-cart', '0');
+                        
+                        // Update Your Box header
+                        updateYourBoxHeader();
+                    } else {
+                        alert(response.data.message || 'Error removing from cart');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                },
+                complete: function() {
+                    $button.prop('disabled', false).removeClass('loading');
+                }
+            });
+        });
+        
+        /**
+         * Update Your Box Header Display
+         */
+        function updateYourBoxHeader() {
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_get_cart_info',
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        $('.your-box-count').text('(' + response.data.count + ')');
+                        $('.your-box-total').text(response.data.total);
+                    }
+                }
+            });
+        }
+
     });
 })(jQuery);
