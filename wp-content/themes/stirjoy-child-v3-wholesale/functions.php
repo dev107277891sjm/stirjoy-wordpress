@@ -176,8 +176,13 @@ function register_custom_sidebars4() {
 }
 add_action('widgets_init', 'register_custom_sidebars4');
 
-// Add short description to product archive pages
+// Add short description to product archive pages (only for non-customize pages)
 function woocommerce_template_loop_product_short_description() {
+    // Skip on customize your box page
+    if ( is_shop() && isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'shop' ) !== false ) {
+        return;
+    }
+    
     global $product;
     
     $short_description = $product->get_short_description();
@@ -193,8 +198,13 @@ add_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_produ
 // Remove price from product archive pages
 remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
 
-// Add quantity input before add to cart button on archive pages
+// Add quantity input before add to cart button on archive pages (only for non-customize pages)
 function add_quantity_field_to_archive() {
+    // Skip on customize your box page (our custom template handles everything)
+    if ( is_shop() && isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'shop' ) !== false ) {
+        return;
+    }
+    
     global $product;
     
     echo '<div class="qty-block">';
@@ -565,3 +575,18 @@ function stirjoy_get_cart_info() {
 }
 add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
 add_action( 'wp_ajax_nopriv_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
+
+/**
+ * Remove parent theme hooks that interfere with custom shop page
+ */
+function stirjoy_remove_parent_theme_shop_hooks() {
+    if ( is_shop() ) {
+        // Remove star rating that creates extra grid elements
+        remove_action('woocommerce_before_shop_loop_item_title', 'thecrate_woocommerce_star_rating');
+        
+        // Remove any other interfering hooks
+        remove_action('woocommerce_before_shop_loop_item', 'woocommerce_template_loop_product_link_open', 10);
+        remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5);
+    }
+}
+add_action( 'wp', 'stirjoy_remove_parent_theme_shop_hooks' );

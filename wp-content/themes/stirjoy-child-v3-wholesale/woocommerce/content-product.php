@@ -143,18 +143,14 @@ $searchable_text = strtolower( $product->get_name() . ' ' . $short_description .
 
 			<!-- Action Buttons -->
 			<div class="meal-actions">
-				<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="button view-details-btn">
+				<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="view-details-btn">
 					View Details
 				</a>
 				
 				<?php if ( $in_cart ) : ?>
-					<button type="button" class="button remove-from-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
-						- Remove
-					</button>
+					<button type="button" class="remove-from-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">- Remove</button>
 				<?php else : ?>
-					<button type="button" class="button add-to-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
-						<span class="plus-icon">+</span> Add
-					</button>
+					<button type="button" class="add-to-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">+ Add</button>
 				<?php endif; ?>
 			</div>
 

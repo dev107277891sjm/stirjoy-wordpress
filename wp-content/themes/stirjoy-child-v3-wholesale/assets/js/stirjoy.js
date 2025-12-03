@@ -565,7 +565,7 @@
                     if (response.success) {
                         // Update button to Remove
                         $button.replaceWith(
-                            '<button type="button" class="button remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                            '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
                         );
                         
                         // Update card data
@@ -611,8 +611,7 @@
                     if (response.success) {
                         // Update button to Add
                         $button.replaceWith(
-                            '<button type="button" class="button add-to-cart-btn" data-product-id="' + productId + '">' +
-                            '<span class="plus-icon">+</span> Add</button>'
+                            '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
                         );
                         
                         // Update card data

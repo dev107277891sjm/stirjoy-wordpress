@@ -13,11 +13,6 @@ defined( 'ABSPATH' ) || exit;
 
 get_header( 'shop' );
 
-/**
- * Hook: woocommerce_before_main_content.
- */
-do_action( 'woocommerce_before_main_content' );
-
 ?>
 <div class="customize-your-box-page">
 	
@@ -144,7 +139,7 @@ do_action( 'woocommerce_before_main_content' );
 					?>
 					<div class="meal-category-section" data-category="<?php echo esc_attr( $key ); ?>">
 						<h2 class="category-heading"><?php echo esc_html( $cat_data['title'] ); ?></h2>
-						<ul class="products columns-3">
+						<ul class="products">
 							<?php
 							foreach ( $cat_data['products'] as $product ) {
 								$GLOBALS['product'] = $product;
@@ -171,10 +166,5 @@ do_action( 'woocommerce_before_main_content' );
 </div><!-- .customize-your-box-page -->
 
 <?php
-/**
- * Hook: woocommerce_after_main_content.
- */
-do_action( 'woocommerce_after_main_content' );
-
 get_footer( 'shop' );
 

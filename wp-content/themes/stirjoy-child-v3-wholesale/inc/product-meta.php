@@ -90,9 +90,14 @@ function stirjoy_save_product_meta_fields( $post_id ) {
 add_action( 'woocommerce_process_product_meta', 'stirjoy_save_product_meta_fields' );
 
 /**
- * Display product meta on product cards
+ * Display product meta on product cards (only for non-customize pages)
  */
 function stirjoy_display_product_meta() {
+    // Skip on customize your box page (our custom template handles everything)
+    if ( is_shop() && isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'shop' ) !== false ) {
+        return;
+    }
+    
     global $product;
     
     $prep_time = get_post_meta( $product->get_id(), '_prep_time', true );
