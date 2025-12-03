@@ -26,8 +26,8 @@ get_header( 'shop' );
 					<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
 				</svg>
 				<span class="your-box-text">Your Box</span>
-				<span class="your-box-count">(<?php echo WC()->cart->get_cart_contents_count(); ?>)</span>
-				<span class="your-box-total"><?php echo WC()->cart->get_cart_subtotal(); ?></span>
+				<span class="your-box-count">(<?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?>)</span>
+				<span class="your-box-total"><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
 			</div>
 		</div>
 	</div>

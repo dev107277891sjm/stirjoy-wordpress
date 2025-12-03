@@ -568,9 +568,17 @@ add_action( 'wp_ajax_nopriv_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart
 function stirjoy_get_cart_info() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
+    // Get cart total as HTML
+    $cart_subtotal_html = WC()->cart->get_cart_subtotal();
+    
+    // Also get plain number for potential use
+    $cart_total_plain = WC()->cart->get_subtotal();
+    
     wp_send_json_success( array(
         'count' => WC()->cart->get_cart_contents_count(),
-        'total' => WC()->cart->get_cart_subtotal()
+        'total_html' => $cart_subtotal_html,
+        'total_plain' => wc_price( $cart_total_plain ),
+        'cart_hash' => WC()->cart->get_cart_hash()
     ) );
 }
 add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
