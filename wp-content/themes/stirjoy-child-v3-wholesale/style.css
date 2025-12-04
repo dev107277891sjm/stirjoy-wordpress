@@ -690,7 +690,7 @@ footer p.card-icons {
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .cart_list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 16px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -709,24 +709,44 @@ footer p.card-icons {
     border-radius: 8px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.mini-cart-item-card img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+}
+/* Override parent theme mini-cart image size constraints */
+.header_mini_cart .woocommerce ul.cart_list li.mini-cart-item-card img,
+.header_mini_cart .woocommerce ul.product_list_widget li.mini-cart-item-card img {
+    float: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
 }
 .mini-cart-item-image-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 75%; /* 4:3 Aspect Ratio */
+    height: 0;
+    padding-bottom: 100%; /* Square aspect ratio for wireframe match */
     background: linear-gradient(135deg, #f0fdf4 0%, #fef3e2 100%);
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 8px 8px 0 0;
 }
 .mini-cart-item-image-wrapper img {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important; /* Fill entire area while maintaining aspect ratio */
 }
 .mini-cart-item-placeholder {
     position: absolute;
@@ -734,7 +754,12 @@ footer p.card-icons {
     left: 50%;
     transform: translate(-50%, -50%);
     color: #2d5a27;
-    opacity: 0.6;
+    opacity: 0.4;
+    z-index: 1;
+}
+.mini-cart-item-placeholder svg {
+    width: 60px;
+    height: 60px;
 }
 .mini-cart-item-image-link {
     position: absolute;
@@ -743,56 +768,68 @@ footer p.card-icons {
     width: 100%;
     height: 100%;
     z-index: 1;
+    display: block;
+}
+.mini-cart-item-image-link img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .woocommerce.widget_shopping_cart .cart_list .mini_cart_item a.remove {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 24px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1;
     color: #dc2626 !important;
     text-decoration: none;
     z-index: 10;
     font-weight: bold;
     transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .woocommerce.widget_shopping_cart .cart_list .mini_cart_item a.remove:hover {
     background: #dc2626 !important;
     color: #fff !important;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 .mini-cart-item-info {
-    padding: 10px 8px;
+    padding: 12px 10px;
     background: white;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    text-align: center;
+    border-radius: 0 0 8px 8px;
 }
 .mini-cart-item-name {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     color: #2c3e50;
-    line-height: 1.3;
+    line-height: 1.4;
     text-decoration: none;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin: 0;
+    min-height: 36px; /* Ensure consistent height for 2 lines */
 }
 .mini-cart-item-name:hover {
     color: #2d5a27;
 }
 .mini-cart-item-price {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
     color: #2c3e50;
     margin: 0;
 }
@@ -2317,7 +2354,7 @@ footer p.card-icons {
     font-size: 13px !important;
     font-weight: 600 !important;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
     display: flex !important;
     align-items: center;
     justify-content: center;

@@ -194,14 +194,108 @@
             }
         });
 
-        // Cart Item Rmove Icon
+        // Cart Item Remove Icon
         $(document).on('click', '.mini_cart_item a.remove', function(e) {
             e.preventDefault();
-
-            var productId = $(this).attr('data-product_id');
-            var $miniCartItem = $('.mini_cart_item [data-product_id="' + productId + '"]');
-            var $input = $('.add_to_cart_button[data-product_id="' + productId + '"]').parent().find('input[type="number"]');
-            $input.val($miniCartItem.length - 1).change();
+            
+            // Check if another operation is in progress
+            if (isCartOperationInProgress) {
+                return false;
+            }
+            
+            var $button = $(this);
+            var productId = $button.attr('data-product_id');
+            var cartItemKey = $button.attr('data-cart_item_key');
+            var $cartItem = $button.closest('.mini_cart_item');
+            
+            // Lock cart operations
+            isCartOperationInProgress = true;
+            $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'none').css('opacity', '0.6');
+            
+            // Immediately remove item for instant feedback
+            $cartItem.fadeOut(150, function() {
+                $(this).remove();
+                
+                // Check if cart is empty
+                if ($('.mini_cart_item').length === 0) {
+                    $('.mini-cart-left-block .woocommerce-mini-cart').html(
+                        '<p class="woocommerce-mini-cart__empty-message">No products in the cart.</p>'
+                    );
+                }
+            });
+            
+            // Update Shop page card state immediately (if on Shop page)
+            var $shopCard = $('.meal-product-card[data-product-id="' + productId + '"]');
+            if ($shopCard.length > 0) {
+                $shopCard.attr('data-in-cart', '0');
+                $shopCard.find('.remove-from-cart-btn').replaceWith(
+                    '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
+                );
+            }
+            
+            // Call AJAX to remove from cart in background
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                timeout: 5000,
+                data: {
+                    action: 'stirjoy_remove_from_cart',
+                    nonce: stirjoyData.nonce,
+                    product_id: productId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Update cart counts and totals
+                        $('.cart-contents span').text(response.data.cart_count);
+                        $('.your-box-count').text('(' + response.data.cart_count + ')');
+                        
+                        // Update cart sidebar widget title
+                        var itemText = response.data.cart_count === 1 ? 'item' : 'items';
+                        $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + response.data.cart_count + ' ' + itemText + '</span>');
+                        
+                        // Update totals in cart sidebar
+                        if (response.data.cart_total) {
+                            $('.your-box-total').html(response.data.cart_total);
+                            $('.mini-cart-subtotal .price').html(response.data.cart_total);
+                        }
+                        
+                        // Update free shipping and gift bars
+                        updateFreeShippingAndGiftBar();
+                        
+                        // Trigger removed_from_cart event
+                        $('body').trigger('removed_from_cart');
+                    } else {
+                        // On error, show the item again
+                        $cartItem.fadeIn(150);
+                        if ($shopCard.length > 0) {
+                            $shopCard.attr('data-in-cart', '1');
+                            $shopCard.find('.add-to-cart-btn').replaceWith(
+                                '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                            );
+                        }
+                        alert('Error removing product from cart');
+                    }
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
+                },
+                error: function() {
+                    // On error, show the item again
+                    $cartItem.fadeIn(150);
+                    if ($shopCard.length > 0) {
+                        $shopCard.attr('data-in-cart', '1');
+                        $shopCard.find('.add-to-cart-btn').replaceWith(
+                            '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                        );
+                    }
+                    alert('An error occurred. Please try again.');
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
+                }
+            });
         });
 
         function updateSubscriptionStatus(subscription_id, action) {
@@ -494,6 +588,9 @@
          * ========================================
          */
         
+        // Global flag to prevent simultaneous cart operations
+        var isCartOperationInProgress = false;
+        
         /**
          * Category Tab Filtering
          */
@@ -549,16 +646,30 @@
         $(document).on('click', '.add-to-cart-btn', function(e) {
             e.preventDefault();
             
+            // Check if another operation is in progress
+            if (isCartOperationInProgress) {
+                return false;
+            }
+            
             var $button = $(this);
             var productId = $button.data('product-id');
             var $card = $button.closest('.meal-product-card');
             
-            // Disable button during request
-            $button.prop('disabled', true).addClass('loading');
+            // Lock cart operations
+            isCartOperationInProgress = true;
+            $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'none').css('opacity', '0.6');
             
+            // Immediately update UI for instant feedback
+            $button.replaceWith(
+                '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+            );
+            $card.attr('data-in-cart', '1');
+            
+            // Send AJAX request in background
             $.ajax({
                 url: stirjoyData.ajaxUrl,
                 type: 'POST',
+                timeout: 5000, // 5 second timeout
                 data: {
                     action: 'stirjoy_add_to_cart',
                     product_id: productId,
@@ -567,25 +678,34 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Update button to Remove
-                        $button.replaceWith(
-                            '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
-                        );
-                        
-                        // Update card data
-                        $card.attr('data-in-cart', '1');
-                        
                         // Update Your Box header
                         updateYourBoxHeader();
                     } else {
+                        // Revert on error
+                        var $newButton = $card.find('.remove-from-cart-btn[data-product-id="' + productId + '"]');
+                        $newButton.replaceWith(
+                            '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
+                        );
+                        $card.attr('data-in-cart', '0');
                         alert(response.data.message || 'Error adding to cart');
                     }
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
                 },
                 error: function() {
+                    // Revert on error
+                    var $newButton = $card.find('.remove-from-cart-btn[data-product-id="' + productId + '"]');
+                    $newButton.replaceWith(
+                        '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
+                    );
+                    $card.attr('data-in-cart', '0');
                     alert('An error occurred. Please try again.');
-                },
-                complete: function() {
-                    $button.prop('disabled', false).removeClass('loading');
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
                 }
             });
         });
@@ -596,16 +716,30 @@
         $(document).on('click', '.remove-from-cart-btn', function(e) {
             e.preventDefault();
             
+            // Check if another operation is in progress
+            if (isCartOperationInProgress) {
+                return false;
+            }
+            
             var $button = $(this);
             var productId = $button.data('product-id');
             var $card = $button.closest('.meal-product-card');
             
-            // Disable button during request
-            $button.prop('disabled', true).addClass('loading');
+            // Lock cart operations
+            isCartOperationInProgress = true;
+            $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'none').css('opacity', '0.6');
             
+            // Immediately update UI for instant feedback
+            $button.replaceWith(
+                '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
+            );
+            $card.attr('data-in-cart', '0');
+            
+            // Send AJAX request in background
             $.ajax({
                 url: stirjoyData.ajaxUrl,
                 type: 'POST',
+                timeout: 5000, // 5 second timeout
                 data: {
                     action: 'stirjoy_remove_from_cart',
                     product_id: productId,
@@ -613,25 +747,34 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Update button to Add
-                        $button.replaceWith(
-                            '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
-                        );
-                        
-                        // Update card data
-                        $card.attr('data-in-cart', '0');
-                        
                         // Update Your Box header
                         updateYourBoxHeader();
                     } else {
+                        // Revert on error
+                        var $newButton = $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]');
+                        $newButton.replaceWith(
+                            '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                        );
+                        $card.attr('data-in-cart', '1');
                         alert(response.data.message || 'Error removing from cart');
                     }
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
                 },
                 error: function() {
+                    // Revert on error
+                    var $newButton = $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]');
+                    $newButton.replaceWith(
+                        '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                    );
+                    $card.attr('data-in-cart', '1');
                     alert('An error occurred. Please try again.');
-                },
-                complete: function() {
-                    $button.prop('disabled', false).removeClass('loading');
+                    
+                    // Unlock cart operations
+                    isCartOperationInProgress = false;
+                    $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'auto').css('opacity', '1');
                 }
             });
         });

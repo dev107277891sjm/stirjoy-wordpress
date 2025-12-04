@@ -65,7 +65,7 @@ get_header( 'shop' );
 			<button class="category-tab active" data-category="all">All</button>
 			<button class="category-tab" data-category="breakfast">Breakfast</button>
 			<button class="category-tab" data-category="mains">Mains</button>
-			<button class="category-tab" data-category="snacks">Snacks & Desserts</button>
+			<button class="category-tab" data-category="snacks">Snacks</button>
 			<button class="category-tab" data-category="desserts">Desserts</button>
 		</div>
 
