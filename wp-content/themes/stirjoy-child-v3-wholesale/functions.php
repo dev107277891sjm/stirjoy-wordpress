@@ -587,6 +587,79 @@ add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
 add_action( 'wp_ajax_nopriv_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
 
 /**
+ * AJAX handler to get product details for modal
+ */
+function stirjoy_get_product_details() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
+    
+    if ( ! $product_id ) {
+        wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
+    }
+    
+    $product = wc_get_product( $product_id );
+    
+    if ( ! $product ) {
+        wp_send_json_error( array( 'message' => 'Product not found' ) );
+    }
+    
+    // Get all product meta
+    $prep_time = get_post_meta( $product_id, '_prep_time', true );
+    $cook_time = get_post_meta( $product_id, '_cook_time', true );
+    $serving_size = get_post_meta( $product_id, '_serving_size', true );
+    $calories = get_post_meta( $product_id, '_calories', true );
+    $protein = get_post_meta( $product_id, '_protein', true );
+    $carbs = get_post_meta( $product_id, '_carbs', true );
+    $fat = get_post_meta( $product_id, '_fat', true );
+    $ingredients = get_post_meta( $product_id, '_ingredients', true );
+    $allergens = get_post_meta( $product_id, '_allergens', true );
+    $instructions = get_post_meta( $product_id, '_instructions', true );
+    
+    // Get product image
+    $image_id = $product->get_image_id();
+    $image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : wc_placeholder_img_src();
+    
+    // Get rating
+    $average_rating = $product->get_average_rating();
+    
+    // Get description (strip HTML tags to avoid rendering issues)
+    $description = $product->get_description() ?: $product->get_short_description();
+    $description = wp_strip_all_tags( $description );
+    
+    // Check if in cart
+    $in_cart = false;
+    foreach ( WC()->cart->get_cart() as $cart_item ) {
+        if ( $cart_item['product_id'] == $product_id ) {
+            $in_cart = true;
+            break;
+        }
+    }
+    
+    wp_send_json_success( array(
+        'product_id' => $product_id,
+        'name' => $product->get_name(),
+        'description' => $description,
+        'image_url' => $image_url,
+        'price' => $product->get_price_html(),
+        'rating' => $average_rating,
+        'prep_time' => $prep_time,
+        'cook_time' => $cook_time,
+        'serving_size' => $serving_size,
+        'calories' => $calories,
+        'protein' => $protein,
+        'carbs' => $carbs,
+        'fat' => $fat,
+        'ingredients' => $ingredients,
+        'allergens' => $allergens,
+        'instructions' => $instructions,
+        'in_cart' => $in_cart,
+    ) );
+}
+add_action( 'wp_ajax_stirjoy_get_product_details', 'stirjoy_get_product_details' );
+add_action( 'wp_ajax_nopriv_stirjoy_get_product_details', 'stirjoy_get_product_details' );
+
+/**
  * Remove parent theme hooks that interfere with custom shop page
  */
 function stirjoy_remove_parent_theme_shop_hooks() {

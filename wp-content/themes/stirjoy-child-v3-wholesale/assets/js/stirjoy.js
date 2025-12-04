@@ -893,6 +893,252 @@
                 }
             });
         }
+        
+        /**
+         * Product Detail Modal
+         */
+        var $modal = $('#product-detail-modal');
+        var $modalOverlay = $modal.find('.modal-overlay');
+        var $modalContent = $modal.find('.modal-content');
+        var $modalClose = $modal.find('.modal-close');
+        
+        // Open modal when View Details button is clicked
+        $(document).on('click', '.view-details-btn', function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            
+            if (!productId) {
+                return;
+            }
+            
+            // Show loading state
+            $modal.addClass('loading');
+            $modal.addClass('active');
+            $('body').addClass('modal-open');
+            
+            // Fetch product details via AJAX
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_get_product_details',
+                    product_id: productId,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        populateModal(response.data);
+                    } else {
+                        alert('Failed to load product details.');
+                        closeModal();
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                    closeModal();
+                },
+                complete: function() {
+                    $modal.removeClass('loading');
+                }
+            });
+        });
+        
+        // Close modal handlers
+        $modalClose.on('click', closeModal);
+        $modalOverlay.on('click', closeModal);
+        
+        // Prevent closing when clicking inside modal content
+        $modalContent.on('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Also allow closing by clicking on the wrapper (outside content)
+        $('.modal-content-wrapper').on('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close on Escape key
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && $modal.hasClass('active')) {
+                closeModal();
+            }
+        });
+        
+        // Populate modal with product data
+        function populateModal(data) {
+            // Basic info
+            $('#modal-product-img').attr('src', data.image_url).attr('alt', data.name);
+            $('#modal-product-title').text(data.name);
+            
+            // Rating
+            if (data.rating > 0) {
+                $('#modal-rating-value').text(data.rating.toFixed(1));
+                $('#modal-rating').show();
+            } else {
+                $('#modal-rating').hide();
+            }
+            
+            // Description (use .html() to properly render text, but data is already sanitized in PHP)
+            $('#modal-description').html(data.description || '');
+            
+            // Metrics
+            if (data.prep_time) {
+                $('#modal-prep-time .metric-value').text(data.prep_time);
+                $('#modal-prep-time').show();
+            } else {
+                $('#modal-prep-time').hide();
+            }
+            
+            if (data.cook_time) {
+                $('#modal-cook-time .metric-value').text(data.cook_time);
+                $('#modal-cook-time').show();
+            } else {
+                $('#modal-cook-time').hide();
+            }
+            
+            if (data.serving_size) {
+                $('#modal-serving-size .metric-value').text(data.serving_size);
+                $('#modal-serving-size').show();
+            } else {
+                $('#modal-serving-size').hide();
+            }
+            
+            if (data.calories) {
+                $('#modal-calories .metric-value').text(data.calories);
+                $('#modal-calories').show();
+            } else {
+                $('#modal-calories').hide();
+            }
+            
+            // Nutrition
+            if (data.protein) {
+                $('#modal-protein .nutrition-value').text(data.protein + 'g');
+                $('#modal-protein').show();
+            } else {
+                $('#modal-protein').hide();
+            }
+            
+            if (data.carbs) {
+                $('#modal-carbs .nutrition-value').text(data.carbs + 'g');
+                $('#modal-carbs').show();
+            } else {
+                $('#modal-carbs').hide();
+            }
+            
+            if (data.fat) {
+                $('#modal-fat .nutrition-value').text(data.fat + 'g');
+                $('#modal-fat').show();
+            } else {
+                $('#modal-fat').hide();
+            }
+            
+            // Ingredients
+            if (data.ingredients) {
+                var ingredients = data.ingredients.split(',').map(function(item) {
+                    return item.trim();
+                }).filter(function(item) {
+                    return item.length > 0;
+                });
+                
+                var $ingredientsList = $('#modal-ingredients-list');
+                $ingredientsList.empty();
+                
+                ingredients.forEach(function(ingredient) {
+                    $ingredientsList.append('<span class="ingredient-tag">' + ingredient + '</span>');
+                });
+                
+                $('#modal-ingredients-section').show();
+            } else {
+                $('#modal-ingredients-section').hide();
+            }
+            
+            // Allergens
+            if (data.allergens) {
+                var allergens = data.allergens.split(',').map(function(item) {
+                    return item.trim();
+                }).filter(function(item) {
+                    return item.length > 0;
+                });
+                
+                var $allergensList = $('#modal-allergens-list');
+                $allergensList.empty();
+                
+                allergens.forEach(function(allergen) {
+                    $allergensList.append('<span class="allergen-tag">' + allergen + '</span>');
+                });
+                
+                $('#modal-allergens-section').show();
+            } else {
+                $('#modal-allergens-section').hide();
+            }
+            
+            // Instructions
+            if (data.instructions) {
+                var instructions = data.instructions.split('\n').filter(function(item) {
+                    return item.trim().length > 0;
+                });
+                
+                var $instructionsList = $('#modal-instructions-list');
+                $instructionsList.empty();
+                
+                instructions.forEach(function(instruction) {
+                    $instructionsList.append('<li>' + instruction.trim() + '</li>');
+                });
+                
+                $('#modal-instructions-section').show();
+            } else {
+                $('#modal-instructions-section').hide();
+            }
+            
+            // Price and action button
+            $('#modal-price').html(data.price);
+            
+            var $actionBtn = $('#modal-action-btn');
+            $actionBtn.attr('data-product-id', data.product_id);
+            
+            if (data.in_cart) {
+                $actionBtn.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+            } else {
+                $actionBtn.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+            }
+        }
+        
+        // Close modal function
+        function closeModal() {
+            $modal.removeClass('active');
+            $('body').removeClass('modal-open');
+        }
+        
+        // Handle modal action button (Add/Remove)
+        $(document).on('click', '#modal-action-btn', function(e) {
+            e.preventDefault();
+            
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            var isRemove = $button.hasClass('remove-btn');
+            
+            if (isRemove) {
+                // Trigger remove from cart
+                $('.remove-from-cart-btn[data-product-id="' + productId + '"]').first().trigger('click');
+            } else {
+                // Trigger add to cart
+                $('.add-to-cart-btn[data-product-id="' + productId + '"]').first().trigger('click');
+            }
+            
+            // Update modal button state after a short delay
+            setTimeout(function() {
+                var inCart = $('.meal-product-card[data-product-id="' + productId + '"]').attr('data-in-cart') === '1';
+                if (inCart) {
+                    $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                } else {
+                    $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+                }
+            }, 500);
+        });
 
     });
 })(jQuery);

@@ -59,6 +59,20 @@ function stirjoy_add_product_meta_fields() {
     ));
     
     woocommerce_wp_text_input( array(
+        'id' => '_carbs',
+        'label' => __( 'Carbs (g)', 'stirjoy-child' ),
+        'placeholder' => '45',
+        'type' => 'text',
+    ));
+    
+    woocommerce_wp_text_input( array(
+        'id' => '_fat',
+        'label' => __( 'Fat (g)', 'stirjoy-child' ),
+        'placeholder' => '18',
+        'type' => 'text',
+    ));
+    
+    woocommerce_wp_text_input( array(
         'id' => '_serving_size',
         'label' => __( 'Serving Size', 'stirjoy-child' ),
         'placeholder' => '2',
@@ -71,6 +85,30 @@ function stirjoy_add_product_meta_fields() {
         'description' => __( 'Number of servings per meal', 'stirjoy-child' ),
     ));
     
+    woocommerce_wp_textarea_input( array(
+        'id' => '_ingredients',
+        'label' => __( 'Ingredients', 'stirjoy-child' ),
+        'placeholder' => 'Quinoa, Bell peppers, Zucchini, Cherry tomatoes, Tahini...',
+        'description' => __( 'Enter ingredients separated by commas', 'stirjoy-child' ),
+        'rows' => 3,
+    ));
+    
+    woocommerce_wp_textarea_input( array(
+        'id' => '_allergens',
+        'label' => __( 'Allergens', 'stirjoy-child' ),
+        'placeholder' => 'Sesame',
+        'description' => __( 'Enter allergens separated by commas', 'stirjoy-child' ),
+        'rows' => 2,
+    ));
+    
+    woocommerce_wp_textarea_input( array(
+        'id' => '_instructions',
+        'label' => __( 'Cooking Instructions', 'stirjoy-child' ),
+        'placeholder' => '1. Cook quinoa according to package directions.\n2. Roast vegetables at 400°F for 20 minutes.\n3. Prepare tahini dressing.\n4. Combine and serve.',
+        'description' => __( 'Enter cooking instructions, one per line', 'stirjoy-child' ),
+        'rows' => 5,
+    ));
+    
     echo '</div>';
 }
 add_action( 'woocommerce_product_options_general_product_data', 'stirjoy_add_product_meta_fields' );
@@ -79,11 +117,18 @@ add_action( 'woocommerce_product_options_general_product_data', 'stirjoy_add_pro
  * Save custom product fields
  */
 function stirjoy_save_product_meta_fields( $post_id ) {
-    $fields = array( '_prep_time', '_cook_time', '_calories', '_protein', '_serving_size' );
+    $text_fields = array( '_prep_time', '_cook_time', '_calories', '_protein', '_carbs', '_fat', '_serving_size' );
+    $textarea_fields = array( '_ingredients', '_allergens', '_instructions' );
     
-    foreach ( $fields as $field ) {
+    foreach ( $text_fields as $field ) {
         if ( isset( $_POST[ $field ] ) ) {
             update_post_meta( $post_id, $field, sanitize_text_field( $_POST[ $field ] ) );
+        }
+    }
+    
+    foreach ( $textarea_fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_textarea_field( $_POST[ $field ] ) );
         }
     }
 }

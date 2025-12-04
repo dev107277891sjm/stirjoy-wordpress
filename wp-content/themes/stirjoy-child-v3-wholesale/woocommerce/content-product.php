@@ -143,9 +143,9 @@ $searchable_text = strtolower( $product->get_name() . ' ' . $short_description .
 
 			<!-- Action Buttons -->
 			<div class="meal-actions">
-				<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="view-details-btn">
+				<button type="button" class="view-details-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
 					View Details
-				</a>
+				</button>
 				
 				<?php if ( $in_cart ) : ?>
 					<button type="button" class="remove-from-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">- Remove</button>
