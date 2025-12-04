@@ -553,7 +553,8 @@ function stirjoy_remove_from_cart() {
         wp_send_json_success( array(
             'message' => 'Product removed from cart',
             'cart_count' => WC()->cart->get_cart_contents_count(),
-            'cart_total' => WC()->cart->get_cart_subtotal()
+            'cart_total' => WC()->cart->get_cart_subtotal(),
+            'cart_subtotal_numeric' => WC()->cart->get_subtotal()
         ) );
     } else {
         wp_send_json_error( array( 'message' => 'Product not found in cart' ) );
@@ -578,6 +579,7 @@ function stirjoy_get_cart_info() {
         'count' => WC()->cart->get_cart_contents_count(),
         'total_html' => $cart_subtotal_html,
         'total_plain' => wc_price( $cart_total_plain ),
+        'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
         'cart_hash' => WC()->cart->get_cart_hash()
     ) );
 }

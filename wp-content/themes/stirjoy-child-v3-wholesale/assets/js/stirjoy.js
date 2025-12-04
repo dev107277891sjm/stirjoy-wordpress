@@ -89,6 +89,30 @@
             location.reload();
         }
 
+        /**
+         * Update Cart Bar Progress Bars in Shop Page Header
+         */
+        function updateCartBarProgressBars(subtotal) {
+            console.log('Updating cart bar progress with subtotal:', subtotal);
+            
+            const shippingThreshold = 80;
+            const giftThreshold = 120;
+            
+            // Calculate shipping progress
+            var shippingProgress = Math.min(100, (subtotal / shippingThreshold) * 100);
+            console.log('Shipping progress:', shippingProgress + '%');
+            $('.shipping-progress').css('width', shippingProgress + '%');
+            
+            // Calculate gift progress
+            var giftProgress = Math.min(100, (subtotal / giftThreshold) * 100);
+            console.log('Gift progress:', giftProgress + '%');
+            $('.gift-progress').css('width', giftProgress + '%');
+            
+            // Log if elements were found
+            console.log('Shipping elements found:', $('.shipping-progress').length);
+            console.log('Gift elements found:', $('.gift-progress').length);
+        }
+        
         function updateFreeShippingAndGiftBar() {
             fetch('/wp-json/wc/store/v1/cart')
                 .then(response => response.json())
@@ -114,10 +138,12 @@
                         caption2 = '$' + rest + ' to go';
                         width = (subtotal / freeGiftThreshold) * 100;
                     }
-                    
+
                     $(".free-gift-bar .caption2").text(caption2);
                     $(".free-gift-bar .bar > div").width(width + '%');
                     
+                    // Update cart bar progress bars (Shop page header)
+                    updateCartBarProgressBars(subtotal);
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -245,9 +271,11 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        console.log('Cart sidebar remove success:', response.data);
+                        
                         // Update cart counts and totals
                         $('.cart-contents span').text(response.data.cart_count);
-                        $('.your-box-count').text('(' + response.data.cart_count + ')');
+                        $('.your-box-count').text(response.data.cart_count); // Just number, no parentheses
                         
                         // Update cart sidebar widget title
                         var itemText = response.data.cart_count === 1 ? 'item' : 'items';
@@ -259,7 +287,19 @@
                             $('.mini-cart-subtotal .price').html(response.data.cart_total);
                         }
                         
-                        // Update free shipping and gift bars
+                        // Update cart bar progress bars IMMEDIATELY with response data
+                        console.log('Full response data:', response.data);
+                        console.log('cart_subtotal_numeric value:', response.data.cart_subtotal_numeric);
+                        
+                        if (response.data.cart_subtotal_numeric !== undefined && response.data.cart_subtotal_numeric !== null) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        } else {
+                            console.error('cart_subtotal_numeric is missing, fetching via updateFreeShippingAndGiftBar');
+                            // Fallback: fetch cart data
+                            updateFreeShippingAndGiftBar();
+                        }
+                        
+                        // Also always update cart sidebar progress bars
                         updateFreeShippingAndGiftBar();
                         
                         // Trigger removed_from_cart event
@@ -592,6 +632,24 @@
         var isCartOperationInProgress = false;
         
         /**
+         * Toggle Cart Sidebar from Shop Page
+         */
+        $(document).on('click', '.toggle-cart-sidebar', function(e) {
+            e.preventDefault();
+            $('.fixed-sidebar-menu-minicart').toggleClass('open');
+            $('.your-box-header').toggleClass('cart-open');
+        });
+        
+        /**
+         * Close Cart Sidebar with X Button
+         */
+        $(document).on('click', '.cart-box-close-button', function(e) {
+            e.preventDefault();
+            $('.fixed-sidebar-menu-minicart').removeClass('open');
+            $('.your-box-header').removeClass('cart-open');
+        });
+        
+        /**
          * Category Tab Filtering
          */
         $('.category-tab').on('click', function(e) {
@@ -680,6 +738,14 @@
                     if (response.success) {
                         // Update Your Box header
                         updateYourBoxHeader();
+                        
+                        // Update progress bars immediately with response data
+                        if (response.data.cart_subtotal_numeric !== undefined) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        }
+                        
+                        // Also update cart sidebar bars
+                        updateFreeShippingAndGiftBar();
                     } else {
                         // Revert on error
                         var $newButton = $card.find('.remove-from-cart-btn[data-product-id="' + productId + '"]');
@@ -749,6 +815,14 @@
                     if (response.success) {
                         // Update Your Box header
                         updateYourBoxHeader();
+                        
+                        // Update progress bars immediately with response data
+                        if (response.data.cart_subtotal_numeric !== undefined) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        }
+                        
+                        // Also update cart sidebar bars
+                        updateFreeShippingAndGiftBar();
                     } else {
                         // Revert on error
                         var $newButton = $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]');
@@ -792,8 +866,10 @@
                 },
                 success: function(response) {
                     if (response.success && response.data) {
+                        console.log('updateYourBoxHeader response:', response.data);
+                        
                         // Update Your Box header
-                        $('.your-box-count').text('(' + response.data.count + ')');
+                        $('.your-box-count').text(response.data.count);
                         $('.your-box-total').html(response.data.total_html); // Use .html() to render HTML properly
                         
                         // Update main header cart badge
@@ -803,7 +879,12 @@
                         var itemText = response.data.count === 1 ? 'item' : 'items';
                         $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + response.data.count + ' ' + itemText + '</span>');
                         
-                        // Update free shipping and gift bars
+                        // Update cart bar progress bars immediately
+                        if (response.data.cart_subtotal_numeric !== undefined) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        }
+                        
+                        // Update cart sidebar progress bars
                         updateFreeShippingAndGiftBar();
                         
                         // Trigger cart updated event for other scripts

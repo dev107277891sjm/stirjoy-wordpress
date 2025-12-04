@@ -20,14 +20,69 @@ get_header( 'shop' );
 	<div class="your-box-header">
 		<div class="container">
 			<div class="your-box-info">
-				<svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<circle cx="9" cy="21" r="1"></circle>
-					<circle cx="20" cy="21" r="1"></circle>
-					<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-				</svg>
-				<span class="your-box-text">Your Box</span>
-				<span class="your-box-count">(<?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?>)</span>
-				<span class="your-box-total"><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
+				<div class="your-box-left-section">
+					<svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="9" cy="21" r="1"></circle>
+						<circle cx="20" cy="21" r="1"></circle>
+						<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+					</svg>
+					<span class="your-box-text">Your Box</span>
+					<span class="your-box-count"><?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?></span>
+				</div>
+				
+				<div class="your-box-right-section">
+					<?php
+					$subtotal = WC()->cart->get_subtotal();
+					$free_shipping_threshold = 80;
+					$free_gift_threshold = 120;
+					
+					$shipping_remaining = max(0, $free_shipping_threshold - $subtotal);
+					$shipping_progress = min(100, ($subtotal / $free_shipping_threshold) * 100);
+					
+					$gift_remaining = max(0, $free_gift_threshold - $subtotal);
+					$gift_progress = min(100, ($subtotal / $free_gift_threshold) * 100);
+					?>
+					
+					<!-- Free Shipping Progress -->
+					<div class="cart-bar-progress-item">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="truck-icon">
+							<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path>
+							<path d="M15 18H9"></path>
+							<path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path>
+							<circle cx="17" cy="18" r="2"></circle>
+							<circle cx="7" cy="18" r="2"></circle>
+						</svg>
+						<div class="progress-bar-wrapper">
+							<div class="progress-bar">
+								<div class="progress-fill shipping-progress" style="width: <?php echo esc_attr($shipping_progress); ?>%"></div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Free Gift Progress -->
+					<div class="cart-bar-progress-item">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gift-icon">
+							<rect x="3" y="8" width="18" height="4" rx="1"></rect>
+							<path d="M12 8v13"></path>
+							<path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>
+							<path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"></path>
+						</svg>
+						<div class="progress-bar-wrapper">
+							<div class="progress-bar">
+								<div class="progress-fill gift-progress" style="width: <?php echo esc_attr($gift_progress); ?>%"></div>
+							</div>
+						</div>
+					</div>
+					
+					<span class="your-box-total"><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
+					
+					<!-- Toggle Cart Button -->
+					<button type="button" class="toggle-cart-sidebar" aria-label="Toggle cart">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down">
+							<polyline points="6 9 12 15 18 9"></polyline>
+						</svg>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

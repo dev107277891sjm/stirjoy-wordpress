@@ -108,9 +108,6 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 
 <div class="mini-cart-total-section">
 	<?php if ( WC()->cart && ! WC()->cart->is_empty() ) : ?>
-		<div class="mini-cart-summary-header">
-			<a href="#" class="mini-cart-collapse">Collapse</a>
-		</div>
 		<div class="mini-cart-summary">
 			<?php /*<p class="woocommerce-mini-cart__total total">*/ ?>
 				<?php
