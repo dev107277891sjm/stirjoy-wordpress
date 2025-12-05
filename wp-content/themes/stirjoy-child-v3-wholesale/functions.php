@@ -575,12 +575,19 @@ function stirjoy_get_cart_info() {
     // Also get plain number for potential use
     $cart_total_plain = WC()->cart->get_subtotal();
     
+    // Get product IDs in cart
+    $product_ids_in_cart = array();
+    foreach ( WC()->cart->get_cart() as $cart_item ) {
+        $product_ids_in_cart[] = $cart_item['product_id'];
+    }
+    
     wp_send_json_success( array(
         'count' => WC()->cart->get_cart_contents_count(),
         'total_html' => $cart_subtotal_html,
         'total_plain' => wc_price( $cart_total_plain ),
         'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
-        'cart_hash' => WC()->cart->get_cart_hash()
+        'cart_hash' => WC()->cart->get_cart_hash(),
+        'product_ids' => $product_ids_in_cart
     ) );
 }
 add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );

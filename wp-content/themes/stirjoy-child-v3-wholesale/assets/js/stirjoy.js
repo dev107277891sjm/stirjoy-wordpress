@@ -273,34 +273,13 @@
                     if (response.success) {
                         console.log('Cart sidebar remove success:', response.data);
                         
-                        // Update cart counts and totals
-                        $('.cart-contents span').text(response.data.cart_count);
-                        $('.your-box-count').text(response.data.cart_count); // Just number, no parentheses
-                        
-                        // Update cart sidebar widget title
-                        var itemText = response.data.cart_count === 1 ? 'item' : 'items';
-                        $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + response.data.cart_count + ' ' + itemText + '</span>');
-                        
-                        // Update totals in cart sidebar
-                        if (response.data.cart_total) {
-                            $('.your-box-total').html(response.data.cart_total);
-                            $('.mini-cart-subtotal .price').html(response.data.cart_total);
-                        }
-                        
                         // Update cart bar progress bars IMMEDIATELY with response data
-                        console.log('Full response data:', response.data);
-                        console.log('cart_subtotal_numeric value:', response.data.cart_subtotal_numeric);
-                        
                         if (response.data.cart_subtotal_numeric !== undefined && response.data.cart_subtotal_numeric !== null) {
                             updateCartBarProgressBars(response.data.cart_subtotal_numeric);
-                        } else {
-                            console.error('cart_subtotal_numeric is missing, fetching via updateFreeShippingAndGiftBar');
-                            // Fallback: fetch cart data
-                            updateFreeShippingAndGiftBar();
                         }
                         
-                        // Also always update cart sidebar progress bars
-                        updateFreeShippingAndGiftBar();
+                        // Update all cart displays and shop page buttons via updateYourBoxHeader
+                        updateYourBoxHeader();
                         
                         // Trigger removed_from_cart event
                         $('body').trigger('removed_from_cart');
@@ -854,6 +833,45 @@
         });
         
         /**
+         * Update all shop page buttons based on cart state
+         */
+        function updateShopPageButtons(productIdsInCart) {
+            // Convert array to object for faster lookup
+            var inCartMap = {};
+            if (productIdsInCart && productIdsInCart.length > 0) {
+                productIdsInCart.forEach(function(id) {
+                    inCartMap[id] = true;
+                });
+            }
+            
+            // Update all product cards on shop page
+            $('.meal-product-card').each(function() {
+                var $card = $(this);
+                var productId = parseInt($card.attr('data-product-id'));
+                var isInCart = inCartMap[productId] || false;
+                
+                // Update data attribute
+                $card.attr('data-in-cart', isInCart ? '1' : '0');
+                
+                // Find and update button
+                var $addBtn = $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]');
+                var $removeBtn = $card.find('.remove-from-cart-btn[data-product-id="' + productId + '"]');
+                
+                if (isInCart) {
+                    // Product is in cart - show remove button
+                    if ($addBtn.length > 0) {
+                        $addBtn.replaceWith('<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>');
+                    }
+                } else {
+                    // Product is not in cart - show add button
+                    if ($removeBtn.length > 0) {
+                        $removeBtn.replaceWith('<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>');
+                    }
+                }
+            });
+        }
+        
+        /**
          * Update Your Box Header Display
          */
         function updateYourBoxHeader() {
@@ -886,6 +904,11 @@
                         
                         // Update cart sidebar progress bars
                         updateFreeShippingAndGiftBar();
+                        
+                        // Update all shop page buttons based on cart state
+                        if (response.data.product_ids !== undefined) {
+                            updateShopPageButtons(response.data.product_ids);
+                        }
                         
                         // Trigger cart updated event for other scripts
                         $(document.body).trigger('wc_fragment_refresh');
