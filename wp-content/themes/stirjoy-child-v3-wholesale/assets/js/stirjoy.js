@@ -905,15 +905,19 @@
         // Open modal when View Details button is clicked
         $(document).on('click', '.view-details-btn', function(e) {
             e.preventDefault();
+            console.log('=== VIEW DETAILS CLICKED ===');
             
             var $button = $(this);
             var productId = $button.data('product-id');
+            console.log('Product ID from view details button:', productId);
             
             if (!productId) {
+                console.error('No product ID on view details button');
                 return;
             }
             
             // Show loading state
+            console.log('Opening modal...');
             $modal.addClass('loading');
             $modal.addClass('active');
             $('body').addClass('modal-open');
@@ -970,6 +974,9 @@
         
         // Populate modal with product data
         function populateModal(data) {
+            console.log('=== POPULATING MODAL ===');
+            console.log('Product data:', data);
+            
             // Basic info
             $('#modal-product-img').attr('src', data.image_url).attr('alt', data.name);
             $('#modal-product-title').text(data.name);
@@ -1098,13 +1105,25 @@
             $('#modal-price').html(data.price);
             
             var $actionBtn = $('#modal-action-btn');
-            $actionBtn.attr('data-product-id', data.product_id);
+            console.log('Found action button:', $actionBtn.length, 'elements');
+            console.log('Button before update:', $actionBtn[0] ? $actionBtn[0].outerHTML : 'not found');
             
+            // Set product ID
+            $actionBtn.attr('data-product-id', data.product_id);
+            console.log('Set product ID to:', data.product_id);
+            console.log('Product ID after setting:', $actionBtn.attr('data-product-id'));
+            
+            // Set button text and class based on cart status
             if (data.in_cart) {
                 $actionBtn.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                console.log('Set button to REMOVE mode');
             } else {
                 $actionBtn.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+                console.log('Set button to ADD mode');
             }
+            
+            console.log('Button after update:', $actionBtn[0] ? $actionBtn[0].outerHTML : 'not found');
+            console.log('=== MODAL POPULATION COMPLETE ===');
         }
         
         // Close modal function
@@ -1113,31 +1132,146 @@
             $('body').removeClass('modal-open');
         }
         
-        // Handle modal action button (Add/Remove)
+        // Handle modal action button (Add/Remove) - Works independently
         $(document).on('click', '#modal-action-btn', function(e) {
             e.preventDefault();
+            console.log('=== MODAL BUTTON CLICKED ===');
             
             var $button = $(this);
-            var productId = $button.data('product-id');
-            var isRemove = $button.hasClass('remove-btn');
+            console.log('Button element:', $button);
+            console.log('Button HTML:', $button[0] ? $button[0].outerHTML : 'not found');
             
-            if (isRemove) {
-                // Trigger remove from cart
-                $('.remove-from-cart-btn[data-product-id="' + productId + '"]').first().trigger('click');
-            } else {
-                // Trigger add to cart
-                $('.add-to-cart-btn[data-product-id="' + productId + '"]').first().trigger('click');
+            // Check if another operation is in progress
+            if (isCartOperationInProgress) {
+                console.log('Cart operation already in progress, blocking');
+                return false;
             }
             
-            // Update modal button state after a short delay
-            setTimeout(function() {
-                var inCart = $('.meal-product-card[data-product-id="' + productId + '"]').attr('data-in-cart') === '1';
-                if (inCart) {
-                    $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
-                } else {
-                    $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
-                }
-            }, 500);
+            // Use .attr() to read the attribute we set with .attr()
+            var productId = $button.attr('data-product-id');
+            console.log('Product ID from attr:', productId);
+            
+            var isRemove = $button.hasClass('remove-btn');
+            console.log('Is remove button:', isRemove);
+            console.log('Button classes:', $button.attr('class'));
+            
+            if (!productId) {
+                console.error('NO PRODUCT ID FOUND!');
+                console.error('All button attributes:', $button[0].attributes);
+                alert('Error: Product ID is missing. Please close and reopen the modal.');
+                return false;
+            }
+            
+            console.log('Proceeding with', isRemove ? 'REMOVE' : 'ADD', 'for product ID:', productId);
+            
+            // Lock cart operations
+            isCartOperationInProgress = true;
+            $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove, #modal-action-btn').css('pointer-events', 'none').css('opacity', '0.6');
+            
+            if (isRemove) {
+                // Immediately update button for instant feedback
+                $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+                
+                // Send AJAX request in background
+                $.ajax({
+                    url: stirjoyData.ajaxUrl,
+                    type: 'POST',
+                    timeout: 5000,
+                    data: {
+                        action: 'stirjoy_remove_from_cart',
+                        product_id: productId,
+                        nonce: stirjoyData.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update shop page card state if exists
+                            var $shopCard = $('.meal-product-card[data-product-id="' + productId + '"]');
+                            if ($shopCard.length > 0) {
+                                $shopCard.attr('data-in-cart', '0');
+                                $shopCard.find('.remove-from-cart-btn').replaceWith(
+                                    '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
+                                );
+                            }
+                            
+                            // Update cart displays
+                            updateYourBoxHeader();
+                            if (response.data.cart_subtotal_numeric !== undefined) {
+                                updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                            }
+                            updateFreeShippingAndGiftBar();
+                        } else {
+                            // Revert on error
+                            $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                            alert(response.data.message || 'Error removing from cart');
+                        }
+                        
+                        // Unlock cart operations
+                        isCartOperationInProgress = false;
+                        $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove, #modal-action-btn').css('pointer-events', 'auto').css('opacity', '1');
+                    },
+                    error: function() {
+                        // Revert on error
+                        $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                        alert('An error occurred. Please try again.');
+                        
+                        // Unlock cart operations
+                        isCartOperationInProgress = false;
+                        $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove, #modal-action-btn').css('pointer-events', 'auto').css('opacity', '1');
+                    }
+                });
+            } else {
+                // Immediately update button for instant feedback
+                $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                
+                // Send AJAX request in background
+                $.ajax({
+                    url: stirjoyData.ajaxUrl,
+                    type: 'POST',
+                    timeout: 5000,
+                    data: {
+                        action: 'stirjoy_add_to_cart',
+                        product_id: productId,
+                        quantity: 1,
+                        nonce: stirjoyData.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update shop page card state if exists
+                            var $shopCard = $('.meal-product-card[data-product-id="' + productId + '"]');
+                            if ($shopCard.length > 0) {
+                                $shopCard.attr('data-in-cart', '1');
+                                $shopCard.find('.add-to-cart-btn').replaceWith(
+                                    '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                                );
+                            }
+                            
+                            // Update cart displays
+                            updateYourBoxHeader();
+                            if (response.data.cart_subtotal_numeric !== undefined) {
+                                updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                            }
+                            updateFreeShippingAndGiftBar();
+                        } else {
+                            // Revert on error
+                            $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+                            alert(response.data.message || 'Error adding to cart');
+                        }
+                        
+                        // Unlock cart operations
+                        isCartOperationInProgress = false;
+                        $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove, #modal-action-btn').css('pointer-events', 'auto').css('opacity', '1');
+                    },
+                    error: function() {
+                        // Revert on error
+                        $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
+                        alert('An error occurred. Please try again.');
+                        
+                        // Unlock cart operations
+                        isCartOperationInProgress = false;
+                        $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove, #modal-action-btn').css('pointer-events', 'auto').css('opacity', '1');
+                    }
+                });
+            }
         });
 
     });
