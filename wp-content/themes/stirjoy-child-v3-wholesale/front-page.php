@@ -37,32 +37,20 @@ function stirjoy_get_image_url($filename) {
         <div class="row">
             <div class="col-12">
                 <div class="feature-items">
-                    <div class="feature-item">
-                        <span class="feature-icon">🍃</span>
-                        <span class="feature-text">clean ingredients</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🌱</span>
-                        <span class="feature-text">plant-based</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">💪</span>
-                        <span class="feature-text">protein</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">⚡</span>
-                        <span class="feature-text">fibre</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🥕</span>
-                        <span class="feature-text">veggies</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">❤️</span>
-                        <span class="feature-text">lots of joy</span>
-                    </div>
-                    <div class="feature-item feature-price">
-                        <span class="feature-text">$6 per portion</span>
+                    <span class="feature-text">clean ingredients</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">plant-based</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">protein</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">fibre</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">veggies</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">lots of joy</span>
+                    <span class="feature-icon">-</span>
+                    <span class="feature-text">$6 per portion</span>
+                    <span class="feature-icon">-</span>
                     </div>
                 </div>
             </div>
@@ -74,9 +62,11 @@ function stirjoy_get_image_url($filename) {
 <section class="stirjoy-product-intro">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center">
-                <p class="intro-text">Easy, plant-powered meal kits that live in your pantry. Just add water and simmer.</p>
+            <div class="col-md-1 text-center"></div>
+            <div class="col-md-10 text-center">
+                <h1 class="intro-text">Easy, plant-powered meal kits that live in your pantry. Just add water and simmer.</h1>
             </div>
+            <div class="col-md-1 text-center"></div>
         </div>
         <div class="row product-cards">
             <?php
