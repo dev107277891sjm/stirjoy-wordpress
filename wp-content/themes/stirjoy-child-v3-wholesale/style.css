@@ -3438,3 +3438,691 @@ body.modal-open {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ===================================
+   Front Page Design Styles - Figma Design
+   =================================== */
+
+/* Hide breadcrumbs and page title on front page */
+body.home .thecrate_before_primary_area,
+body.page-template-front-page .thecrate_before_primary_area {
+    display: none !important;
+}
+
+body.home #primary.content-area,
+body.page-template-front-page #primary.content-area {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+body.home .container,
+body.page-template-front-page .container {
+    max-width: 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+body.home .row,
+body.page-template-front-page .row {
+    margin: 0 !important;
+}
+
+body.home .site-main,
+body.page-template-front-page .site-main {
+    padding: 0 !important;
+}
+
+/* Hero Section */
+.stirjoy-hero-section {
+    background: #2d5a27;
+    padding: 100px 0;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.stirjoy-hero-section .hero-title {
+    color: #ffffff;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.btn-hero-primary {
+    background: #a8d574;
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-hero-primary:hover {
+    background: #8bc34a;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.hero-image {
+    text-align: center;
+}
+
+.hero-image-placeholder {
+    width: 100%;
+    height: 400px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+}
+
+/* Feature Bar */
+.stirjoy-feature-bar {
+    background: #f5f5f0;
+    padding: 30px 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.feature-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2d5a27;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.feature-item.feature-price {
+    margin-left: auto;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.feature-icon {
+    font-size: 20px;
+}
+
+/* Product Introduction Section */
+.stirjoy-product-intro {
+    background: #f5f5f0;
+    padding: 80px 0;
+}
+
+.intro-text {
+    font-size: 24px;
+    color: #2d5a27;
+    margin-bottom: 50px;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.product-cards {
+    margin-bottom: 40px;
+}
+
+.product-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    margin-bottom: 20px;
+}
+
+.product-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.product-placeholder {
+    width: 100%;
+    height: 250px;
+    background: #e0e0e0;
+    border-radius: 8px;
+}
+
+.product-title {
+    color: #2d5a27;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-customize-box {
+    background: #a8d574;
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-customize-box:hover {
+    background: #8bc34a;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Health & Planet Section */
+.stirjoy-health-planet {
+    background: #f5f5f0;
+    padding: 80px 0;
+}
+
+.section-title {
+    color: #2d5a27;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    font-style: italic;
+}
+
+.health-benefits-wrapper {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.central-bowl {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.bowl-placeholder {
+    width: 300px;
+    height: 300px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.benefit-item {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #2d5a27;
+    z-index: 2;
+}
+
+.benefit-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.benefit-text {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.benefit-top-left {
+    top: 10%;
+    left: 10%;
+}
+
+.benefit-mid-left {
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+}
+
+.benefit-bottom-left {
+    bottom: 10%;
+    left: 15%;
+}
+
+.benefit-top-right {
+    top: 15%;
+    right: 10%;
+}
+
+.benefit-mid-right {
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+}
+
+/* How It Works Section */
+.stirjoy-how-it-works {
+    background: #2d5a27;
+    padding: 80px 0;
+    color: #ffffff;
+}
+
+.section-title-white {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 50px;
+}
+
+.steps {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.step-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.step-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.step-description {
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.btn-how-it-works {
+    background: #a8d574;
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-how-it-works:hover {
+    background: #8bc34a;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Testimonials Section */
+.stirjoy-testimonials {
+    background: #f5f5f0;
+    padding: 80px 0;
+}
+
+.section-subtitle {
+    color: #666666;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    font-style: italic;
+}
+
+.testimonial-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.testimonial-illustration {
+    margin-bottom: 20px;
+}
+
+.illustration-placeholder {
+    width: 100%;
+    height: 150px;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.testimonial-text {
+    color: #333333;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.testimonial-author {
+    color: #666666;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Mission Statement Section */
+.stirjoy-mission {
+    background: #f75904;
+    padding: 100px 0;
+    color: #ffffff;
+    position: relative;
+    background-image: url(''); /* Add kitchen counter image here */
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.stirjoy-mission::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(247, 89, 4, 0.85);
+    z-index: 1;
+}
+
+.stirjoy-mission .container {
+    position: relative;
+    z-index: 2;
+}
+
+.mission-title {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.btn-mission {
+    background: #a8d574;
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-mission:hover {
+    background: #8bc34a;
+    color: #ffffff;
+}
+
+/* FAQs Section */
+.stirjoy-faqs {
+    background: #f75904;
+    padding: 80px 0;
+    color: #ffffff;
+}
+
+.faq-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.faq-illustration {
+    flex-shrink: 0;
+    width: 200px;
+}
+
+.faq-illustration-placeholder {
+    width: 100%;
+    height: 200px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+}
+
+.faq-accordion {
+    flex: 1;
+}
+
+.faq-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #ffffff;
+    position: relative;
+    transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.faq-question::after {
+    content: '+';
+    position: absolute;
+    right: 20px;
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question::after {
+    content: '-';
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    padding: 0 20px 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ffffff;
+    display: none;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+}
+
+/* Social Media Section */
+.stirjoy-social {
+    background: #f5f5f0;
+    padding: 80px 0;
+}
+
+.social-posts {
+    margin-top: 40px;
+}
+
+.social-post-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.social-post-item {
+    aspect-ratio: 1;
+}
+
+.social-post-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #e0e0e0;
+    border-radius: 8px;
+}
+
+.social-follow {
+    color: #2d5a27;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Bottom CTA Section */
+.stirjoy-cta-bottom {
+    background: #2d5a27;
+    padding: 100px 0;
+    color: #ffffff;
+    text-align: center;
+    position: relative;
+    background-image: url(''); /* Add field image here */
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.stirjoy-cta-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(45, 90, 39, 0.7);
+    z-index: 1;
+}
+
+.stirjoy-cta-bottom .container {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-title {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.btn-cta-bottom {
+    background: #a8d574;
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-cta-bottom:hover {
+    background: #8bc34a;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .stirjoy-hero-section {
+        padding: 60px 0;
+        min-height: auto;
+    }
+    
+    .stirjoy-hero-section .hero-title {
+        font-size: 36px;
+    }
+    
+    .section-title,
+    .section-title-white {
+        font-size: 28px;
+    }
+    
+    .feature-items {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .feature-item.feature-price {
+        margin-left: 0;
+    }
+    
+    .health-benefits-wrapper {
+        min-height: 400px;
+    }
+    
+    .bowl-placeholder {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .benefit-item {
+        position: static;
+        margin: 10px;
+    }
+    
+    .health-benefits-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .steps {
+        margin-top: 30px;
+    }
+    
+    .step-icon {
+        font-size: 48px;
+    }
+    
+    .cta-title {
+        font-size: 28px;
+    }
+    
+    .faq-wrapper {
+        flex-direction: column;
+    }
+    
+    .faq-illustration {
+        width: 100%;
+    }
+    
+    .social-post-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .mission-title {
+        font-size: 24px;
+    }
+}

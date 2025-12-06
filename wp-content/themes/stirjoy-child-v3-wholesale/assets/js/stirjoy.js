@@ -1297,5 +1297,21 @@
             }
         });
 
-    });
+        /**
+         * FAQ Accordion Functionality
+         */
+        $('.faq-question').on('click', function() {
+            var $faqItem = $(this).parent('.faq-item');
+            var $faqAnswer = $faqItem.find('.faq-answer');
+            
+            // Close all other FAQ items
+            $('.faq-item').not($faqItem).removeClass('active').find('.faq-answer').slideUp(300);
+            
+            // Toggle current FAQ item
+            $faqItem.toggleClass('active');
+            $faqAnswer.slideToggle(300);
+        });
+
+    }); // End document ready
+
 })(jQuery);
