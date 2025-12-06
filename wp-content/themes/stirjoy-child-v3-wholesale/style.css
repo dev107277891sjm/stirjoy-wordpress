@@ -393,23 +393,67 @@ header .top-header {
 #theme-main-head > .container {
     padding-top: 15px;
     padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
 }
-#navbar,
-#navbar1 {
+
+/* Logo on the left */
+.navbar-header {
+    flex-shrink: 0;
+    order: 1;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.navbar-header .logo {
+    margin-left: 0;
+}
+
+/* Nav menu centered */
+#navbar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 2;
     padding: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 5;
 }
+
+#navbar .nav-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#navbar .nav-menu > .menu-item:first-child > a {
+    padding-left: 0;
+}
+
+/* Header actions on the right */
+#navbar1 {
+    order: 3;
+    padding: 0;
+    flex-shrink: 0;
+}
+
 header .header-nav-actions {
     text-align: right;
     padding: 0;
 }
+
 .is-sticky .header-nav-actions .thecrate-search-icon {
     padding: 0;
-}
-#navbar .nav-menu > .menu-item:first-child > a {
-    padding-left: 0;
-}
-.navbar-header .logo {
-    margin-left: 0;
 }
 header .cart-contents span {
     background: #2D5A27;
@@ -1899,6 +1943,32 @@ footer p.card-icons {
     }
     .mobile-menu {
         display: none !important;
+    }
+}
+
+/* Responsive: Mobile adjustments */
+@media (max-width: 991px) {
+    #theme-main-head > .container {
+        flex-wrap: wrap;
+    }
+    
+    .navbar-header {
+        position: static;
+        width: auto;
+        flex-shrink: 0;
+    }
+    
+    #navbar {
+        position: static;
+        transform: none;
+        width: 100%;
+        order: 3;
+        margin-top: 10px;
+    }
+    
+    #navbar1 {
+        width: auto;
+        margin-left: auto;
     }
 }
 
