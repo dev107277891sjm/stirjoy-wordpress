@@ -8,23 +8,24 @@ get_header();
 
 // Remove default page spacing and breadcrumbs for front page
 remove_action('thecrate_before_primary_area', 'thecrate_header_title_breadcrumbs_include');
+
+// Helper function to get image URL from images folder
+function stirjoy_get_image_url($filename) {
+    $image_path = get_stylesheet_directory_uri() . '/images/home page/' . $filename;
+    return $image_path;
+}
 ?>
 
 <!-- Hero Section -->
-<section class="stirjoy-hero-section">
+<section class="stirjoy-hero-section" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('c5eb69843577e51f40926a6780c5892843d1e942.jpg')); ?>');">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <h1 class="hero-title">Live to the full, we've got dinner covered</h1>
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">GET STARTED</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">SEE MENU</a>
             </div>
-            <div class="col-md-6">
-                <div class="hero-image">
-                    <!-- Hero image placeholder - can be replaced with actual image -->
-                    <div class="hero-image-placeholder">
-                        <!-- Product imagery will be added here -->
-                    </div>
-                </div>
+            <div class="col-md-4">
+                <!-- Right side content can be removed or kept for spacing -->
             </div>
         </div>
     </div>
