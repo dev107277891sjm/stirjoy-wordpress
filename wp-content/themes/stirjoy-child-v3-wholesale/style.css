@@ -409,7 +409,8 @@ header .top-header {
 }
 
 .navbar-header .logo {
-    margin-left: 0;
+    /* margin-left: 0; */
+    padding-left: 15px;
 }
 
 /* Nav menu centered */
@@ -640,7 +641,7 @@ footer p.card-icons {
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart {
     position: relative;
-    border-top: solid 1px #e0e0e0;
+    /* border-top: solid 1px #e0e0e0; */
     width: 100% !important;
     height: 0;
     right: 0;
@@ -3470,19 +3471,51 @@ body.page-template-front-page .row {
 body.home .site-main,
 body.page-template-front-page .site-main {
     padding: 0 !important;
+    margin: 0 !important;
+}
+
+body.home #primary,
+body.page-template-front-page #primary {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+body.home header.header1,
+body.page-template-front-page header.header1 {
+    margin-bottom: 0 !important;
+}
+
+body.home .your-box-header,
+body.page-template-front-page .your-box-header {
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+}
+
+body.home header.header1 + .your-box-header,
+body.page-template-front-page header.header1 + .your-box-header {
+    margin-bottom: 0 !important;
+}
+
+body.home header.header1 + .your-box-header + .stirjoy-hero-section,
+body.page-template-front-page header.header1 + .your-box-header + .stirjoy-hero-section,
+body.home header.header1 + .stirjoy-hero-section,
+body.page-template-front-page header.header1 + .stirjoy-hero-section {
+    margin-top: 0 !important;
 }
 
 /* Hero Section */
 .stirjoy-hero-section {
     background: #2d5a27;
     background-size: cover;
-    background-position: center calc(50% + 50px);
+    background-position: center calc(20% - 100px);
     background-repeat: no-repeat;
     padding: 100px 0 200px 0;
     min-height: 600px;
     display: flex;
     align-items: center;
     position: relative;
+    margin-top: 0 !important;
+    padding-top: 100px !important;
 }
 
 .stirjoy-hero-section::before {

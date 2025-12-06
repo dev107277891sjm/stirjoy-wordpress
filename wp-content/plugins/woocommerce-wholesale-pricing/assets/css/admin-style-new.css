@@ -721,7 +721,7 @@ div.bootstrap-select > div.dropdown-menu.show {
   }
 }
   /* Fancy checkbox css end */
-@media screen and (min-width: 1300px) {
+@media screen and (min-width: 1600px) {
   .map_shortcode_callback {
 	margin: 100px 20px!important;
   }

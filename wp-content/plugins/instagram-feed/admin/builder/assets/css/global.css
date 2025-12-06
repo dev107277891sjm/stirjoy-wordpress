@@ -3524,7 +3524,7 @@
     }
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1600px) {
     .sbi-settings-cta .sbi-cta-much-more .sbi-cta-mm-right ul {
         grid-template-columns: 48% 48%;
     }

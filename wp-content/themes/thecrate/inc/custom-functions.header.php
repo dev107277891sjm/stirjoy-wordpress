@@ -323,7 +323,7 @@ if (!function_exists('thecrate_dynamic_css')) {
 				}
 			}
 
-	    	.container{width: 1300px; max-width: 100%;}
+	    	.container{width: 1600px; max-width: 100%;}
 	    		.breadcrumb a::after {
 		        	content: "'.esc_attr($breadcrumbs_delimitator).'";
 		    	}
