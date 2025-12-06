@@ -181,8 +181,8 @@ class Css_Combinator extends Abstract_Combinator {
 				continue;
 			}
 
-			// Replace the site URL and get the src.
-			$excluded[] = trim( str_replace( Helper_Service::get_site_url(), '', strtok( $wp_styles->registered[ $handle ]->src, '?' ) ), '/\\' );
+			// Remove the query stings and the host to get the source.
+			$excluded[] = $this->prepare_url_src( $wp_styles->registered[ $handle ]->src );
 		}
 
 		// Set the excluded urls.
@@ -207,7 +207,7 @@ class Css_Combinator extends Abstract_Combinator {
 			return true;
 		}
 
-		// Get the host from src..
+		// Get the host from src.
 		$host = wp_parse_url( $style[2], PHP_URL_HOST );
 
 		// Bail if it's an external style.
@@ -218,11 +218,11 @@ class Css_Combinator extends Abstract_Combinator {
 			return true;
 		}
 
-		// Remove query strings from the URL.
-		$src  = Front_End_Optimization::remove_query_strings( $style[2] );
+		// Remove the query stings and the host to get the source.
+		$src = $this->prepare_url_src( $style[2] );
 
-		// Bail if the url is excluded.
-		if ( in_array( str_replace( trailingslashit( Helper_Service::get_site_url() ), '', $src ), $this->excluded_urls ) ) {
+		// Bail if the URL is excluded.
+		if ( in_array( $src, $this->excluded_urls ) ) {
 			return true;
 		}
 

@@ -30,4 +30,14 @@
                 })
         })
     })
+
+    $(window).on('load',function(){
+        $(document).on('click', '.wp-starter .sg-card__actions-wrapper button:last', function() {
+            document.querySelector('#wp-ai-studio-container').shadowRoot.querySelector('.wp-ai-studio-chat__minimized .chat-close-state').click();
+        })
+
+
+    });
+
+
 })( jQuery )

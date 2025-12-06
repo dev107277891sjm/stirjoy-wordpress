@@ -121,11 +121,11 @@ class Rest_Dashboard extends Rest {
 	}
 
 	/**
-	 * Gets the Manage Design section data.
+	 * Gets the Manage Your Website section data.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return array $data The Manage Design data.
+	 * @return array $data The Manage Your Website data.
 	 */
 	public function get_design_data() {
 		// Get the current theme.
@@ -134,7 +134,7 @@ class Rest_Dashboard extends Rest {
 
 		// Prepare the data array.
 		$data = array(
-			'section_title' => __( 'Manage Design', 'siteground-wizard' ),
+			'section_title' => __( 'Manage Your Website', 'siteground-wizard' ),
 			'site_design'   => (object) array(),
 			'pages_design'  => (object) array(),
 			'theme_design'  => (object) array(),
@@ -158,14 +158,21 @@ class Rest_Dashboard extends Rest {
 			);
 		}
 
-		// Change Design.
-		if ( ! empty( $theme ) ) {
+		// AI Agent for WordPress.
+		if ( is_plugin_active( 'sg-ai-studio/sg-ai-studio.php' ) && get_option( 'sg_ai_studio_connected', false ) ) {
 			$data['theme_design'] = array(
-				'title'       => __( 'Change Design', 'siteground-wizard' ),
-				'description' => __( 'Your current theme is', 'siteground-wizard' ),
-				'theme_name'  => $theme->name,
-				'button_text' => __( 'Change Theme', 'siteground-wizard' ),
-				'button_link' => admin_url( 'themes.php' ),
+				'title'       => __( 'AI Agent for WordPress', 'siteground-wizard' ),
+				'description' => __( 'Simplify how you manage your site with AI.', 'siteground-wizard' ),
+				'button_text' => __( 'OPEN CHAT', 'siteground-wizard' ),
+				'button_action' => "document.querySelector('#wp-ai-studio-container').shadowRoot.querySelector('.wp-ai-studio-chat__minimized .chat-close-state').click()",
+			);
+		} else {
+			$data['theme_design'] = array(
+				'title'       => __( 'AI Agent for WordPress', 'siteground-wizard' ),
+				'description' => __( 'Simplify how you manage your site with AI.', 'siteground-wizard' ),
+				'button_text' => __( 'CONNECT AGENT', 'siteground-wizard' ),
+				'button_link' => 'https://studio.siteground.ai/connectors',
+				'label'       => __( 'NEW', 'siteground-wizard' ),
 			);
 		}
 

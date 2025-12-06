@@ -27,6 +27,11 @@
             woosw_load_count();
         }
 
+        if ($('.woosw-list-ajax').length) {
+            // reload the list
+            woosw_load_list();
+        }
+
         if (woosw_vars.added_to_cart === 'yes' && woosw_vars.auto_remove === 'yes') {
             setTimeout(function () {
                 woosw_load_count();
@@ -669,6 +674,18 @@
 
                 woosw_change_count(count);
                 $(document.body).trigger('woosw_load_count', [count]);
+            }
+        });
+    }
+
+    function woosw_load_list() {
+        var data = {
+            action: 'woosw_load_list', nonce: woosw_vars.nonce,
+        };
+
+        $.post(woosw_vars.wc_ajax_url.toString().replace('%%endpoint%%', 'woosw_load_list'), data, function (response) {
+            if (response.list != null) {
+                $('.woosw-list-ajax').replaceWith(response.list);
             }
         });
     }

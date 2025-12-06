@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 5.0.7
+Version: 5.0.8
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.0.7' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.0.8' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -110,6 +110,9 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     // load count
                     add_action( 'wc_ajax_woosw_load_count', [ $this, 'ajax_load_count' ] );
 
+                    // load list
+                    add_action( 'wc_ajax_woosw_load_list', [ $this, 'ajax_load_list' ] );
+
                     // fragments
                     add_action( 'wc_ajax_woosw_get_data', [ $this, 'ajax_get_data' ] );
 
@@ -151,6 +154,11 @@ if ( ! function_exists( 'woosw_init' ) ) {
 
                     // WPC Smart Messages
                     add_filter( 'wpcsm_locations', [ $this, 'wpcsm_locations' ] );
+
+                    // nonce check
+                    add_filter( 'woosw_disable_nonce_check', function ( $check, $context ) {
+                        return apply_filters( 'woosw_disable_security_check', $check, $context );
+                    }, 10, 2 );
                 }
 
                 function query_vars( $vars ) {
@@ -319,7 +327,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_add() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'add_product' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'add_product' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -378,7 +386,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_remove() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'remove_product' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'remove_product' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -433,7 +441,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_empty() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'wishlist_empty' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_empty' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -480,7 +488,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_load() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'wishlist_load' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_load' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -510,7 +518,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_load_count() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'wishlist_load_count' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_load_count' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -532,8 +540,26 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     wp_send_json( $return );
                 }
 
+                function ajax_load_list() {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_load_list' ) ) {
+                        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
+                            die( 'Permissions check failed!' );
+                        }
+                    }
+
+                    $key = self::get_key();
+
+                    if ( $key === '#' ) {
+                        $return['list'] = '<div class="woosw-list">' . self::localization( 'login_message', esc_html__( 'Please log in to use Wishlist!', 'woo-smart-wishlist' ) ) . '</div>';
+                    } else {
+                        $return['list'] = self::get_list( $key );
+                    }
+
+                    wp_send_json( $return );
+                }
+
                 function ajax_add_note() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'add_note' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'add_note' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -579,7 +605,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_manage_wishlists() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'manage_wishlists' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'manage_wishlists' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -592,7 +618,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_add_wishlist() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'add_wishlist' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'add_wishlist' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -623,7 +649,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_delete_wishlist() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'delete_wishlist' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'delete_wishlist' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -653,7 +679,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_view_wishlist() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'view_wishlist' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'view_wishlist' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -669,7 +695,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_set_default() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'set_default' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'set_default' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -705,7 +731,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_get_data() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'get_data' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'get_data' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -816,24 +842,34 @@ if ( ! function_exists( 'woosw_init' ) ) {
 
                 function shortcode_list( $attrs ) {
                     $attrs = shortcode_atts( [
-                            'key' => null
+                            'key'  => null,
+                            'ajax' => 'no'
                     ], $attrs, 'woosw_list' );
 
-                    if ( ! empty( $attrs['key'] ) ) {
-                        $key = $attrs['key'];
+                    if ( wc_string_to_bool( $attrs['ajax'] ) ) {
+                        $return_html = '<div class="woosw-list-ajax"></div>';
                     } else {
-                        if ( get_query_var( 'woosw_id' ) ) {
-                            $key = get_query_var( 'woosw_id' );
-                        } elseif ( ! empty( $_REQUEST['wid'] ) ) {
-                            $key = sanitize_text_field( $_REQUEST['wid'] );
-                        } elseif ( ! empty( $_REQUEST['wl'] ) ) {
-                            $key = sanitize_text_field( $_REQUEST['wl'] );
+                        if ( ! empty( $attrs['key'] ) ) {
+                            $key = $attrs['key'];
                         } else {
-                            $key = self::get_key();
+                            if ( get_query_var( 'woosw_id' ) ) {
+                                $key = get_query_var( 'woosw_id' );
+                            } elseif ( ! empty( $_REQUEST['wid'] ) ) {
+                                $key = sanitize_text_field( $_REQUEST['wid'] );
+                            } elseif ( ! empty( $_REQUEST['wl'] ) ) {
+                                $key = sanitize_text_field( $_REQUEST['wl'] );
+                            } else {
+                                $key = self::get_key();
+                            }
                         }
+
+                        $return_html = self::get_list( $key );
                     }
 
-                    $share_url   = self::get_url( $key, true );
+                    return apply_filters( 'woosw_list_html', $return_html, $attrs );
+                }
+
+                function get_list( $key ) {
                     $return_html = '<div class="woosw-list">';
 
                     if ( ( self::get_setting( 'enable_multiple', 'no' ) === 'yes' ) && ( $user_id = get_current_user_id() ) && self::can_edit( $key ) ) {
@@ -863,6 +899,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     $return_html .= self::get_items( $key, 'table' );
 
                     if ( apply_filters( 'woosw_show_actions_for_empty_wishlist', false ) || self::get_count( $key ) ) {
+                        $share_url   = self::get_url( $key, true );
                         $return_html .= '<div class="woosw-actions">';
 
                         if ( self::get_setting( 'page_share', 'yes' ) === 'yes' ) {
@@ -908,15 +945,21 @@ if ( ! function_exists( 'woosw_init' ) ) {
 
                     $return_html .= '</div><!-- /woosw-list -->';
 
-                    return apply_filters( 'woosw_list_html', $return_html, $attrs );
+                    return apply_filters( 'woosw_get_list', $return_html, $key );
                 }
 
                 function register_settings() {
                     // settings
-                    register_setting( 'woosw_settings', 'woosw_settings' );
+                    register_setting( 'woosw_settings', 'woosw_settings', [
+                            'type'              => 'array',
+                            'sanitize_callback' => [ $this, 'sanitize_array' ],
+                    ] );
 
                     // localization
-                    register_setting( 'woosw_localization', 'woosw_localization' );
+                    register_setting( 'woosw_localization', 'woosw_localization', [
+                            'type'              => 'array',
+                            'sanitize_callback' => [ $this, 'sanitize_array' ],
+                    ] );
                 }
 
                 function admin_menu() {
@@ -2766,7 +2809,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_wishlist_quickview() {
-                    if ( ! apply_filters( 'woosw_disable_security_check', false, 'wishlist_quickview' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_quickview' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) || ! current_user_can( 'manage_options' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -3037,6 +3080,18 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     }
 
                     return $output;
+                }
+
+                public static function sanitize_array( $arr ) {
+                    foreach ( (array) $arr as $k => $v ) {
+                        if ( is_array( $v ) ) {
+                            $arr[ $k ] = self::sanitize_array( $v );
+                        } else {
+                            $arr[ $k ] = sanitize_post_field( 'post_content', $v, 0, 'db' );
+                        }
+                    }
+
+                    return $arr;
                 }
 
                 function wpcsm_locations( $locations ) {

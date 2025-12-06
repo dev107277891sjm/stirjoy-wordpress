@@ -41,6 +41,11 @@ class Login_Service {
 	 * @since  1.0.0
 	 */
 	public function restrict_login_to_ips() {
+		// Bail if the user is trying to access password protected page.
+		if ( isset( $_POST['post_password'] ) && ! is_admin() ) { //phpcs:ignore
+			return true;
+		}
+
 		// Get the list of allowed IP addresses.
 		$allowed_ips = get_option( 'sg_login_access', array() );
 

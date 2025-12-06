@@ -177,6 +177,17 @@ class Activity_Log {
 			'sg-security' === $_GET['page'] &&
 			1 === Helper_Service::is_cron_disabled()
 		) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die(
+					esc_html__( 'You don’t have access to this page. Please contact the administrator of this website for further assistance.', 'sg-security' ),
+					esc_html__( 'Restricted access', 'sg-security' ),
+					array(
+						'sgs_error' => true,
+						'response'  => 403,
+					)
+				);
+			}
+
 			$this->delete_old_activity_logs();
 		}
 	}

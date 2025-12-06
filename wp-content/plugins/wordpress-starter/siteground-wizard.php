@@ -10,7 +10,7 @@
  * Plugin Name:       SiteGround Central
  * Plugin URI:        https://siteground.com
  * Description:       This plugin is designed to provide you with an easy start of your next WordPress project!
- * Version:           3.3.5
+ * Version:           3.3.8
  * Author:            SiteGround
  * Author URI:        https://www.siteground.com
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@ use SiteGround_Central\Activator\Activator;
 
 // Define version constant.
 if ( ! defined( __NAMESPACE__ . '\VERSION' ) ) {
-	define( __NAMESPACE__ . '\VERSION', '3.3.5' );
+	define( __NAMESPACE__ . '\VERSION', '3.3.8' );
 }
 
 // Define root directory.

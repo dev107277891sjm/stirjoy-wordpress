@@ -166,6 +166,7 @@ class Loader {
 			add_filter( 'astra_get_pro_url', array( $this->third_party, 'change_astra_affiliate_link' ) );
 		}
 
+		add_filter( 'option_st_start_onboarding', '__return_false' );
 		add_filter( 'connect_url', '__return_false' );
 		add_filter( 'trp_affiliate_link', array( $this->third_party, 'change_trp_affiliate_link' ) );
 		add_filter( 'aioseo_upgrade_link', array( $this->third_party, 'change_aioseo_affiliate_link' ) );

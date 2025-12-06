@@ -136,11 +136,6 @@ class Supercacher_Posts {
 	 */
 	public function purge_all_post_cache( $post_id ) {
 
-		// Check if the cache for that $post_id is already flushed.
-		if ( true === $this->is_post_cache_already_flushed( $post_id ) ) {
-			return;
-		}
-
 		// Get the post.
 		$post = get_post( $post_id );
 
@@ -156,6 +151,11 @@ class Supercacher_Posts {
 
 		// Bail if post type is excluded from cache purge.
 		if ( true === $this->is_post_excluded_from_cache_purge( $post ) ) {
+			return;
+		}
+
+		// Check if the cache for that $post_id is already flushed.
+		if ( true === $this->is_post_cache_already_flushed( $post_id ) ) {
 			return;
 		}
 

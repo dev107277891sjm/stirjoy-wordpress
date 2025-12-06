@@ -518,6 +518,7 @@ class Js_Combinator extends Abstract_Combinator {
 	 */
 	public $excluded_ids = array(
 		'@wordpress/block-library/navigation-js-module',
+		'@wordpress/block-library/navigation/view-js-module',
 	);
 
 	/**

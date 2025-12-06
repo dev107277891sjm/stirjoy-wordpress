@@ -291,6 +291,9 @@ class Loader {
 		add_action( 'admin_notices', array( $this->custom_login_url, 'show_notices' ) );
 		add_filter( 'wpdiscuz_login_link', array( $this->custom_login_url, 'custom_login_for_wpdiscuz' ) );
 		add_action( 'wp_authenticate_user', array( $this->custom_login_url, 'maybe_block_custom_login' ) );
+		add_action( 'login_init', array( $this->custom_login_url, 'add_sgs_token_to_language_switcher' ) );
+		add_filter( 'um_custom_authenticate_error_codes', array( $this->custom_login_url, 'add_um_form_error_code' ) );
+		add_filter( 'um_submit_form_error', array( $this->custom_login_url, 'set_um_form_flag' ), 100, 2 );
 	}
 
 	/**
