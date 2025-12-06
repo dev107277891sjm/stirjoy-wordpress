@@ -16,18 +16,12 @@
             <span class="icon-bar"></span>
         </button>
 
-        <?php $header_custom_logo = get_post_meta( get_the_ID(), 'header_custom_logo', true ); ?>
-        <?php if(isset($header_custom_logo) && !empty($header_custom_logo)){ ?>
-          <?php $logo = '<img src="'.esc_url($header_custom_logo).'" alt="'.esc_attr(get_bloginfo()).'" />'; ?>
+        <?php if(thecrate_redux('thecrate_logo','url')){ ?>
+          <?php $logo = '<img src="'.esc_url(thecrate_redux('thecrate_logo','url')).'" alt="'.esc_attr(get_bloginfo()).'" />'; ?>
           <?php $logo_class = ''; ?>
         <?php }else{ ?>
-          <?php if(thecrate_redux('thecrate_logo','url')){ ?>
-            <?php $logo = '<img src="'.esc_url(thecrate_redux('thecrate_logo','url')).'" alt="'.esc_attr(get_bloginfo()).'" />'; ?>
-            <?php $logo_class = ''; ?>
-          <?php }else{ ?>
-            <?php $logo = get_bloginfo(); ?>
-            <?php $logo_class = 'no-logo'; ?>
-          <?php } ?>
+          <?php $logo = get_bloginfo(); ?>
+          <?php $logo_class = 'no-logo'; ?>
         <?php } ?>
 
         <div class="logo <?php echo esc_attr($logo_class); ?>">
