@@ -36,21 +36,37 @@ function stirjoy_get_image_url($filename) {
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <div class="feature-items">
-                    <span class="feature-text">clean ingredients</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">plant-based</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">protein</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">fibre</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">veggies</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">lots of joy</span>
-                    <span class="feature-icon">-</span>
-                    <span class="feature-text">$6 per portion</span>
-                    <span class="feature-icon">-</span>
+                <div class="feature-bar-wrapper">
+                    <div class="feature-items">
+                        <span class="feature-text">clean ingredients</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">plant-based</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">protein</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">fibre</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">veggies</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">lots of joy</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">$6 per portion</span>
+                        <span class="feature-icon">-</span>
+                        <!-- Duplicate for seamless loop -->
+                        <span class="feature-text">clean ingredients</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">plant-based</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">protein</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">fibre</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">veggies</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">lots of joy</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">$6 per portion</span>
+                        <span class="feature-icon">-</span>
                     </div>
                 </div>
             </div>
@@ -128,7 +144,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-customize-box">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
@@ -201,7 +217,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-how-it-works">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
@@ -251,7 +267,7 @@ function stirjoy_get_image_url($filename) {
         <div class="row">
             <div class="col-md-8 offset-md-2 text-center">
                 <h2 class="mission-title">Our mission is to make good nutrition less costly for humans and the planet on which we live.</h2>
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-mission">GET STARTED</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">GET STARTED</a>
             </div>
         </div>
     </div>
