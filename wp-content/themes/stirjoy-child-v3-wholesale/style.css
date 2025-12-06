@@ -377,7 +377,10 @@ body {
 header .top-header {
     font-size: 14px;
     text-align: center;
-    padding: 4px 15px 5px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .container {
     margin: auto;
