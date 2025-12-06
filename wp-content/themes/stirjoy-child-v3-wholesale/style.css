@@ -3525,7 +3525,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(45, 90, 39, 0.3);
+    /* background: rgba(45, 90, 39, 0.3); */
     z-index: 1;
 }
 
