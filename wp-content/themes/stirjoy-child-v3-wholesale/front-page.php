@@ -299,28 +299,26 @@ function stirjoy_get_image_url($filename) {
             </div>
         </div>
         <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="faq-wrapper">
-                    <div class="faq-illustration">
-                        <div class="faq-illustration-placeholder"></div>
+            <div class="faq-wrapper">
+                <div class="faq-illustration">
+                    <img src="<?php echo esc_url(stirjoy_get_image_url('77f8e297e41413ad7d4480ebc4973808e9612955.png')); ?>" alt="FAQ" style="width: 348px; height: auto; object-fit: contain;">
+                </div>
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <div class="faq-question">Are dehydrated meals nutritious?</div>
+                        <div class="faq-answer">Usually not right? Well that's why we launched Stirjoy. We work with chefs and nutritionists to make sure all our meals contain loads of plant-based protein, vegetables, and grains while remaining conscious of sodium and sugar. Dehydration is simply the removal of water, and so most of the nutritional value of ingredients is preserved.</div>
                     </div>
-                    <div class="faq-accordion">
-                        <div class="faq-item active">
-                            <div class="faq-question">Are dehydrated meals nutritious?</div>
-                            <div class="faq-answer">Yes! Dehydration preserves nutrients while removing water, making meals shelf-stable and nutritious. Our process maintains vitamins, minerals, and fiber content.</div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">Why are Stirjoy meal kits so much cheaper than traditional meal kits?</div>
-                            <div class="faq-answer">Our dehydrated format reduces shipping costs and extends shelf life, allowing us to offer better prices without compromising on quality or nutrition.</div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">How does the Stirjoy subscription work?</div>
-                            <div class="faq-answer">Choose your meals monthly, and we'll deliver them to your door. You can customize, skip, or cancel anytime with full flexibility.</div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">Can I reschedule or skip a month?</div>
-                            <div class="faq-answer">Absolutely! You have full control over your subscription and can skip or reschedule deliveries anytime through your account dashboard.</div>
-                        </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Why are Stirjoy meal kits so much cheaper than traditional meal kits?</div>
+                        <div class="faq-answer">Our dehydrated format reduces shipping costs and extends shelf life, allowing us to offer better prices without compromising on quality or nutrition.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">How does the Stirjoy subscription work?</div>
+                        <div class="faq-answer">Choose your meals monthly, and we'll deliver them to your door. You can customize, skip, or cancel anytime with full flexibility.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I reschedule or skip a month?</div>
+                        <div class="faq-answer">Absolutely! You have full control over your subscription and can skip or reschedule deliveries anytime through your account dashboard.</div>
                     </div>
                 </div>
             </div>

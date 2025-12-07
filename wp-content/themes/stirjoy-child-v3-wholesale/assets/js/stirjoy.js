@@ -1300,17 +1300,40 @@
         /**
          * FAQ Accordion Functionality
          */
-        $('.faq-question').on('click', function() {
-            var $faqItem = $(this).parent('.faq-item');
+        $(document).on('click', '.faq-question', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var $faqItem = $(this).closest('.faq-item');
             var $faqAnswer = $faqItem.find('.faq-answer');
+            var isActive = $faqItem.hasClass('active');
             
             // Close all other FAQ items
-            $('.faq-item').not($faqItem).removeClass('active').find('.faq-answer').slideUp(300);
+            $('.faq-item').not($faqItem).each(function() {
+                var $otherItem = $(this);
+                var $otherAnswer = $otherItem.find('.faq-answer');
+                $otherItem.removeClass('active');
+                if ($otherAnswer.is(':visible')) {
+                    $otherAnswer.slideUp(300, function() {
+                        $(this).css('display', 'none');
+                    });
+                }
+            });
             
             // Toggle current FAQ item
-            $faqItem.toggleClass('active');
-            $faqAnswer.slideToggle(300);
+            if (isActive) {
+                $faqItem.removeClass('active');
+                $faqAnswer.slideUp(300, function() {
+                    $(this).css('display', 'none');
+                });
+            } else {
+                $faqItem.addClass('active');
+                $faqAnswer.css('display', 'none').slideDown(300);
+            }
         });
+        
+        // Ensure all FAQ answers are hidden on page load
+        $('.faq-answer').css('display', 'none');
 
         /**
          * Testimonial Cards Dragging Functionality
