@@ -176,26 +176,28 @@ function stirjoy_get_image_url($filename) {
             <div class="col-12">
                 <div class="health-benefits-wrapper">
                     <div class="central-bowl">
-                        <div class="bowl-placeholder"></div>
+                        <div class="bowl-placeholder">
+                            <img src="<?php echo esc_url(stirjoy_get_image_url('ef828115bdcf4cab330e3cc749353b3bd657cc11.png')); ?>" alt="Bowl">
+                        </div>
                     </div>
                     <div class="benefit-item benefit-top-left">
-                        <span class="benefit-icon">🥕</span>
-                        <span class="benefit-text">squeezed veggies</span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector.svg')); ?>" alt="Veggies"></span>
+                        <span class="benefit-text">upcycled veggies</span>
                     </div>
                     <div class="benefit-item benefit-mid-left">
-                        <span class="benefit-icon">⚡</span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector 3.svg')); ?>" alt="Fiber"></span>
                         <span class="benefit-text">loads of fiber</span>
                     </div>
                     <div class="benefit-item benefit-bottom-left">
-                        <span class="benefit-icon">👍</span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 150.svg')); ?>" alt="Dollar"></span>
                         <span class="benefit-text">$6 per portion</span>
                     </div>
                     <div class="benefit-item benefit-top-right">
-                        <span class="benefit-icon">💪</span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 144.svg')); ?>" alt="Protein"></span>
                         <span class="benefit-text">loads of protein</span>
                     </div>
                     <div class="benefit-item benefit-mid-right">
-                        <span class="benefit-icon">🌱</span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector (1).svg')); ?>" alt="Plant-based"></span>
                         <span class="benefit-text">plant-based</span>
                     </div>
                 </div>
