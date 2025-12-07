@@ -216,24 +216,24 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row steps">
             <div class="col-md-4 text-center">
-                <div class="step-icon">👆</div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 146.svg')); ?>" alt="Choose Your Meals"></div>
                 <h3 class="step-title">Choose Your Meals</h3>
-                <p class="step-description">We prepare a monthly menu of 6 meals for you, and you can customize it to your taste!</p>
+                <p class="step-description">We prepare a monthly menu of 6 meals for two, and you can customize it to your taste!</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="step-icon">📦</div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 145.svg')); ?>" alt="We Prepare & Deliver"></div>
                 <h3 class="step-title">We Prepare & Deliver</h3>
-                <p class="step-description">From Canadian farms to your door, for only $9 per portion.</p>
+                <p class="step-description">From Canadian farms to your door, for only 6$ per portion</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="step-icon">🍲</div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 147.svg')); ?>" alt="Enjoy at your convenience!"></div>
                 <h3 class="step-title">Enjoy at your convenience!</h3>
-                <p class="step-description">Just add water and simmer.</p>
+                <p class="step-description">Just add water and simmer</p>
             </div>
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary" style="margin-top: 50px;">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
