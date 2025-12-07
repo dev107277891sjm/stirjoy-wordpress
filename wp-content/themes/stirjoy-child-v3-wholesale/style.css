@@ -4130,10 +4130,8 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 
 /* Bottom CTA Section */
 .stirjoy-cta-bottom {
-    background: #2d5a27;
-    padding: 100px 0;
+    padding: 177.5px 0;
     color: #ffffff;
-    text-align: center;
     position: relative;
     background-image: url(''); /* Add field image here */
     background-size: cover;
@@ -4148,7 +4146,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(45, 90, 39, 0.7);
+    background: rgba(0, 0, 0, 0.1);
     z-index: 1;
 }
 
@@ -4159,31 +4157,11 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 
 .cta-title {
     color: #ffffff;
-    font-size: 36px;
+    font-size: 56px;
     font-weight: 700;
-    margin-bottom: 30px;
-    line-height: 1.4;
+    margin: 0 0 20px 0;
+    line-height: 1.2;
     font-style: italic;
-}
-
-.btn-cta-bottom {
-    background: #a8d574;
-    color: #ffffff;
-    padding: 16px 40px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    border: none;
-    text-transform: uppercase;
-}
-
-.btn-cta-bottom:hover {
-    background: #8bc34a;
-    color: #ffffff;
-    transform: translateY(-2px);
 }
 
 /* Responsive Styles */

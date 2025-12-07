@@ -340,12 +340,12 @@ function stirjoy_get_image_url($filename) {
 </section>
 
 <!-- Bottom CTA Section -->
-<section class="stirjoy-cta-bottom">
+<section class="stirjoy-cta-bottom" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('a44138152c25721355342f935e19b36cf4acba32.jpg')); ?>');">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center">
+            <div class="col-md-8">
                 <h2 class="cta-title">So... what will you stir into the world with all that extra time and energy?</h2>
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-cta-bottom">GET STARTED</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">GET STARTED</a>
             </div>
         </div>
     </div>
