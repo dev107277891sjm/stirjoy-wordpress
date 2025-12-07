@@ -480,6 +480,265 @@ header .cart-contents span {
 .fixed-search-overlay.visible {
     left: 0;
 }
+/* ===================================
+   Stirjoy Footer Design - Figma Design
+   =================================== */
+
+.stirjoy-footer {
+    background: #ffffff;
+    padding: 64px 0 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Navigation Links */
+.stirjoy-footer-nav {
+    margin: 0;
+    padding: 0;
+}
+
+.stirjoy-footer-item {
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+.stirjoy-footer-item a {
+    color: #000000;
+    text-decoration: none;
+}
+.stirjoy-footer-item a:hover {
+    color: #e67e22;
+}
+
+.stirjoy-footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.stirjoy-footer-links li {
+    margin-bottom: 15px;
+}
+
+.stirjoy-footer-links li a {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.stirjoy-footer-links li a:hover {
+    color: #a8d574;
+}
+
+.stirjoy-footer-newsletter-container {
+    padding-left: 150px;
+}
+/* Newsletter Section */
+.stirjoy-newsletter-title {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; */
+}
+
+.stirjoy-newsletter-input-group {
+    display: flex;
+    gap: 0;
+    border-radius: 8px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.stirjoy-email-input {
+    background: #FFFFEB;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    padding: 16px 20px;
+    font-size: 16px;
+    /* font-family: 'Courier New', Courier, monospace; */
+    color: #000000;
+    width: 250px;
+    outline: none;
+    flex: 1;
+}
+
+.stirjoy-email-input::placeholder {
+    color: #000000;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-weight: 600 !important;
+}
+
+.stirjoy-submit-btn {
+    background: #E2EE48 !important;
+    color: #000000 !important;
+    border: none !important;
+    border-radius: 0 8px 8px 0 !important;
+    padding: 16px 30px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    /* font-family: 'Courier New', Courier, monospace !important; */
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+}
+
+.stirjoy-submit-btn:hover {
+    background: #8bc34a;
+}
+
+/* Social Media Links */
+.stirjoy-footer-social {
+    display: flex;
+    flex-direction: row !important;
+    gap: 80px;
+    margin-bottom: 30px;
+}
+
+.stirjoy-social-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    transition: color 0.3s ease;
+}
+
+.stirjoy-social-link:hover {
+    color: #e67e22;
+}
+
+.stirjoy-social-link svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* Copyright */
+.stirjoy-copyright {
+    color: #000000;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+    text-align: right;
+    padding-top: 30px;
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; */
+}
+
+/* Large STIRJOY Brand Text (Bottom) */
+.stirjoy-footer-brand {
+    text-align: center;
+    padding: 24px 0 0 0;
+    position: relative;
+    /* z-index: 5; */
+}
+
+.stirjoy-brand-text {
+    font-size: 150px;
+    font-weight: 900;
+    color: #a8d574;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    font-style: normal;
+}
+
+.brand-letter {
+    display: inline-block;
+    position: relative;
+}
+
+.brand-i::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #000000;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.brand-o::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #000000;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Responsive Footer */
+@media (max-width: 991px) {
+    .stirjoy-footer-col {
+        margin-bottom: 40px;
+    }
+    
+    .stirjoy-brand-text {
+        font-size: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .stirjoy-footer {
+        padding: 60px 0 0 0;
+    }
+    
+    .stirjoy-footer-top {
+        padding-bottom: 40px;
+    }
+    
+    .stirjoy-footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .stirjoy-newsletter-input-group {
+        flex-direction: column;
+    }
+    
+    .stirjoy-email-input {
+        border-radius: 8px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .stirjoy-submit-btn {
+        border-radius: 8px;
+        width: 100%;
+    }
+    
+    .stirjoy-brand-text {
+        font-size: 80px;
+    }
+}
+
 footer .footer-top {
     border-top: 1px solid #e5e7eb;
 }
@@ -3624,14 +3883,14 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 }
 
 .feature-text {
-    font-size: 20px;
+    font-size: 24px;
     color: #2d5a27;
-    font-weight: 500;
+    font-weight: 600;
     flex-shrink: 0;
 }
 
 .feature-icon {
-    font-size: 20px;
+    font-size: 24px;
     color: #2d5a27;
     flex-shrink: 0;
 }

@@ -6,41 +6,60 @@
 ?>
 
     <!-- FOOTER -->
-    <footer class="footer-main-group">
-        <?php if ( class_exists( 'ReduxFrameworkPlugin' ) ) { ?>
-            <?php if (thecrate_redux('thecrate_footer_row_1') == true) { ?>
-                <?php if (is_active_sidebar('footer_row_1_1') || is_active_sidebar('footer_row_1_2') || is_active_sidebar('footer_row_1_3') || is_active_sidebar('footer_row_1_4') || is_active_sidebar('footer_row_1_5')) { ?>
-                    <!-- FOOTER TOP -->
-                    <div class="row footer-top">
-                        <div class="container">
-                        <?php
-                            //FOOTER WIDGETS ROW 1
-                            echo thecrate_footer_row1();
-                        ?>
-                        </div>
-                    </div>
-                <?php } ?>
-            <?php } ?>
-        <?php } ?>
-
-        <!-- FOOTER BOTTOM -->
-        <div class="row footer">
-            <div class="container">
+    <footer class="footer-main-group stirjoy-footer">
+        <div class="container">
+            <!-- Footer Top Section - Three Columns -->
+            <div class="stirjoy-footer-top">
                 <div class="row">
-                    <?php if ( class_exists( 'ReduxFrameworkPlugin' ) ) { ?>
-                        <div class="text-center footer-bottom-col-3">
-                            <p class="card-icons"><?php echo thecrate_redux('thecrate_footer_text_right'); ?></p>
+                    <!-- Left Column - Navigation Links -->
+                    <div class="col-md-3 stirjoy-footer-col">
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">SHOP MEALS</a></p>
+                        <p class="stirjoy-footer-item"><a href="#how-it-works">HOW IT WORKS</a></p>
+                        <p class="stirjoy-footer-item"><a href="#our-story">OUR STORY</a></p>
+                        <p class="stirjoy-footer-item"><a href="#faqs">FAQ</a></p>
+                    </div>
+                    
+                    <!-- Middle Column - Information Links -->
+                    <div class="col-md-3 stirjoy-footer-col">
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'contact' ) ) ?: '#' ); ?>">CONTACT US</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'delivery' ) ) ?: '#' ); ?>">DELIVERY</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'terms-conditions' ) ) ?: wc_get_page_permalink( 'terms' ) ); ?>">TERMS & CONDITIONS</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'privacy-policy' ) ) ?: get_privacy_policy_url() ); ?>">PRIVACY POLICY</a></p>
+                    </div>
+                    
+                    <!-- Right Column - Newsletter & Social -->
+                    <div class="col-md-6 stirjoy-footer-col">
+                        <div class="stirjoy-footer-newsletter-container">
+                            <div class="stirjoy-footer-newsletter">
+                                <h3 class="stirjoy-newsletter-title">Join our newsletter and get first dibs on seasonal bundles and exclusive deals!</h3>
+                                <form class="stirjoy-newsletter-form" method="post" action="">
+                                    <div class="stirjoy-newsletter-input-group">
+                                        <input type="email" name="email" placeholder="Your email" class="stirjoy-email-input" required>
+                                        <button type="submit" class="stirjoy-submit-btn">SUBMIT</button>
+                                    </div>
+                                </form>
+                            </div>
+                        
+                            <div class="stirjoy-footer-social">
+                                <a href="https://www.tiktok.com/@stirjoy" target="_blank" rel="noopener" class="stirjoy-social-link">
+                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group.svg')); ?>" alt="TIKTOK">
+                                    <span>TIKTOK</span>
+                                </a>
+                                <a href="https://www.instagram.com/stirjoy" target="_blank" rel="noopener" class="stirjoy-social-link">
+                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group.png')); ?>" alt="INSTAGRAM">
+                                    <span>INSTAGRAM</span>
+                                </a>
+                            </div>
                         </div>
-                        <div class="text-center footer-bottom-col-2">
-                            <p class="copyright"><?php echo thecrate_redux('thecrate_footer_text_center'); ?></p>
-                        </div>
-                    <?php }else{ ?>
-                        <div class="col-md-6 text-left footer-bottom-col-2">
-                            <p class="copyright"><?php echo esc_html__('Handcrafted with Love by ThemeSLR.','thecrate'); ?></p>
-                        </div>
-                    <?php } ?>
+                        <p class="stirjoy-copyright">© STIRJOY 2025</p>
+                    </div>
                 </div>
             </div>
+            
+        </div>
+        <!-- Footer Bottom - Large STIRJOY Logo -->
+        <div class="stirjoy-footer-brand">
+            <img src="<?php echo esc_url(stirjoy_get_image_url('Calque_1.png')); ?>" alt="STIRJOY">
         </div>
     </footer>
 </div>
