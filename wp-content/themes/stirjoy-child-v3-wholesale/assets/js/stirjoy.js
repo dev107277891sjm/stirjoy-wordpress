@@ -138,7 +138,7 @@
                         caption2 = '$' + rest + ' to go';
                         width = (subtotal / freeGiftThreshold) * 100;
                     }
-
+                    
                     $(".free-gift-bar .caption2").text(caption2);
                     $(".free-gift-bar .bar > div").width(width + '%');
                     
@@ -223,7 +223,7 @@
         // Cart Item Remove Icon
         $(document).on('click', '.mini_cart_item a.remove', function(e) {
             e.preventDefault();
-            
+
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
                 return false;
@@ -1311,6 +1311,102 @@
             $faqItem.toggleClass('active');
             $faqAnswer.slideToggle(300);
         });
+
+        /**
+         * Testimonial Cards Dragging Functionality
+         */
+        var testimonialContainer = $('#testimonial-cards-container');
+        var testimonialWrapper = $('.testimonial-cards-wrapper');
+        
+        if (testimonialContainer.length && testimonialWrapper.length) {
+            var isDragging = false;
+            var startX = 0;
+            var currentX = 0;
+            var currentTranslate = 0;
+            var prevTranslate = 0;
+
+            testimonialWrapper.on('mousedown', function(e) {
+                isDragging = true;
+                startX = e.pageX - testimonialWrapper.offset().left;
+                prevTranslate = currentTranslate;
+                testimonialWrapper.css('cursor', 'grabbing');
+                e.preventDefault();
+            });
+
+            $(document).on('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                
+                currentX = e.pageX - testimonialWrapper.offset().left;
+                var movedX = currentX - startX;
+                currentTranslate = prevTranslate + movedX;
+                
+                // Apply transform
+                testimonialContainer.css('transform', 'translateX(' + currentTranslate + 'px)');
+            });
+
+            $(document).on('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    testimonialWrapper.css('cursor', 'grab');
+                    
+                    // Get container and wrapper dimensions
+                    var containerWidth = testimonialContainer.outerWidth();
+                    var wrapperWidth = testimonialWrapper.outerWidth();
+                    var maxTranslate = 0;
+                    var minTranslate = wrapperWidth - containerWidth;
+                    
+                    // Constrain movement
+                    if (currentTranslate > maxTranslate) {
+                        currentTranslate = maxTranslate;
+                    } else if (currentTranslate < minTranslate) {
+                        currentTranslate = minTranslate;
+                    }
+                    
+                    prevTranslate = currentTranslate;
+                    testimonialContainer.css('transform', 'translateX(' + currentTranslate + 'px)');
+                }
+            });
+
+            // Touch events for mobile
+            var touchStartX = 0;
+            var touchCurrentX = 0;
+            var touchPrevTranslate = 0;
+            var touchCurrentTranslate = 0;
+
+            testimonialWrapper.on('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchPrevTranslate = currentTranslate;
+                e.preventDefault();
+            });
+
+            testimonialWrapper.on('touchmove', function(e) {
+                touchCurrentX = e.touches[0].clientX;
+                var movedX = touchCurrentX - touchStartX;
+                touchCurrentTranslate = touchPrevTranslate + movedX;
+                testimonialContainer.css('transform', 'translateX(' + touchCurrentTranslate + 'px)');
+                e.preventDefault();
+            });
+
+            testimonialWrapper.on('touchend', function() {
+                // Get container and wrapper dimensions
+                var containerWidth = testimonialContainer.outerWidth();
+                var wrapperWidth = testimonialWrapper.outerWidth();
+                var maxTranslate = 0;
+                var minTranslate = wrapperWidth - containerWidth;
+                
+                // Constrain movement
+                if (touchCurrentTranslate > maxTranslate) {
+                    touchCurrentTranslate = maxTranslate;
+                } else if (touchCurrentTranslate < minTranslate) {
+                    touchCurrentTranslate = minTranslate;
+                }
+                
+                currentTranslate = touchCurrentTranslate;
+                touchPrevTranslate = touchCurrentTranslate;
+                testimonialContainer.css('transform', 'translateX(' + touchCurrentTranslate + 'px)');
+            });
+        }
 
     }); // End document ready
 

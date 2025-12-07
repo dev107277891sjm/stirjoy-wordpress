@@ -248,25 +248,26 @@ function stirjoy_get_image_url($filename) {
                 <p class="section-subtitle">The Foodies have spoken</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
+    </div>
+    
+    <div class="testimonial-cards-wrapper">
+        <div class="testimonial-cards" id="testimonial-cards-container">
+            <img src="<?php echo esc_url(stirjoy_get_image_url('cf237043b13972b4d238f57edb25d5c3b253681e.png')); ?>" alt="Testimonial" class="testimonial-image">
+            <div class="testimonial-item">
                 <div class="testimonial-card">
-                    <div class="testimonial-illustration">
-                        <div class="illustration-placeholder"></div>
-                    </div>
                     <div class="stars">★★★★★</div>
-                    <p class="testimonial-text">"So easy to prep, real ingredients, and tastes amazing!"</p>
-                    <p class="testimonial-author">- Alissa A.</p>
+                    <p class="testimonial-text">LOVE THIS FOOD! Super easy to prep, we know we are getting great, real ingredients, and it tastes AWESOME! We are huge fans of Stirjoy.</p>
+                    <p class="testimonial-author">Alissa A.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="testimonial-item">
                 <div class="testimonial-card">
                     <div class="stars">★★★★★</div>
                     <p class="testimonial-text">"Healthy, easy, and my digestion has never been better!"</p>
                     <p class="testimonial-author">- James D.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="testimonial-item">
                 <div class="testimonial-card">
                     <div class="stars">★★★★★</div>
                     <p class="testimonial-text">"Love the convenience and the taste is incredible!"</p>
