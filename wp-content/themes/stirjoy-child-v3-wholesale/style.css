@@ -3997,8 +3997,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 
 /* Mission Statement Section */
 .stirjoy-mission {
-    background: #f75904;
-    padding: 100px 0;
+    padding: 180px 0 250px 0;
     color: #ffffff;
     position: relative;
     background-image: url(''); /* Add kitchen counter image here */
@@ -4014,7 +4013,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(247, 89, 4, 0.85);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -4025,7 +4024,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 
 .mission-title {
     color: #ffffff;
-    font-size: 32px;
+    font-size: 60px;
     font-weight: 700;
     line-height: 1.4;
     margin-bottom: 30px;

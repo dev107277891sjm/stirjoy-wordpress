@@ -279,12 +279,12 @@ function stirjoy_get_image_url($filename) {
 </section>
 
 <!-- Mission Statement Section -->
-<section class="stirjoy-mission">
+<section class="stirjoy-mission" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('508e4e32d981ac0c6bd1ff3ef2bb3129503d9ca0.jpg')); ?>');">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 offset-md-2 text-center">
+            <div class="col-md-9">
                 <h2 class="mission-title">Our mission is to make good nutrition less costly for humans and the planet on which we live.</h2>
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">GET STARTED</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">OUR STORY</a>
             </div>
         </div>
     </div>
