@@ -33,7 +33,7 @@ function stirjoy_get_image_url($filename) {
 
 <!-- Feature Bar -->
 <section class="stirjoy-feature-bar">
-    <div class="container">
+    <!-- <div class="container"> -->
         <div class="row">
             <div class="col-12">
                 <div class="feature-bar-wrapper">
@@ -67,11 +67,25 @@ function stirjoy_get_image_url($filename) {
                         <span class="feature-icon">-</span>
                         <span class="feature-text">$6 per portion</span>
                         <span class="feature-icon">-</span>
+                        <span class="feature-text">clean ingredients</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">plant-based</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">protein</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">fibre</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">veggies</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">lots of joy</span>
+                        <span class="feature-icon">-</span>
+                        <span class="feature-text">$6 per portion</span>
+                        <span class="feature-icon">-</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </section>
 
 <!-- Product Introduction Section -->
@@ -100,7 +114,7 @@ function stirjoy_get_image_url($filename) {
                     global $product;
                     $product_image = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
             ?>
-            <div class="col-md-4">
+            <div class="col-md-4 no-gap">
                 <div class="product-card">
                     <?php if ($product_image) : ?>
                         <div class="product-image">
@@ -116,7 +130,7 @@ function stirjoy_get_image_url($filename) {
             else:
             ?>
             <!-- Fallback product cards if no products exist -->
-            <div class="col-md-4">
+            <div class="col-md-4 no-gap">
                 <div class="product-card">
                     <div class="product-image">
                         <div class="product-placeholder"></div>
@@ -124,7 +138,7 @@ function stirjoy_get_image_url($filename) {
                     <h3 class="product-title">Risotto with lion's mane and grilled mushrooms</h3>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 no-gap">
                 <div class="product-card">
                     <div class="product-image">
                         <div class="product-placeholder"></div>
@@ -132,7 +146,7 @@ function stirjoy_get_image_url($filename) {
                     <h3 class="product-title">Burrito bowl with quinoa and dried tomatoes</h3>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 no-gap">
                 <div class="product-card">
                     <div class="product-image">
                         <div class="product-placeholder"></div>
@@ -144,7 +158,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary" style="margin-top: 14px;">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
