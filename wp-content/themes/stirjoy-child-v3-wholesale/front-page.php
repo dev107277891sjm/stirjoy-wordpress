@@ -181,23 +181,23 @@ function stirjoy_get_image_url($filename) {
                         </div>
                     </div>
                     <div class="benefit-item benefit-top-left">
-                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector.svg')); ?>" alt="Veggies"></span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Vector.svg')); ?>" alt="Veggies"></span>
                         <span class="benefit-text">upcycled veggies</span>
                     </div>
                     <div class="benefit-item benefit-mid-left">
-                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector 3.svg')); ?>" alt="Fiber"></span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Vector 3.svg')); ?>" alt="Fiber"></span>
                         <span class="benefit-text">loads of fiber</span>
                     </div>
                     <div class="benefit-item benefit-bottom-left">
-                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 150.svg')); ?>" alt="Dollar"></span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Group 150.svg')); ?>" alt="Dollar"></span>
                         <span class="benefit-text">$6 per portion</span>
                     </div>
                     <div class="benefit-item benefit-top-right">
-                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 144.svg')); ?>" alt="Protein"></span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Group 144.svg')); ?>" alt="Protein"></span>
                         <span class="benefit-text">loads of protein</span>
                     </div>
                     <div class="benefit-item benefit-mid-right">
-                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('vector (1).svg')); ?>" alt="Plant-based"></span>
+                        <span class="benefit-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Vector (1).svg')); ?>" alt="Plant-based"></span>
                         <span class="benefit-text">plant-based</span>
                     </div>
                 </div>
@@ -216,17 +216,17 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row steps">
             <div class="col-md-4 text-center">
-                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 146.svg')); ?>" alt="Choose Your Meals"></div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Group 146.svg')); ?>" alt="Choose Your Meals"></div>
                 <h3 class="step-title">Choose Your Meals</h3>
                 <p class="step-description">We prepare a monthly menu of 6 meals for two, and you can customize it to your taste!</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 145.svg')); ?>" alt="We Prepare & Deliver"></div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Group 145.svg')); ?>" alt="We Prepare & Deliver"></div>
                 <h3 class="step-title">We Prepare & Deliver</h3>
                 <p class="step-description">From Canadian farms to your door, for only 6$ per portion</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('group 147.svg')); ?>" alt="Enjoy at your convenience!"></div>
+                <div class="step-icon"><img src="<?php echo esc_url(stirjoy_get_image_url('Group 147.svg')); ?>" alt="Enjoy at your convenience!"></div>
                 <h3 class="step-title">Enjoy at your convenience!</h3>
                 <p class="step-description">Just add water and simmer</p>
             </div>
