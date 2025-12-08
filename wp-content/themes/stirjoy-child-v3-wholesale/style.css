@@ -382,6 +382,38 @@ header .top-header {
     padding-left: 15px;
     padding-right: 15px;
 }
+
+/* Mobile responsive: Change top bar title to "Free shipping with orders above $75" */
+@media (max-width: 768px) {
+    header .top-header {
+        position: relative;
+        min-height: 40px;
+    }
+    
+    /* Hide all desktop content */
+    header .top-header > * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+    }
+    
+    /* Show mobile text */
+    header .top-header::after {
+        content: "FREE SHIPPING WITH ORDERS ABOVE $75";
+        font-size: 14px;
+        display: block;
+        opacity: 1;
+        position: relative;
+        text-align: center;
+        line-height: 1.5;
+        visibility: visible;
+    }
+}
 .container {
     margin: auto;
     padding-left: 15px !important;

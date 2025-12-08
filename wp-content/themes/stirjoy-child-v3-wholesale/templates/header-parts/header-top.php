@@ -1,7 +1,8 @@
 <?php if (thecrate_redux('thecrate_header_top_status') == true) { ?>
   <!-- TOP HEADER -->
   <div class="top-header row no-margin">
-    <?= esc_html(thecrate_redux('thecrate_header_top_small_left_2_text')) ?>
+    <span><?= esc_html(thecrate_redux('thecrate_header_top_small_left_2_text')) ?></span>
+    
 
     <?php /*<div class="col-md-6 col-sm-6 text-left left-side">
       <div class="top-header-col-inner">
