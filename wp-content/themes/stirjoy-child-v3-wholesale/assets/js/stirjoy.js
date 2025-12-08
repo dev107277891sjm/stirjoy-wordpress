@@ -1431,6 +1431,47 @@
             });
         }
 
+        /**
+         * Mobile Menu Toggle - Ensure Bootstrap collapse works correctly
+         */
+        $(document).on('click', '.navbar-toggle', function() {
+            var $button = $(this);
+            var $target = $($button.data('target'));
+            
+            // Ensure the menu toggles correctly
+            if ($target.length) {
+                // Bootstrap should handle this, but we ensure it works
+                setTimeout(function() {
+                    if ($target.hasClass('in') || $target.hasClass('show')) {
+                        $button.removeClass('collapsed');
+                        $button.attr('aria-expanded', 'true');
+                    } else {
+                        $button.addClass('collapsed');
+                        $button.attr('aria-expanded', 'false');
+                    }
+                }, 100);
+            }
+        });
+        
+        /**
+         * Close mobile menu when clicking outside or on menu links
+         */
+        $(document).on('click', '#navbar1 .mobile-menu a', function() {
+            // Close menu after a short delay to allow navigation
+            setTimeout(function() {
+                $('.navbar-toggle').addClass('collapsed').attr('aria-expanded', 'false');
+                $('#navbar1').removeClass('in show').addClass('collapse');
+            }, 300);
+        });
+        
+        /**
+         * Ensure mobile menu is properly initialized on page load
+         */
+        if ($(window).width() <= 991) {
+            $('#navbar1').addClass('collapse');
+            $('.navbar-toggle').addClass('collapsed').attr('aria-expanded', 'false');
+        }
+
     }); // End document ready
 
 })(jQuery);

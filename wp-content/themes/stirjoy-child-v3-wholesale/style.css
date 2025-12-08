@@ -2259,27 +2259,195 @@ footer p.card-icons {
 
 /* Responsive: Mobile adjustments */
 @media (max-width: 991px) {
-    #theme-main-head > .container {
-        flex-wrap: wrap;
+    /* Mobile Header Height - 62px */
+    #theme-main-head,
+    .navbar-default {
+        min-height: 62px;
+        height: 62px;
     }
     
+    #theme-main-head > .container {
+        flex-wrap: wrap;
+        position: relative;
+        min-height: 62px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    
+    /* Navbar Header - Logo and Burger Menu Container */
     .navbar-header {
-        position: static;
-        width: auto;
+        position: relative !important;
+        width: 100% !important;
+        flex-shrink: 0;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        min-height: 46px;
+        left: 0 !important;
+    }
+    
+    /* Logo Positioning on Mobile */
+    .navbar-header .logo {
+        order: 1 !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        text-align: left !important;
         flex-shrink: 0;
     }
     
-    #navbar {
-        position: static;
-        transform: none;
-        width: 100%;
-        order: 3;
-        margin-top: 10px;
+    /* Logo Image Sizing on Mobile - 200px */
+    .navbar-header .logo img,
+    header .navbar-header .logo img,
+    header .logo img {
+        width: 200px !important;
+        height: auto !important;
+        max-width: 200px !important;
+        min-width: 200px;
     }
     
+    /* Burger Menu Button - Positioned on the Right */
+    .navbar-toggle,
+    .navbar-default .navbar-toggle,
+    header .navbar-default .navbar-toggle {
+        display: block !important;
+        position: absolute !important;
+        right: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 8px 10px !important;
+        margin: 0 !important;
+        z-index: 1000;
+        order: 2 !important;
+    }
+    
+    .navbar-toggle:focus,
+    .navbar-toggle:hover,
+    .navbar-default .navbar-toggle:focus,
+    .navbar-default .navbar-toggle:hover,
+    header .navbar-default .navbar-toggle:focus,
+    header .navbar-default .navbar-toggle:hover {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+    }
+    
+    /* Burger Menu Icon Bars - Yellow Color */
+    .navbar-toggle .icon-bar,
+    .navbar-default .navbar-toggle .icon-bar,
+    header .navbar-default .navbar-toggle .icon-bar {
+        background: #E2EE48 !important;
+        width: 25px;
+        height: 3px;
+        border-radius: 2px;
+        margin: 4px 0;
+        transition: all 0.3s ease;
+        display: block;
+    }
+    
+    /* Burger Menu Animation When Open */
+    .navbar-toggle:not(.collapsed) .icon-bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .navbar-toggle:not(.collapsed) .icon-bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .navbar-toggle:not(.collapsed) .icon-bar:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+    
+    /* Hide Desktop Nav Menu on Mobile */
+    #navbar {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        width: 0 !important;
+    }
+    
+    /* Mobile Menu (#navbar1) - Bootstrap Collapse Functionality */
     #navbar1 {
-        width: auto;
-        margin-left: auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px 15px !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    /* When Collapsed (Default State) */
+    #navbar1.collapse {
+        display: none !important;
+        height: 0;
+        overflow: hidden;
+    }
+    
+    /* When Expanded (Bootstrap adds .in or .show class) */
+    #navbar1.collapse.in,
+    #navbar1.collapse.show,
+    #navbar1.collapsing {
+        display: flex !important;
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+    
+    /* Center the Mobile Menu Items */
+    #navbar1 .mobile-menu {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 20px 0;
+        text-align: center;
+        list-style: none;
+        padding: 0;
+    }
+    
+    #navbar1 .mobile-menu li {
+        text-align: center;
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    #navbar1 .mobile-menu li a {
+        text-align: center;
+        display: block;
+        width: 100%;
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border-radius: 4px;
+    }
+    
+    #navbar1 .mobile-menu li a:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* Center Header Nav Actions in Mobile Menu */
+    #navbar1 .header-nav-actions {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 15px 0;
+        padding: 15px 0;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
     }
 }
 
