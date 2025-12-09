@@ -4290,7 +4290,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 .product-card {
     background: #FFFFEB;
     padding: 0;
-    text-align: center;
+    /* text-align: center; */
     /* transition: all 0.3s ease; */
     margin-bottom: 0;
     display: flex;
@@ -4337,7 +4337,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     font-weight: 500;
     margin: 20px 15px;
     padding: 0;
-    text-align: center;
+    /* text-align: center; */
     line-height: 1.4;
 }
 
@@ -4839,6 +4839,15 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     .section-title-white {
         font-size: 28px;
     }
+    
+    .stirjoy-product-intro {
+        padding: 64px 0;
+    }
+    
+    .intro-text {
+        font-size: 36px;
+        margin: 0 0 44px 0;
+        }
     
     .feature-items {
         animation-duration: 20s; /* Faster on mobile */
