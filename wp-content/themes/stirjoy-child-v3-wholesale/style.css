@@ -425,14 +425,14 @@ header .top-header {
 .container {
     margin: auto;
     padding-left: 15px !important;
-    padding-right: 15px !important;
+    /* padding-right: 15px !important; */
 }
 #theme-main-head {
     box-shadow: none;
 }
 #theme-main-head > .container {
     padding-top: 15px;
-    padding-bottom: 15px;
+    /* padding-bottom: 15px; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2290,9 +2290,9 @@ footer p.card-icons {
         min-height: 62px;
         height: 62px;
         padding-top: 8px;
-        padding-bottom: 8px;
+        /* padding-bottom: 8px; */
         padding-left: 0 !important;
-        padding-right: 15px !important;
+        /* padding-right: 15px !important; */
         margin-left: 0 !important;
     }
     
@@ -4070,7 +4070,7 @@ body.home .container,
 body.page-template-front-page .container {
     max-width: 100% !important;
     padding-left: 15px !important;
-    padding-right: 15px !important;
+    /* padding-right: 15px !important; */
 }
 
 body.home .row,
