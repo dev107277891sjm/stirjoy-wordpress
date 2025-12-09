@@ -1432,36 +1432,89 @@
         }
 
         /**
-         * Mobile Menu Toggle - Ensure Bootstrap collapse works correctly
+         * Listen for Bootstrap collapse events to update header height IMMEDIATELY
+         * Use 'show' and 'hide' events (fire before animation) for smooth synchronized animation
+         */
+        $(document).on('show.bs.collapse', '#navbar1', function() {
+            // Menu is about to open - expand header IMMEDIATELY (at same time as collapse animation starts)
+            $('#theme-main-head, .navbar-default').addClass('menu-open');
+        });
+        
+        $(document).on('hide.bs.collapse', '#navbar1', function() {
+            // Menu is about to close - collapse header IMMEDIATELY (at same time as collapse animation starts)
+            $('#theme-main-head, .navbar-default').removeClass('menu-open');
+        });
+        
+        /**
+         * Backup: Ensure state is correct after animation completes
+         */
+        $(document).on('shown.bs.collapse', '#navbar1', function() {
+            $('#theme-main-head, .navbar-default').addClass('menu-open');
+        });
+        
+        $(document).on('hidden.bs.collapse', '#navbar1', function() {
+            $('#theme-main-head, .navbar-default').removeClass('menu-open');
+        });
+        
+        /**
+         * Mobile Menu Toggle - Sync button state only
          */
         $(document).on('click', '.navbar-toggle', function() {
             var $button = $(this);
             var $target = $($button.data('target'));
             
-            // Ensure the menu toggles correctly
+            // Sync button state after Bootstrap handles the toggle
+            // Header height is handled by Bootstrap events above for smooth animation
             if ($target.length) {
-                // Bootstrap should handle this, but we ensure it works
                 setTimeout(function() {
                     if ($target.hasClass('in') || $target.hasClass('show')) {
-                        $button.removeClass('collapsed');
-                        $button.attr('aria-expanded', 'true');
+                        $button.removeClass('collapsed').attr('aria-expanded', 'true');
                     } else {
-                        $button.addClass('collapsed');
-                        $button.attr('aria-expanded', 'false');
+                        $button.addClass('collapsed').attr('aria-expanded', 'false');
                     }
-                }, 100);
+                }, 50);
             }
         });
         
         /**
-         * Close mobile menu when clicking outside or on menu links
+         * Close mobile menu when clicking on menu links
          */
-        $(document).on('click', '#navbar1 .mobile-menu a', function() {
-            // Close menu after a short delay to allow navigation
-            setTimeout(function() {
-                $('.navbar-toggle').addClass('collapsed').attr('aria-expanded', 'false');
-                $('#navbar1').removeClass('in show').addClass('collapse');
-            }, 300);
+        $(document).on('click', '#navbar1 .mobile-menu a', function(e) {
+            var $link = $(this);
+            var $menu = $('#navbar1');
+            var $toggle = $('.navbar-toggle');
+            
+            // Only close if it's a regular link (not a dropdown toggle)
+            if (!$link.parent().hasClass('dropdown-toggle') && !$link.hasClass('dropdown-toggle')) {
+                // Use Bootstrap's collapse method for proper state management
+                setTimeout(function() {
+                    if ($menu.hasClass('in') || $menu.hasClass('show')) {
+                        $menu.collapse('hide');
+                        $toggle.addClass('collapsed').attr('aria-expanded', 'false');
+                    }
+                }, 300);
+            }
+        });
+        
+        /**
+         * Close mobile menu when clicking outside
+         */
+        $(document).on('click', function(e) {
+            var $target = $(e.target);
+            var $menu = $('#navbar1');
+            var $toggle = $('.navbar-toggle');
+            
+            // If click is outside menu, toggle button, and navbar header
+            if (!$target.closest('#navbar1').length && 
+                !$target.closest('.navbar-toggle').length && 
+                !$target.closest('.navbar-header').length) {
+                
+                // Only close if menu is open
+                if ($menu.hasClass('in') || $menu.hasClass('show')) {
+                    $menu.collapse('hide');
+                    $toggle.addClass('collapsed').attr('aria-expanded', 'false');
+                }
+            }
         });
         
         /**

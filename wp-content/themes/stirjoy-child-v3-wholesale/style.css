@@ -2409,6 +2409,7 @@ footer p.card-icons {
     }
     
     /* Mobile Menu (#navbar1) - Bootstrap Collapse Functionality */
+    /* Match header's original background */
     #navbar1 {
         width: 100% !important;
         max-width: 100% !important;
@@ -2418,10 +2419,29 @@ footer p.card-icons {
         top: 100%;
         left: 0;
         right: 0;
-        background: #ffffff;
+        background: inherit;
+        background-color: inherit;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 999;
+        z-index: 1000 !important;
         border-top: 1px solid #e0e0e0;
+        transition: all 0.35s ease;
+    }
+    
+    /* Ensure it matches navbar-default background */
+    .navbar-default #navbar1,
+    #theme-main-head #navbar1 {
+        background-color: inherit;
+    }
+    
+    /* Fallback to match default header background (white) */
+    @media (max-width: 991px) {
+        .navbar-default {
+            background-color: #ffffff;
+        }
+        
+        #navbar1 {
+            background-color: #ffffff; /* Match navbar-default default background */
+        }
     }
     
     /* When Collapsed (Default State) */
@@ -2433,12 +2453,62 @@ footer p.card-icons {
     
     /* When Expanded (Bootstrap adds .in or .show class) */
     #navbar1.collapse.in,
-    #navbar1.collapse.show,
-    #navbar1.collapsing {
+    #navbar1.collapse.show {
         display: flex !important;
         flex-direction: column;
         height: auto;
         overflow: visible;
+        position: relative !important;
+        top: 0 !important;
+    }
+    
+    /* During collapse animation - keep overflow hidden for smooth animation */
+    #navbar1.collapsing {
+        display: flex !important;
+        flex-direction: column;
+        position: relative !important;
+        top: 0 !important;
+        overflow: hidden !important;
+        transition: height 0.35s ease !important;
+    }
+    
+    /* Expand header and container when mobile menu is open - using :has() selector */
+    #theme-main-head:has(#navbar1.collapse.in),
+    #theme-main-head:has(#navbar1.collapse.show),
+    .navbar-default:has(#navbar1.collapse.in),
+    .navbar-default:has(#navbar1.collapse.show) {
+        height: auto !important;
+        min-height: 62px !important;
+    }
+    
+    #theme-main-head:has(#navbar1.collapse.in) > .container,
+    #theme-main-head:has(#navbar1.collapse.show) > .container {
+        height: auto !important;
+        min-height: 62px !important;
+    }
+    
+    /* Fallback for browsers that don't support :has() - use class added by JavaScript */
+    #theme-main-head.menu-open,
+    .navbar-default.menu-open {
+        height: auto !important;
+        min-height: 62px !important;
+        transition: height 0.35s ease, min-height 0.35s ease !important;
+    }
+    
+    #theme-main-head.menu-open > .container {
+        height: auto !important;
+        min-height: 62px !important;
+        transition: height 0.35s ease, min-height 0.35s ease !important;
+    }
+    
+    /* Smooth transition for header when menu opens/closes */
+    #theme-main-head,
+    .navbar-default {
+        transition: height 0.35s ease, min-height 0.35s ease !important;
+    }
+    
+    #theme-main-head > .container {
+        transition: height 0.35s ease, min-height 0.35s ease !important;
     }
     
     /* Center the Mobile Menu Items */
