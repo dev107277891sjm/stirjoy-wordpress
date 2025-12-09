@@ -244,7 +244,7 @@ function stirjoy_get_image_url($filename) {
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="section-title">Don't just take our word for it!</h2>
+                <h2 class="section-title-testimonials">Don't just take our word for it!</h2>
                 <p class="section-subtitle">The Foodies have spoken</p>
             </div>
         </div>

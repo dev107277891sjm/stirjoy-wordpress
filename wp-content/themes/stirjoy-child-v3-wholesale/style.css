@@ -4367,7 +4367,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     padding: 40px 0 80px 0;
 }
 
-.section-title {
+.section-title, .section-title-testimonials {
     color: #2d5a27;
     font-size: 56px;
     font-weight: 700;
@@ -4493,16 +4493,10 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     margin-top: 24px !important;
 }
 
-.btn-how-it-works:hover {
-    background: #8bc34a;
-    color: #ffffff;
-    transform: translateY(-2px);
-}
-
 /* Testimonials Section */
 .stirjoy-testimonials {
     background: #FFFFEB;
-    padding: 160px 0 260px 0;
+    padding: 74px 0 0 0;
 }
 
 .section-subtitle {
@@ -4934,6 +4928,19 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     
     .step-icon {
         font-size: 48px;
+    }
+    
+    .section-title-testimonials {
+        font-size: 48px;
+        margin: 0 20px 20px 20px !important;
+        /* width: 100%; */
+        max-width: 100%;
+    }
+
+    .section-subtitle {
+        margin: 0;
+        width: 100%;
+        font-size: 24px;
     }
     
     .cta-title {
