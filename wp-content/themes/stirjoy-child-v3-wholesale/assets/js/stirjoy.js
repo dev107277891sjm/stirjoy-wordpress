@@ -1432,7 +1432,7 @@
         }
 
         /**
-         * Listen for Bootstrap collapse events to update header height IMMEDIATELY
+         * Listen for Bootstrap collapse events to update header height SMOOTHLY
          * Use 'show' and 'hide' events (fire before animation) for smooth synchronized animation
          */
         $(document).on('show.bs.collapse', '#navbar1', function() {
@@ -1441,19 +1441,74 @@
         });
         
         $(document).on('hide.bs.collapse', '#navbar1', function() {
-            // Menu is about to close - collapse header IMMEDIATELY (at same time as collapse animation starts)
-            $('#theme-main-head, .navbar-default').removeClass('menu-open');
+            // Menu is about to close - collapse header SMOOTHLY
+            var $header = $('#theme-main-head, .navbar-default');
+            var $container = $('#theme-main-head > .container');
+            
+            // Get current height (auto) before removing menu-open for smooth transition
+            var currentHeight = $header.outerHeight();
+            
+            // Set explicit height before removing class so CSS can transition smoothly
+            // This allows transition from explicit height to 62px
+            $header.css({
+                'height': currentHeight + 'px',
+                'min-height': currentHeight + 'px'
+            });
+            $container.css({
+                'height': currentHeight + 'px',
+                'min-height': currentHeight + 'px'
+            });
+            
+            // Force reflow to ensure height is set before transition
+            if ($header.length && $header[0]) {
+                $header[0].offsetHeight;
+            }
+            
+            // Remove menu-open class - CSS transition will animate from currentHeight to 62px
+            $header.removeClass('menu-open');
+            
+            // After transition completes (350ms), set to final fixed height
+            setTimeout(function() {
+                $header.css({
+                    'height': '62px',
+                    'min-height': '62px'
+                });
+                $container.css({
+                    'height': '62px',
+                    'min-height': '62px'
+                });
+            }, 350);
         });
         
         /**
          * Backup: Ensure state is correct after animation completes
          */
         $(document).on('shown.bs.collapse', '#navbar1', function() {
-            $('#theme-main-head, .navbar-default').addClass('menu-open');
+            var $header = $('#theme-main-head, .navbar-default');
+            $header.addClass('menu-open');
+            // Reset height to auto after transition completes
+            setTimeout(function() {
+                $header.css({
+                    'height': 'auto',
+                    'min-height': '62px'
+                });
+            }, 350);
         });
         
         $(document).on('hidden.bs.collapse', '#navbar1', function() {
-            $('#theme-main-head, .navbar-default').removeClass('menu-open');
+            var $header = $('#theme-main-head, .navbar-default');
+            var $container = $('#theme-main-head > .container');
+            // Ensure fixed height after transition completes
+            setTimeout(function() {
+                $header.css({
+                    'height': '62px',
+                    'min-height': '62px'
+                });
+                $container.css({
+                    'height': '62px',
+                    'min-height': '62px'
+                });
+            }, 50);
         });
         
         /**

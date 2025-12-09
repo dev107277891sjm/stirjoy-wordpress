@@ -2502,12 +2502,23 @@ footer p.card-icons {
     }
     
     /* Smooth transition for header when menu opens/closes */
+    /* Applied to base state so transitions work in both directions */
     #theme-main-head,
     .navbar-default {
         transition: height 0.35s ease, min-height 0.35s ease !important;
     }
     
     #theme-main-head > .container {
+        transition: height 0.35s ease, min-height 0.35s ease !important;
+    }
+    
+    /* Ensure transitions work when menu-open class is removed */
+    #theme-main-head:not(.menu-open),
+    .navbar-default:not(.menu-open) {
+        transition: height 0.35s ease, min-height 0.35s ease !important;
+    }
+    
+    #theme-main-head:not(.menu-open) > .container {
         transition: height 0.35s ease, min-height 0.35s ease !important;
     }
     
