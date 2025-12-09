@@ -439,6 +439,22 @@ header .top-header {
     position: relative;
 }
 
+/* Desktop Header Height - 83px */
+@media (min-width: 992px) {
+    #theme-main-head,
+    .navbar-default {
+        min-height: 83px;
+        height: 83px;
+    }
+    
+    /* Match container to header height on desktop */
+    #theme-main-head > .container {
+        min-height: 83px;
+        height: 83px;
+        box-sizing: border-box;
+    }
+}
+
 /* Logo on the left */
 .navbar-header {
     flex-shrink: 0;
@@ -2251,8 +2267,8 @@ footer p.card-icons {
     header nav#theme-main-head > .container {
         display: flex;
         align-items: center;
-        min-height: 62px;
-        height: 62px;
+        min-height: 83px;
+        height: 83px;
     }
     .mobile-menu {
         display: none !important;
@@ -2275,6 +2291,9 @@ footer p.card-icons {
         height: 62px;
         padding-top: 8px;
         padding-bottom: 8px;
+        padding-left: 0 !important;
+        padding-right: 15px !important;
+        margin-left: 0 !important;
     }
     
     /* Navbar Header - Logo and Burger Menu Container */
@@ -2288,9 +2307,11 @@ footer p.card-icons {
         justify-content: flex-start !important;
         align-items: center !important;
         left: 0 !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
     }
     
-    /* Logo Positioning on Mobile - Left Side */
+    /* Logo Positioning on Mobile - Left Side - No Gap */
     .navbar-header .logo {
         order: 1 !important;
         margin-left: 0 !important;
@@ -2300,6 +2321,11 @@ footer p.card-icons {
         flex-shrink: 0;
         float: left !important;
         align-self: center !important;
+    }
+    
+    .navbar-header .logo a {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
     
     .navbar-header .logo a {
