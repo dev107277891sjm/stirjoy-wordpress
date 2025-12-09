@@ -17,7 +17,7 @@ function stirjoy_get_image_url($filename) {
 ?>
 
 <!-- Hero Section -->
-<section class="stirjoy-hero-section" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('c5eb69843577e51f40926a6780c5892843d1e942.jpg')); ?>');">
+<section class="stirjoy-hero-section" style="--hero-bg-image: url('<?php echo esc_url(stirjoy_get_image_url('c5eb69843577e51f40926a6780c5892843d1e942.jpg')); ?>');">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-8">
@@ -158,7 +158,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary" style="margin-top: 14px;">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
@@ -233,7 +233,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary" style="margin-top: 50px;">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>
@@ -279,7 +279,7 @@ function stirjoy_get_image_url($filename) {
 </section>
 
 <!-- Mission Statement Section -->
-<section class="stirjoy-mission" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('508e4e32d981ac0c6bd1ff3ef2bb3129503d9ca0.jpg')); ?>');">
+<section class="stirjoy-mission" style="--mission-bg-image: url('<?php echo esc_url(stirjoy_get_image_url('508e4e32d981ac0c6bd1ff3ef2bb3129503d9ca0.jpg')); ?>');">
     <div class="container">
         <div class="row">
             <div class="col-md-9">
@@ -301,7 +301,7 @@ function stirjoy_get_image_url($filename) {
         <div class="row">
             <div class="faq-wrapper">
                 <div class="faq-illustration">
-                    <img src="<?php echo esc_url(stirjoy_get_image_url('77f8e297e41413ad7d4480ebc4973808e9612955.png')); ?>" alt="FAQ" style="width: 348px; height: auto; object-fit: contain;">
+                    <img src="<?php echo esc_url(stirjoy_get_image_url('77f8e297e41413ad7d4480ebc4973808e9612955.png')); ?>" alt="FAQ">
                 </div>
                 <div class="faq-accordion">
                     <div class="faq-item">
@@ -340,7 +340,7 @@ function stirjoy_get_image_url($filename) {
 </section>
 
 <!-- Bottom CTA Section -->
-<section class="stirjoy-cta-bottom" style="background-image: url('<?php echo esc_url(stirjoy_get_image_url('a44138152c25721355342f935e19b36cf4acba32.jpg')); ?>');">
+<section class="stirjoy-cta-bottom" style="--cta-bg-image: url('<?php echo esc_url(stirjoy_get_image_url('a44138152c25721355342f935e19b36cf4acba32.jpg')); ?>');">
     <div class="container">
         <div class="row">
             <div class="col-md-8">

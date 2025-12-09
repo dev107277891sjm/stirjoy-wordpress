@@ -4126,6 +4126,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 /* Hero Section */
 .stirjoy-hero-section {
     background: #2d5a27;
+    background-image: var(--hero-bg-image, url('../images/home page/c5eb69843577e51f40926a6780c5892843d1e942.jpg'));
     background-size: cover;
     background-position: center calc(20% - 100px);
     background-repeat: no-repeat;
@@ -4181,6 +4182,15 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Button margin variations */
+.stirjoy-product-intro .btn-hero-primary {
+    margin-top: 14px;
+}
+
+.stirjoy-how-it-works .btn-hero-primary {
+    margin-top: 50px;
 }
 
 .hero-image {
@@ -4608,7 +4618,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     padding: 180px 0 250px 0;
     color: #ffffff;
     position: relative;
-    background-image: url(''); /* Add kitchen counter image here */
+    background-image: var(--mission-bg-image, url('../images/home page/508e4e32d981ac0c6bd1ff3ef2bb3129503d9ca0.jpg'));
     background-size: cover;
     background-position: center;
     background-blend-mode: overlay;
@@ -4657,6 +4667,12 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     flex-shrink: 0;
     padding: 44px 0;
     width: fit-content;
+}
+
+.faq-illustration img {
+    width: 348px;
+    height: auto;
+    object-fit: contain;
 }
 
 .faq-illustration-placeholder {
@@ -4741,7 +4757,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     padding: 177.5px 0;
     color: #ffffff;
     position: relative;
-    background-image: url(''); /* Add field image here */
+    background-image: var(--cta-bg-image, url('../images/home page/a44138152c25721355342f935e19b36cf4acba32.jpg'));
     background-size: cover;
     background-position: center;
     background-blend-mode: overlay;
@@ -4780,7 +4796,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     }
     
     .stirjoy-hero-section .hero-title {
-        font-size: 36px;
+        font-size: 64px;
     }
     
     .product-cards {
