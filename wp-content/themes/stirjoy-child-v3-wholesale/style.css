@@ -5036,7 +5036,13 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
         grid-template-columns: repeat(2, 1fr);
     }
     
+    .stirjoy-mission {
+        padding: 87px 0 161px 0;
+        background-position: calc(40% + 100px);
+    }
+
     .mission-title {
-        font-size: 24px;
+        font-size: 48px;
+        line-height: 1.2;
     }
 }
