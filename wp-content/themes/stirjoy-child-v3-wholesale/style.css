@@ -453,6 +453,16 @@ header .top-header {
         height: 83px;
         box-sizing: border-box;
     }
+    
+    /* Logo Image Sizing on Desktop - 196px */
+    .navbar-header .logo img,
+    header .navbar-header .logo img,
+    header .logo img {
+        width: 196px !important;
+        height: auto !important;
+        max-width: 196px !important;
+        min-width: 196px;
+    }
 }
 
 /* Logo on the left */
@@ -2333,14 +2343,14 @@ footer p.card-icons {
         text-align: left;
     }
     
-    /* Logo Image Sizing on Mobile - 200px */
+    /* Logo Image Sizing on Mobile - 174px */
     .navbar-header .logo img,
     header .navbar-header .logo img,
     header .logo img {
-        width: 200px !important;
+        width: 174px !important;
         height: auto !important;
-        max-width: 200px !important;
-        min-width: 200px;
+        max-width: 174px !important;
+        min-width: 174px;
     }
     
     /* Burger Menu Button - Positioned on the Right */
