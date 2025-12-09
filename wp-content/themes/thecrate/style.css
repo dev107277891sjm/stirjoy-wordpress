@@ -1183,7 +1183,7 @@ a.woocommerce-privacy-policy-link {
     }
     body header .menu > .menu-item {
         padding: 5px 0;
-        border-bottom: 1px solid #ddd;
+        /* border-bottom: 1px solid #ddd; */
     }
     body header .menu > .menu-item:last-child{
         border-bottom: 0 none;
