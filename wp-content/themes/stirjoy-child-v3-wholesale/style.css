@@ -4496,7 +4496,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 /* Testimonials Section */
 .stirjoy-testimonials {
     background: #FFFFEB;
-    padding: 74px 0 0 0;
+    padding: 194px 0 260px 0;
 }
 
 .section-subtitle {
@@ -4595,6 +4595,77 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     text-align: left;
     /* font-family: 'Courier New', Courier, monospace; */
     margin: 0;
+}
+
+/* Testimonial image fix - hidden on desktop, visible on mobile at bottom */
+.testimonial-image-fix {
+    display: none; /* Hidden on desktop by default */
+}
+
+/* Mobile Responsive - Testimonials */
+@media (max-width: 768px) {
+    /* Hide the testimonial-image inside testimonial-cards on mobile */
+    .testimonial-cards .testimonial-image {
+        display: none;
+    }
+    
+    /* Show testimonial-image-fix at bottom on mobile */
+    .testimonial-image-fix {
+        display: block;
+        position: absolute;
+        bottom: -10px;
+        left: 5%;
+        /* transform: translateX(-50%); */
+        width: 175px;
+        max-width: 175px;
+        height: 240px;
+        z-index: 1;
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+    }
+    
+    /* Ensure wrapper has relative positioning for absolute image */
+    .testimonial-cards-wrapper {
+        position: relative;
+        /* padding-bottom: 250px; */
+        min-height: 560px;
+        overflow: hidden;
+    }
+    
+    .testimonial-cards {
+        margin: 0 15px !important;
+        padding: 42px 0 0 0;
+        gap: 20px;
+        position: relative;
+        z-index: 2 !important;
+    }
+    
+    /* Make testimonial-item width fit container on mobile */
+    .testimonial-item {
+        width: calc(100vw - 60px) !important;
+        max-width: calc(100vw - 60px) !important;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 2 !important;
+    }
+    
+    .testimonial-card {
+        background: #FFFFEB !important;
+        padding: 34px 24px !important;
+        border: 3px solid #2d5a27 !important;
+        border-radius: 20px !important;
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+        text-align: left !important;
+        min-height: 100% !important;
+        height: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        position: relative;
+        z-index: 2 !important;
+    }
 }
 
 /* Mission Statement Section */
@@ -4928,6 +4999,12 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     
     .step-icon {
         font-size: 48px;
+    }
+    
+    .stirjoy-testimonials {
+        background: #FFFFEB;
+        padding: 74px 0 0 0;
+        height: 789px;
     }
     
     .section-title-testimonials {

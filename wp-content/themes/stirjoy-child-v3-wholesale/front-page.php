@@ -275,6 +275,7 @@ function stirjoy_get_image_url($filename) {
                 </div>
             </div>
         </div>
+        <img src="<?php echo esc_url(stirjoy_get_image_url('cf237043b13972b4d238f57edb25d5c3b253681e.png')); ?>" alt="Testimonial" class="testimonial-image-fix">
     </div>
 </section>
 
