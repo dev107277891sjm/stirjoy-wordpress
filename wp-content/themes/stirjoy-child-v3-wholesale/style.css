@@ -4818,6 +4818,10 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
         font-size: 64px;
     }
     
+    .stirjoy-product-intro {
+        padding: 64px 0;
+    }
+
     .product-cards {
         flex-direction: column;
         gap: 20px;
@@ -4835,14 +4839,19 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
         height: 250px;
     }
     
-    .section-title,
-    .section-title-white {
-        font-size: 28px;
+    .stirjoy-health-planet {
+        padding: 20px 0 80px 0;
+        height: 955px;
     }
     
-    .stirjoy-product-intro {
-        padding: 64px 0;
+    .section-title,
+    .section-title-white {
+        font-size: 36px;
+        margin: 0 20px 80px 20px !important;
+        /* width: 100%; */
+        max-width: 100%;
     }
+    
     
     .intro-text {
         font-size: 36px;
@@ -4859,22 +4868,60 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     }
     
     .health-benefits-wrapper {
-        min-height: 400px;
+        min-height: 560px;
     }
     
     .bowl-placeholder {
-        width: 200px;
-        height: 200px;
+        width: 100%;
+        height: auto;
     }
     
     .benefit-item {
-        position: static;
+        /* position: static; */
         margin: 10px;
     }
     
+    .central-bowl {
+        position: absolute;
+        width: 350px;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .benefit-top-left {
+        top: -10%!important;
+        right: -60%!important;
+    }
+
+    .benefit-mid-left {
+        top: 80%!important;
+        left: 0!important;
+        /* transform: translateY(-50%); */
+    }
+
+    .benefit-bottom-left {
+        bottom: -10%!important;
+        left: 38%!important;
+    }
+
+    .benefit-top-right {
+        top: -10%!important;
+        left: -60%!important;
+    }
+
+    .benefit-mid-right {
+        top: 80%!important;
+        right: 0!important;
+        /* transform: translateY(-50%)!important; */
+    }
+
     .health-benefits-wrapper {
         flex-direction: column;
         gap: 20px;
+    }
+
+    .benefit-text {
+        width: 100px;
     }
     
     .steps {
