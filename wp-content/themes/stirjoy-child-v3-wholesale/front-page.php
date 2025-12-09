@@ -233,7 +233,7 @@ function stirjoy_get_image_url($filename) {
         </div>
         <div class="row">
             <div class="col-12 text-center">
-                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary">CUSTOMIZE YOUR BOX</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="btn btn-hero-primary btn-how-it-works">CUSTOMIZE YOUR BOX</a>
             </div>
         </div>
     </div>

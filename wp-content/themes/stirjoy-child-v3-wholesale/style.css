@@ -4483,24 +4483,14 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 }
 
 .step-description {
-    color: #e0e0e0;
+    color: #ffffff;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 550;
     line-height: 1.6;
 }
 
 .btn-how-it-works {
-    background: #a8d574;
-    color: #ffffff;
-    padding: 16px 40px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    border: none;
-    text-transform: uppercase;
+    margin-top: 24px !important;
 }
 
 .btn-how-it-works:hover {
@@ -4844,8 +4834,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
         height: 955px;
     }
     
-    .section-title,
-    .section-title-white {
+    .section-title{
         font-size: 36px;
         margin: 0 20px 80px 20px !important;
         /* width: 100%; */
@@ -4924,8 +4913,23 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
         width: 100px;
     }
     
+    .section-title-white {
+        font-size: 48px;
+        margin: 0 20px 24px 20px !important;
+        /* width: 100%; */
+        max-width: 100%;
+    }
+    
     .steps {
         margin-top: 30px;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .step-title {
+        font-size: 28px;
     }
     
     .step-icon {
