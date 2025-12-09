@@ -2251,6 +2251,8 @@ footer p.card-icons {
     header nav#theme-main-head > .container {
         display: flex;
         align-items: center;
+        min-height: 62px;
+        height: 62px;
     }
     .mobile-menu {
         display: none !important;
@@ -2270,6 +2272,7 @@ footer p.card-icons {
         flex-wrap: wrap;
         position: relative;
         min-height: 62px;
+        height: 62px;
         padding-top: 8px;
         padding-bottom: 8px;
     }
@@ -2278,21 +2281,30 @@ footer p.card-icons {
     .navbar-header {
         position: relative !important;
         width: 100% !important;
+        height: 46px !important;
+        min-height: 46px !important;
         flex-shrink: 0;
         display: flex !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         align-items: center !important;
-        min-height: 46px;
         left: 0 !important;
     }
     
-    /* Logo Positioning on Mobile */
+    /* Logo Positioning on Mobile - Left Side */
     .navbar-header .logo {
         order: 1 !important;
         margin-left: 0 !important;
         padding-left: 0 !important;
+        margin-right: auto !important;
         text-align: left !important;
         flex-shrink: 0;
+        float: left !important;
+        align-self: center !important;
+    }
+    
+    .navbar-header .logo a {
+        display: inline-block;
+        text-align: left;
     }
     
     /* Logo Image Sizing on Mobile - 200px */
@@ -2465,6 +2477,12 @@ footer p.card-icons {
 }
 
 @media (max-width: 767px) {
+    /* Mobile Header Height - 62px */
+    #theme-main-head,
+    .navbar-default {
+        min-height: 62px;
+        height: 62px;
+    }
     .woocommerce-page .products {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
@@ -2474,6 +2492,12 @@ footer p.card-icons {
 }
 
 @media (max-width: 480px) {
+    /* Mobile Header Height - 62px */
+    #theme-main-head,
+    .navbar-default {
+        min-height: 62px;
+        height: 62px;
+    }
     .woocommerce-page .products {
         grid-template-columns: 1fr;
     }
