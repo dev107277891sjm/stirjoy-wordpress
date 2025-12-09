@@ -431,7 +431,7 @@ header .top-header {
     box-shadow: none;
 }
 #theme-main-head > .container {
-    padding-top: 15px;
+    /* padding-top: 15px; */
     /* padding-bottom: 15px; */
     display: flex;
     align-items: center;
@@ -2299,7 +2299,7 @@ footer p.card-icons {
         position: relative;
         min-height: 62px;
         height: 62px;
-        padding-top: 8px;
+        /* padding-top: 8px; */
         /* padding-bottom: 8px; */
         padding-left: 0 !important;
         /* padding-right: 15px !important; */
@@ -4791,8 +4791,27 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 /* Responsive Styles */
 @media (max-width: 768px) {
     .stirjoy-hero-section {
-        padding: 60px 0;
+        padding: 24px 0 185px 0;
         min-height: auto;
+        overflow: hidden;
+        background-image: none !important;
+    }
+    
+    /* Rotate background image 90 degrees on mobile using ::before pseudo-element */
+    .stirjoy-hero-section::before {
+        background-image: var(--hero-bg-image, url('../images/home page/c5eb69843577e51f40926a6780c5892843d1e942.jpg'));
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        top: 50%;
+        left: 50%;
+        margin-top: -50vw;
+        margin-left: -50vh;
+        z-index: 1;
     }
     
     .stirjoy-hero-section .hero-title {
