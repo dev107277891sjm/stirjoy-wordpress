@@ -31,16 +31,17 @@
       <a href="<?php echo esc_url(get_permalink( get_option('woocommerce_myaccount_page_id') )); ?>" class="thecrate-account-link thecrate-account-link-loggedin">
         <i class="far fa-user-circle"></i>
       </a>
+      <a class="cart-contents" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
+        <?php echo thecrate_cart_svg(); ?>
+        <span><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+      </a>
     <?php }else{ ?>
       <a href="<?php echo esc_url(get_permalink( get_option('woocommerce_myaccount_page_id') )); ?>" class="thecrate-account-link thecrate-account-link-loggedout">
-        <i class="far fa-user-circle"></i>
+        <!-- <i class="far fa-user-circle"></i> -->
+         <span class="log-in-text">LOG IN</span>
       </a>
     <?php } ?>
 
-    <a class="cart-contents" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
-      <?php echo thecrate_cart_svg(); ?>
-      <span><?php echo WC()->cart->get_cart_contents_count(); ?></span>
-    </a>
 
     <?php if ( is_user_logged_in() ) { ?>
       <div class="woocommerce-MyAccount-navigation thecrate-woocommerce-account-tabs">

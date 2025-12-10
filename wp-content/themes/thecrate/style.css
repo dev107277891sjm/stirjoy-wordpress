@@ -10233,3 +10233,14 @@ a.col-2.sbtn:hover{
 .single .summary > button.woosw-btn {
     display: none;
 }
+
+.log-in-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.log-in-text:hover {
+    color: #e67c22;
+    text-decoration: none;
+}
