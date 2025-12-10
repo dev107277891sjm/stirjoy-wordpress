@@ -1432,6 +1432,120 @@
         }
 
         /**
+         * Social Posts Dragging Functionality (Mobile Only - Same as Testimonial Cards)
+         */
+        var socialPostsContainer = $('#social-posts-container');
+        var socialPostsWrapper = $('.social-posts-wrapper');
+        
+        function isMobileView() {
+            return window.innerWidth <= 768;
+        }
+        
+        if (socialPostsContainer.length && socialPostsWrapper.length) {
+            var isSocialDragging = false;
+            var socialStartX = 0;
+            var socialCurrentX = 0;
+            var socialCurrentTranslate = 0;
+            var socialPrevTranslate = 0;
+            var isMobile = isMobileView();
+            
+            // Update mobile detection on resize
+            $(window).on('resize', function() {
+                isMobile = isMobileView();
+            });
+
+            socialPostsWrapper.on('mousedown', function(e) {
+                if (!isMobile) return;
+                
+                isSocialDragging = true;
+                socialStartX = e.pageX - socialPostsWrapper.offset().left;
+                socialPrevTranslate = socialCurrentTranslate;
+                socialPostsWrapper.css('cursor', 'grabbing');
+                e.preventDefault();
+            });
+
+            $(document).on('mousemove', function(e) {
+                if (!isSocialDragging || !isMobile) return;
+                e.preventDefault();
+                
+                socialCurrentX = e.pageX - socialPostsWrapper.offset().left;
+                var movedX = socialCurrentX - socialStartX;
+                socialCurrentTranslate = socialPrevTranslate + movedX;
+                
+                // Apply transform to container (not image)
+                socialPostsContainer.css('transform', 'translateX(' + socialCurrentTranslate + 'px)');
+            });
+
+            $(document).on('mouseup', function() {
+                if (isSocialDragging && isMobile) {
+                    isSocialDragging = false;
+                    socialPostsWrapper.css('cursor', 'grab');
+                    
+                    // Get container and wrapper dimensions
+                    var containerWidth = socialPostsContainer.outerWidth();
+                    var wrapperWidth = socialPostsWrapper.outerWidth();
+                    var maxTranslate = 0;
+                    var minTranslate = wrapperWidth - containerWidth;
+                    
+                    // Constrain movement
+                    if (socialCurrentTranslate > maxTranslate) {
+                        socialCurrentTranslate = maxTranslate;
+                    } else if (socialCurrentTranslate < minTranslate) {
+                        socialCurrentTranslate = minTranslate;
+                    }
+                    
+                    socialPrevTranslate = socialCurrentTranslate;
+                    socialPostsContainer.css('transform', 'translateX(' + socialCurrentTranslate + 'px)');
+                }
+            });
+
+            // Touch events for mobile
+            var touchSocialStartX = 0;
+            var touchSocialCurrentX = 0;
+            var touchSocialPrevTranslate = 0;
+            var touchSocialCurrentTranslate = 0;
+
+            socialPostsWrapper.on('touchstart', function(e) {
+                if (!isMobile) return;
+                
+                touchSocialStartX = e.touches[0].clientX;
+                touchSocialPrevTranslate = socialCurrentTranslate;
+                e.preventDefault();
+            });
+
+            socialPostsWrapper.on('touchmove', function(e) {
+                if (!isMobile) return;
+                
+                touchSocialCurrentX = e.touches[0].clientX;
+                var movedX = touchSocialCurrentX - touchSocialStartX;
+                touchSocialCurrentTranslate = touchSocialPrevTranslate + movedX;
+                socialPostsContainer.css('transform', 'translateX(' + touchSocialCurrentTranslate + 'px)');
+                e.preventDefault();
+            });
+
+            socialPostsWrapper.on('touchend', function() {
+                if (!isMobile) return;
+                
+                // Get container and wrapper dimensions
+                var containerWidth = socialPostsContainer.outerWidth();
+                var wrapperWidth = socialPostsWrapper.outerWidth();
+                var maxTranslate = 0;
+                var minTranslate = wrapperWidth - containerWidth;
+                
+                // Constrain movement
+                if (touchSocialCurrentTranslate > maxTranslate) {
+                    touchSocialCurrentTranslate = maxTranslate;
+                } else if (touchSocialCurrentTranslate < minTranslate) {
+                    touchSocialCurrentTranslate = minTranslate;
+                }
+                
+                socialCurrentTranslate = touchSocialCurrentTranslate;
+                touchSocialPrevTranslate = touchSocialCurrentTranslate;
+                socialPostsContainer.css('transform', 'translateX(' + touchSocialCurrentTranslate + 'px)');
+            });
+        }
+
+        /**
          * Listen for Bootstrap collapse events to update header height SMOOTHLY
          * Use 'show' and 'hide' events (fire before animation) for smooth synchronized animation
          */

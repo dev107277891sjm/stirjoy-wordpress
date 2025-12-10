@@ -332,8 +332,10 @@ function stirjoy_get_image_url($filename) {
     <div class="row">
         <div class="col-12 text-center">
             <h2 class="section-title-social">Looks good!</h2>
-            <div class="social-posts">
-                <img src="<?php echo esc_url(stirjoy_get_image_url('3cc37f4fecfa9aebb97332df4da1fa5c620bcb24.png')); ?>" alt="Social Media" width="1362px" height="auto">
+            <div class="social-posts-wrapper">
+                <div class="social-posts" id="social-posts-container">
+                    <img src="<?php echo esc_url(stirjoy_get_image_url('3cc37f4fecfa9aebb97332df4da1fa5c620bcb24.png')); ?>" alt="Social Media">
+                </div>
             </div>
             <p class="social-follow">Follow along @stirjoy.ca</p>
         </div>
