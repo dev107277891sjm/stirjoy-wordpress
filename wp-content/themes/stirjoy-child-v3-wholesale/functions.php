@@ -11,6 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Helper function to get image URL from images folder
+ * Available globally across all template files
+ */
+function stirjoy_get_image_url($filename) {
+    $image_path = get_stylesheet_directory_uri() . '/images/home page/' . $filename;
+    return $image_path;
+}
+
+/**
  * Enqueue parent and child theme styles
  */
 function stirjoy_child_enqueue_styles() {

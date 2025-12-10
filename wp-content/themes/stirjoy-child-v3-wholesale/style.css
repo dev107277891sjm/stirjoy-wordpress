@@ -717,6 +717,14 @@ header .cart-contents span {
     /* z-index: 5; */
 }
 
+.stirjoy-footer-brand-img-desktop {
+    display: block;
+}
+
+.stirjoy-footer-brand-img-mobile {
+    display: none;
+}
+
 .stirjoy-brand-text {
     font-size: 150px;
     font-weight: 900;
@@ -774,34 +782,98 @@ header .cart-contents span {
 
 @media (max-width: 768px) {
     .stirjoy-footer {
-        padding: 60px 0 0 0;
+        padding: 74px 0 0 0;
     }
     
     .stirjoy-footer-top {
-        padding-bottom: 40px;
+        padding-bottom: 0;
+    }
+    
+    /* Restructure footer columns for mobile */
+    .stirjoy-footer-top .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    /* First two columns (navigation links) side by side */
+    .stirjoy-footer-top .row > .col-md-3:first-child,
+    .stirjoy-footer-top .row > .col-md-3:nth-child(2) {
+        flex: 0 0 50%;
+        max-width: 50%;
+        margin-bottom: 20px;
+        padding-right: 15px;
+    }
+    
+    .stirjoy-footer-top .row > .col-md-3:nth-child(2) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Newsletter column full width below */
+    .stirjoy-footer-top .row > .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: 0px;
     }
     
     .stirjoy-footer-col {
-        margin-bottom: 30px;
+        margin-bottom: 0px;
+    }
+    
+    /* Newsletter container - remove left padding on mobile */
+    .stirjoy-footer-newsletter-container {
+        padding-left: 0;
     }
     
     .stirjoy-newsletter-input-group {
-        flex-direction: column;
+        flex-direction: row;
+        width: 100%;
     }
     
     .stirjoy-email-input {
-        border-radius: 8px;
-        width: 100%;
-        margin-bottom: 10px;
+        border-radius: 8px 0 0 8px;
+        width: auto;
+        flex: 1;
+        margin-bottom: 0;
     }
     
     .stirjoy-submit-btn {
-        border-radius: 8px;
-        width: 100%;
+        border-radius: 0 8px 8px 0;
+        width: auto;
+        white-space: nowrap;
+    }
+    
+    /* Social media links - centered */
+    .stirjoy-footer-social {
+        justify-content: center;
+        gap: 80px;
+        margin: 20px 0;
+    }
+    
+    /* Copyright - centered */
+    .stirjoy-copyright {
+        text-align: center;
+        padding-top: 30px;
     }
     
     .stirjoy-brand-text {
         font-size: 80px;
+    }
+    
+    /* Footer brand logo */
+    .stirjoy-footer-brand img {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+    }
+    
+    /* Show mobile image, hide desktop image on mobile */
+    .stirjoy-footer-brand-img-desktop {
+        display: none !important;
+    }
+    
+    .stirjoy-footer-brand-img-mobile {
+        display: block !important;
     }
 }
 

@@ -539,7 +539,7 @@ button[type="submit"],
 .wp-block-search .wp-block-search__button,
 form input[type="submit"],
 .button {
-    padding: 19px 36px !important;
+    padding: 19px 22px !important;
     font-weight: 600;
     font-size: 12px;
     line-height: 1;

@@ -8,12 +8,6 @@ get_header();
 
 // Remove default page spacing and breadcrumbs for front page
 remove_action('thecrate_before_primary_area', 'thecrate_header_title_breadcrumbs_include');
-
-// Helper function to get image URL from images folder
-function stirjoy_get_image_url($filename) {
-    $image_path = get_stylesheet_directory_uri() . '/images/home page/' . $filename;
-    return $image_path;
-}
 ?>
 
 <!-- Hero Section -->
