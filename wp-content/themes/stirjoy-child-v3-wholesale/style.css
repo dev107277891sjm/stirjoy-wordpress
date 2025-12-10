@@ -5069,7 +5069,7 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     }
     
     .cta-title {
-        font-size: 28px;
+        font-size: 36px;
     }
     
     .faq-wrapper {
@@ -5127,5 +5127,9 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 
     .social-follow{
         margin: 44px 0 0 0;
+    }
+
+    .stirjoy-cta-bottom {
+        padding: 107.5px 0;
     }
 }
