@@ -1449,9 +1449,44 @@
             var socialPrevTranslate = 0;
             var isMobile = isMobileView();
             
-            // Update mobile detection on resize
+            // Function to center the social posts image
+            function centerSocialPosts() {
+                if (!isMobile) return;
+                
+                var containerWidth = socialPostsContainer.outerWidth();
+                var wrapperWidth = socialPostsWrapper.outerWidth();
+                
+                if (containerWidth > wrapperWidth) {
+                    // Center the image: move left by half the difference
+                    socialCurrentTranslate = (wrapperWidth - containerWidth) / 2;
+                    socialPrevTranslate = socialCurrentTranslate;
+                    socialPostsContainer.css('transform', 'translateX(' + socialCurrentTranslate + 'px)');
+                }
+            }
+            
+            // Center on page load (after images are loaded)
+            $(window).on('load', function() {
+                setTimeout(centerSocialPosts, 100);
+            });
+            
+            // Also center immediately if already loaded
+            if (document.readyState === 'complete') {
+                setTimeout(centerSocialPosts, 100);
+            } else {
+                $(document).ready(function() {
+                    setTimeout(centerSocialPosts, 100);
+                });
+            }
+            
+            // Update mobile detection on resize and recenter
             $(window).on('resize', function() {
+                var wasMobile = isMobile;
                 isMobile = isMobileView();
+                
+                // If switching to mobile or already mobile, recenter
+                if (isMobile && !isSocialDragging) {
+                    setTimeout(centerSocialPosts, 100);
+                }
             });
 
             socialPostsWrapper.on('mousedown', function(e) {
