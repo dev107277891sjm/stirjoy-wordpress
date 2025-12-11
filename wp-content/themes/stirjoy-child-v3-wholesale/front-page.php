@@ -201,7 +201,7 @@ remove_action('thecrate_before_primary_area', 'thecrate_header_title_breadcrumbs
 </section>
 
 <!-- How It Works Section -->
-<section class="stirjoy-how-it-works">
+<section class="stirjoy-how-it-works" id="how-it-works">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
