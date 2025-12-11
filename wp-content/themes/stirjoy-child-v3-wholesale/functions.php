@@ -525,10 +525,23 @@ function stirjoy_add_to_cart() {
     }
     
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
-    $quantity = isset( $_POST['quantity'] ) ? absint( $_POST['quantity'] ) : 1;
+    // Force quantity to 1 - each product can only be added once
+    $quantity = 1;
     
     if ( ! $product_id ) {
         wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
+    }
+    
+    // Check if product is already in cart
+    $cart = WC()->cart->get_cart();
+    foreach ( $cart as $cart_item_key => $cart_item ) {
+        if ( $cart_item['product_id'] == $product_id ) {
+            wp_send_json_error( array( 
+                'message' => 'This product is already in your cart. Each product can only be added once.',
+                'already_in_cart' => true,
+                'cart_item_key' => $cart_item_key
+            ) );
+        }
     }
     
     $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity );

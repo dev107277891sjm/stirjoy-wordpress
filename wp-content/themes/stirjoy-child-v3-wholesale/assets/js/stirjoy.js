@@ -764,6 +764,12 @@
             var productId = $button.data('product-id');
             var $card = $button.closest('.meal-product-card');
             
+            // Check if product is already in cart (client-side check)
+            if ($card.attr('data-in-cart') === '1') {
+                alert('This product is already in your cart. Each product can only be added once.');
+                return false;
+            }
+            
             // Lock cart operations
             isCartOperationInProgress = true;
             $('.add-to-cart-btn, .remove-from-cart-btn, .mini_cart_item a.remove').css('pointer-events', 'none').css('opacity', '0.6');
@@ -810,6 +816,15 @@
                             if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
                                 window.location.href = response.data.login_url || stirjoyData.loginUrl;
                             }
+                        } else if (response.data && response.data.already_in_cart) {
+                            // Product already in cart - update UI to show remove button
+                            $card.attr('data-in-cart', '1');
+                            if ($newButton.length === 0) {
+                                $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]').replaceWith(
+                                    '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                                );
+                            }
+                            alert(response.data.message || 'This product is already in your cart.');
                         } else {
                             alert(response.data.message || 'Error adding to cart');
                         }
@@ -1340,6 +1355,13 @@
                     }
                 });
             } else {
+                // Check if product is already in cart (client-side check)
+                var $shopCard = $('.meal-product-card[data-product-id="' + productId + '"]');
+                if ($shopCard.length > 0 && $shopCard.attr('data-in-cart') === '1') {
+                    alert('This product is already in your cart. Each product can only be added once.');
+                    return false;
+                }
+                
                 // Immediately update button for instant feedback
                 $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
                 
@@ -1357,7 +1379,6 @@
                     success: function(response) {
                         if (response.success) {
                             // Update shop page card state if exists
-                            var $shopCard = $('.meal-product-card[data-product-id="' + productId + '"]');
                             if ($shopCard.length > 0) {
                                 $shopCard.attr('data-in-cart', '1');
                                 $shopCard.find('.add-to-cart-btn').replaceWith(
@@ -1374,7 +1395,21 @@
                         } else {
                             // Revert on error
                             $button.text('+ Add').removeClass('remove-btn').addClass('add-btn');
-                            alert(response.data.message || 'Error adding to cart');
+                            
+                            // Check if product already in cart
+                            if (response.data && response.data.already_in_cart) {
+                                // Product already in cart - update UI to show remove button
+                                if ($shopCard.length > 0) {
+                                    $shopCard.attr('data-in-cart', '1');
+                                    $shopCard.find('.add-to-cart-btn').replaceWith(
+                                        '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
+                                    );
+                                }
+                                $button.text('- Remove').removeClass('add-btn').addClass('remove-btn');
+                                alert(response.data.message || 'This product is already in your cart.');
+                            } else {
+                                alert(response.data.message || 'Error adding to cart');
+                            }
                         }
                         
                         // Unlock cart operations
