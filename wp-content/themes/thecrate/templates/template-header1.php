@@ -116,7 +116,7 @@
       </div>
     </div>  
 
-    <?php if ( class_exists( 'WooCommerce' ) && thecrate_redux('thecrate_fixed_sidebar_cart') == true ) { ?>
+    <?php if ( class_exists( 'WooCommerce' ) && thecrate_redux('thecrate_fixed_sidebar_cart') == true && is_user_logged_in() ) { ?>
       <!-- Fixed Sidebar Menu -->
       <div class="relative fixed-sidebar-menu-holder header7">
           <div class="fixed-sidebar-menu fixed-sidebar-menu-minicart">

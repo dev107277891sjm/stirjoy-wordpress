@@ -16,6 +16,15 @@
         $(document).on('click', '#stirjoy-confirm-box', function(e) {
             e.preventDefault();
             
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to confirm your box.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
+            
             var $button = $(this);
             $button.addClass('loading');
             
@@ -30,6 +39,15 @@
                     if (response.success) {
                         // Reload page to show confirmed state
                         location.reload();
+                    } else {
+                        // Check if login is required
+                        if (response.data && response.data.login_required) {
+                            if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
+                                window.location.href = response.data.login_url || stirjoyData.loginUrl;
+                            }
+                        } else {
+                            alert(response.data.message || 'An error occurred. Please try again.');
+                        }
                     }
                 },
                 error: function() {
@@ -47,6 +65,15 @@
         $(document).on('click', '#stirjoy-modify-selection', function(e) {
             e.preventDefault();
             
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to modify your selection.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
+            
             var $button = $(this);
             $button.addClass('loading');
             
@@ -61,6 +88,15 @@
                     if (response.success) {
                         // Reload page to show unconfirmed state
                         location.reload();
+                    } else {
+                        // Check if login is required
+                        if (response.data && response.data.login_required) {
+                            if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
+                                window.location.href = response.data.login_url || stirjoyData.loginUrl;
+                            }
+                        } else {
+                            alert(response.data.message || 'An error occurred. Please try again.');
+                        }
                     }
                 },
                 error: function() {
@@ -223,6 +259,15 @@
         // Cart Item Remove Icon
         $(document).on('click', '.mini_cart_item a.remove', function(e) {
             e.preventDefault();
+            
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to manage your cart.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
 
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
@@ -292,7 +337,15 @@
                                 '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
                             );
                         }
-                        alert('Error removing product from cart');
+                        
+                        // Check if login is required
+                        if (response.data && response.data.login_required) {
+                            if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
+                                window.location.href = response.data.login_url || stirjoyData.loginUrl;
+                            }
+                        } else {
+                            alert(response.data.message || 'Error removing product from cart');
+                        }
                     }
                     
                     // Unlock cart operations
@@ -615,6 +668,16 @@
          */
         $(document).on('click', '.toggle-cart-sidebar', function(e) {
             e.preventDefault();
+            
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to view your cart.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
+            
             $('.fixed-sidebar-menu-minicart').toggleClass('open');
             $('.your-box-header').toggleClass('cart-open');
         });
@@ -683,6 +746,15 @@
         $(document).on('click', '.add-to-cart-btn', function(e) {
             e.preventDefault();
             
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to add products to your cart.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
+            
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
                 return false;
@@ -732,7 +804,15 @@
                             '<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>'
                         );
                         $card.attr('data-in-cart', '0');
-                        alert(response.data.message || 'Error adding to cart');
+                        
+                        // Check if login is required
+                        if (response.data && response.data.login_required) {
+                            if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
+                                window.location.href = response.data.login_url || stirjoyData.loginUrl;
+                            }
+                        } else {
+                            alert(response.data.message || 'Error adding to cart');
+                        }
                     }
                     
                     // Unlock cart operations
@@ -760,6 +840,15 @@
          */
         $(document).on('click', '.remove-from-cart-btn', function(e) {
             e.preventDefault();
+            
+            // Check if user is logged in
+            if (!stirjoyData.isLoggedIn) {
+                var message = 'Please log in to manage your cart.';
+                if (confirm(message + '\n\nWould you like to go to the login page?')) {
+                    window.location.href = stirjoyData.loginUrl;
+                }
+                return false;
+            }
             
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
@@ -809,7 +898,15 @@
                             '<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>'
                         );
                         $card.attr('data-in-cart', '1');
-                        alert(response.data.message || 'Error removing from cart');
+                        
+                        // Check if login is required
+                        if (response.data && response.data.login_required) {
+                            if (confirm(response.data.message + '\n\nWould you like to go to the login page?')) {
+                                window.location.href = response.data.login_url || stirjoyData.loginUrl;
+                            }
+                        } else {
+                            alert(response.data.message || 'Error removing from cart');
+                        }
                     }
                     
                     // Unlock cart operations

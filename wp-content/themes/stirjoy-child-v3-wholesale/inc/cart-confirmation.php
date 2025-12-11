@@ -16,6 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function stirjoy_ajax_confirm_box() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
+        wp_send_json_error( array( 
+            'message' => 'Please log in to confirm your box.',
+            'login_required' => true,
+            'login_url' => $login_url
+        ) );
+    }
+    
     if ( ! class_exists( 'WooCommerce' ) ) {
         wp_send_json_error( array( 'message' => 'WooCommerce not active' ) );
     }
@@ -37,6 +47,16 @@ add_action( 'wp_ajax_nopriv_stirjoy_confirm_box', 'stirjoy_ajax_confirm_box' );
  */
 function stirjoy_ajax_modify_selection() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
+        wp_send_json_error( array( 
+            'message' => 'Please log in to modify your selection.',
+            'login_required' => true,
+            'login_url' => $login_url
+        ) );
+    }
     
     if ( ! class_exists( 'WooCommerce' ) ) {
         wp_send_json_error( array( 'message' => 'WooCommerce not active' ) );

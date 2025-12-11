@@ -5196,6 +5196,40 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     .stirjoy-social {
         padding: 74px 0 100px 0;
     }
+}
+
+/* ===================================
+   Hide Cart Elements for Logged-Out Users
+   =================================== */
+
+/* Hide cart buttons for logged-out users */
+body:not(.logged-in) .add-to-cart-btn,
+body:not(.logged-in) .remove-from-cart-btn {
+    display: none !important;
+}
+
+/* Hide cart sidebar for logged-out users */
+body:not(.logged-in) .fixed-sidebar-menu-minicart {
+    display: none !important;
+}
+
+/* Hide "Your Box" header for logged-out users */
+body:not(.logged-in) .your-box-header {
+    display: none !important;
+}
+
+/* Hide mini cart remove buttons for logged-out users */
+body:not(.logged-in) .mini_cart_item a.remove,
+body:not(.logged-in) .remove_from_cart_button {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Hide confirm box button for logged-out users */
+body:not(.logged-in) .confirm-my-box,
+body:not(.logged-in) .confirm-box-desc {
+    display: none !important;
+}
 
     .social-follow{
         margin: 44px 0 0 0;

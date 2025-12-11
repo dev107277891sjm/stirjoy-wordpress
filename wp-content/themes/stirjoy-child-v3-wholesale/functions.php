@@ -51,9 +51,12 @@ function stirjoy_child_enqueue_styles() {
     );
 
     // Localize script for AJAX
+    $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
     wp_localize_script( 'stirjoy-child-script', 'stirjoyData', array(
         'ajaxUrl' => admin_url( 'admin-ajax.php' ),
         'nonce' => wp_create_nonce( 'stirjoy_nonce' ),
+        'isLoggedIn' => is_user_logged_in(),
+        'loginUrl' => $login_url ? $login_url : wp_login_url(),
     ));
 
     wp_dequeue_script( 'thecrate-custom' );
@@ -511,6 +514,16 @@ add_action( 'wp_ajax_nopriv_stirjoy_get_calendar_month', 'stirjoy_get_calendar_m
 function stirjoy_add_to_cart() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
+        wp_send_json_error( array( 
+            'message' => 'Please log in to add products to your cart.',
+            'login_required' => true,
+            'login_url' => $login_url
+        ) );
+    }
+    
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
     $quantity = isset( $_POST['quantity'] ) ? absint( $_POST['quantity'] ) : 1;
     
@@ -539,6 +552,16 @@ add_action( 'wp_ajax_nopriv_stirjoy_add_to_cart', 'stirjoy_add_to_cart' );
  */
 function stirjoy_remove_from_cart() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
+        wp_send_json_error( array( 
+            'message' => 'Please log in to manage your cart.',
+            'login_required' => true,
+            'login_url' => $login_url
+        ) );
+    }
     
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
     
@@ -578,6 +601,19 @@ add_action( 'wp_ajax_nopriv_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart
 function stirjoy_get_cart_info() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_success( array(
+            'count' => 0,
+            'total_html' => wc_price( 0 ),
+            'total_plain' => wc_price( 0 ),
+            'cart_subtotal_numeric' => 0,
+            'cart_hash' => '',
+            'product_ids' => array(),
+            'logged_in' => false
+        ) );
+    }
+    
     // Get cart total as HTML
     $cart_subtotal_html = WC()->cart->get_cart_subtotal();
     
@@ -596,7 +632,8 @@ function stirjoy_get_cart_info() {
         'total_plain' => wc_price( $cart_total_plain ),
         'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
         'cart_hash' => WC()->cart->get_cart_hash(),
-        'product_ids' => $product_ids_in_cart
+        'product_ids' => $product_ids_in_cart,
+        'logged_in' => true
     ) );
 }
 add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
