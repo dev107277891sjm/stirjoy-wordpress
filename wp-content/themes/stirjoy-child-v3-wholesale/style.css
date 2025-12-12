@@ -567,14 +567,14 @@ header .cart-contents span {
     margin-bottom: 30px;
     font-size: 16px;
     font-weight: 700;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-decoration: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
 }
 .stirjoy-footer-item a {
-    color: #000000;
+    color: #396A26;
     text-decoration: none;
 }
 .stirjoy-footer-item a:hover {
@@ -611,7 +611,7 @@ header .cart-contents span {
 }
 /* Newsletter Section */
 .stirjoy-newsletter-title {
-    color: #000000;
+    color: #396A26;
     font-size: 18px;
     font-weight: 600;
     line-height: 1.5;
@@ -623,6 +623,7 @@ header .cart-contents span {
     display: flex;
     gap: 0;
     border-radius: 8px;
+    border: 3px solid #396A26;
     align-items: center;
     margin-bottom: 30px;
 }
@@ -634,22 +635,25 @@ header .cart-contents span {
     padding: 16px 20px;
     font-size: 16px;
     /* font-family: 'Courier New', Courier, monospace; */
-    color: #000000;
+    color: #396A26;
     width: 250px;
     outline: none;
     flex: 1;
 }
 
 .stirjoy-email-input::placeholder {
-    color: #000000;
+    color: #396A26;
     /* font-family: 'Courier New', Courier, monospace; */
     font-weight: 600 !important;
 }
 
 .stirjoy-submit-btn {
     background: #E2EE48 !important;
-    color: #000000 !important;
-    border: none !important;
+    color: #396A26 !important;
+    border: 3px solid #396A26!important;
+    border-top: none!important;
+    border-right: none!important;
+    border-bottom: none!important;
     border-radius: 0 8px 8px 0 !important;
     padding: 16px 30px !important;
     font-size: 16px !important;
@@ -677,7 +681,7 @@ header .cart-contents span {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #000000;
+    color: #396A26;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
@@ -699,7 +703,7 @@ header .cart-contents span {
 
 /* Copyright */
 .stirjoy-copyright {
-    color: #000000;
+    color: #396A26;
     font-size: 14px;
     font-weight: 600;
     margin: 0;
@@ -712,7 +716,7 @@ header .cart-contents span {
 /* Large STIRJOY Brand Text (Bottom) */
 .stirjoy-footer-brand {
     text-align: center;
-    padding: 24px 0 0 0;
+    padding: 24px 40px 0 40px;
     position: relative;
     /* z-index: 5; */
 }
@@ -796,17 +800,22 @@ header .cart-contents span {
     }
     
     /* First two columns (navigation links) side by side */
-    .stirjoy-footer-top .row > .col-md-3:first-child,
-    .stirjoy-footer-top .row > .col-md-3:nth-child(2) {
+    .stirjoy-footer-top .row > .col-md-3:first-child {
         flex: 0 0 50%;
-        max-width: 50%;
         margin-bottom: 20px;
-        padding-right: 15px;
+        padding-right: 5px;
+        padding-left: 5px;
+        max-width: 45%;
+        width: 45%;
     }
     
     .stirjoy-footer-top .row > .col-md-3:nth-child(2) {
-        padding-left: 15px;
-        padding-right: 15px;
+        flex: 0 0 60%;
+        margin-bottom: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+        max-width: 55%;
+        width: 55%;
     }
     
     /* Newsletter column full width below */
@@ -814,6 +823,7 @@ header .cart-contents span {
         flex: 0 0 100%;
         max-width: 100%;
         margin-top: 0px;
+        padding: 0 5px;
     }
     
     .stirjoy-footer-col {
@@ -832,14 +842,14 @@ header .cart-contents span {
     
     .stirjoy-email-input {
         border-radius: 8px 0 0 8px;
-        width: auto;
+        width: calc(100% - 110px);
         flex: 1;
         margin-bottom: 0;
     }
     
     .stirjoy-submit-btn {
         border-radius: 0 8px 8px 0;
-        width: auto;
+        width: 110px;
         white-space: nowrap;
     }
     
@@ -5196,6 +5206,14 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
     .stirjoy-social {
         padding: 74px 0 100px 0;
     }
+
+    .social-follow{
+        margin: 44px 0 0 0;
+    }
+
+    .stirjoy-cta-bottom {
+        padding: 107.5px 0;
+    }
 }
 
 /* ===================================
@@ -5229,13 +5247,4 @@ body:not(.logged-in) .remove_from_cart_button {
 body:not(.logged-in) .confirm-my-box,
 body:not(.logged-in) .confirm-box-desc {
     display: none !important;
-}
-
-    .social-follow{
-        margin: 44px 0 0 0;
-    }
-
-    .stirjoy-cta-bottom {
-        padding: 107.5px 0;
-    }
 }

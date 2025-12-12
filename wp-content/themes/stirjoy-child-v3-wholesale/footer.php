@@ -14,15 +14,15 @@
                     <!-- Left Column - Navigation Links -->
                     <div class="col-md-3 stirjoy-footer-col">
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">SHOP MEALS</a></p>
-                        <p class="stirjoy-footer-item"><a href="#how-it-works">HOW IT WORKS</a></p>
-                        <p class="stirjoy-footer-item"><a href="#our-story">OUR STORY</a></p>
-                        <p class="stirjoy-footer-item"><a href="#faqs">FAQ</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( wc_get_page_permalink( 'home' ) ); ?>/#how-it-works">HOW IT WORKS</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( wc_get_page_permalink( 'home' ) ); ?>/#our-story">OUR STORY</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( wc_get_page_permalink( 'my account' ) ); ?>">MY ACCOUNT</a></p>
                     </div>
                     
                     <!-- Middle Column - Information Links -->
                     <div class="col-md-3 stirjoy-footer-col">
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'contact' ) ) ?: '#' ); ?>">CONTACT US</a></p>
-                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'delivery' ) ) ?: '#' ); ?>">DELIVERY</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'delivery' ) ) ?: '#' ); ?>">FAQs</a></p>
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'terms-conditions' ) ) ?: wc_get_page_permalink( 'terms' ) ); ?>">TERMS & CONDITIONS</a></p>
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'privacy-policy' ) ) ?: get_privacy_policy_url() ); ?>">PRIVACY POLICY</a></p>
                     </div>
@@ -42,11 +42,11 @@
                         
                             <div class="stirjoy-footer-social">
                                 <a href="https://www.tiktok.com/@stirjoy" target="_blank" rel="noopener" class="stirjoy-social-link">
-                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group.svg')); ?>" alt="TIKTOK">
+                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group (1).png')); ?>" alt="TIKTOK">
                                     <span>TIKTOK</span>
                                 </a>
                                 <a href="https://www.instagram.com/stirjoy" target="_blank" rel="noopener" class="stirjoy-social-link">
-                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group.png')); ?>" alt="INSTAGRAM">
+                                    <img src="<?php echo esc_url(stirjoy_get_image_url('Group (2).png')); ?>" alt="INSTAGRAM">
                                     <span>INSTAGRAM</span>
                                 </a>
                             </div>
