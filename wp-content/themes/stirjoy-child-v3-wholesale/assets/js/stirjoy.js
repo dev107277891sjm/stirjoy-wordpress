@@ -1793,23 +1793,98 @@
         });
         
         /**
-         * Mobile Menu Toggle - Sync button state only
+         * Mobile Menu Toggle - Open/Close Full Screen Mobile Menu
          */
-        $(document).on('click', '.navbar-toggle', function() {
-            var $button = $(this);
-            var $target = $($button.data('target'));
-            
-            // Sync button state after Bootstrap handles the toggle
-            // Header height is handled by Bootstrap events above for smooth animation
-            if ($target.length) {
-                setTimeout(function() {
-                    if ($target.hasClass('in') || $target.hasClass('show')) {
-                        $button.removeClass('collapsed').attr('aria-expanded', 'true');
-                    } else {
-                        $button.addClass('collapsed').attr('aria-expanded', 'false');
-                    }
-                }, 50);
+        $(document).on('click', '.navbar-toggle', function(e) {
+            // Only handle on mobile devices
+            if ($(window).width() > 991) {
+                return;
             }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Prevent Bootstrap collapse from interfering
+            var $navbar1 = $('#navbar1');
+            if ($navbar1.hasClass('in') || $navbar1.hasClass('show')) {
+                $navbar1.collapse('hide');
+            }
+            
+            var $mobileMenu = $('#stirjoy-mobile-menu');
+            console.log('Mobile menu toggle clicked. Menu element:', $mobileMenu.length);
+            console.log('Current classes:', $mobileMenu.attr('class'));
+            
+            if ($mobileMenu.length === 0) {
+                console.error('Mobile menu element not found!');
+                return;
+            }
+            
+            if ($mobileMenu.hasClass('active')) {
+                // Close menu
+                console.log('Closing menu');
+                $mobileMenu.removeClass('active');
+                $('body').removeClass('mobile-menu-open');
+            } else {
+                // Open menu
+                console.log('Opening menu');
+                $mobileMenu.addClass('active');
+                $('body').addClass('mobile-menu-open');
+                
+                // Force display with a small delay to ensure CSS is applied
+                setTimeout(function() {
+                    $mobileMenu.css({
+                        'display': 'flex',
+                        'visibility': 'visible',
+                        'opacity': '1',
+                        'transform': 'translateX(0)'
+                    });
+                    console.log('Menu classes after opening:', $mobileMenu.attr('class'));
+                    console.log('Menu computed display:', $mobileMenu.css('display'));
+                    console.log('Menu computed visibility:', $mobileMenu.css('visibility'));
+                    console.log('Menu computed opacity:', $mobileMenu.css('opacity'));
+                }, 10);
+            }
+            
+            return false;
+        });
+        
+        /**
+         * Close Mobile Menu with X button
+         */
+        $(document).on('click', '.stirjoy-mobile-menu-close', function(e) {
+            e.preventDefault();
+            var $mobileMenu = $('#stirjoy-mobile-menu');
+            $mobileMenu.removeClass('active');
+            $('body').removeClass('mobile-menu-open');
+        });
+        
+        /**
+         * Close Mobile Menu when clicking on menu links
+         */
+        $(document).on('click', '.stirjoy-mobile-menu-link, .stirjoy-mobile-menu-cta', function() {
+            var $mobileMenu = $('#stirjoy-mobile-menu');
+            $mobileMenu.removeClass('active');
+            $('body').removeClass('mobile-menu-open');
+        });
+        
+        /**
+         * Close Mobile Menu when clicking outside (on overlay)
+         */
+        $(document).on('click', '.stirjoy-mobile-menu', function(e) {
+            // Only close if clicking directly on the menu container (not on children)
+            if ($(e.target).hasClass('stirjoy-mobile-menu')) {
+                var $mobileMenu = $('#stirjoy-mobile-menu');
+                $mobileMenu.removeClass('active');
+                $('body').removeClass('mobile-menu-open');
+            }
+        });
+        
+        /**
+         * Prevent closing when clicking inside menu content
+         */
+        $(document).on('click', '.stirjoy-mobile-menu-header, .stirjoy-mobile-menu-content, .stirjoy-mobile-menu-footer', function(e) {
+            e.stopPropagation();
         });
         
         /**

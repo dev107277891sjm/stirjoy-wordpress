@@ -5248,3 +5248,249 @@ body:not(.logged-in) .confirm-my-box,
 body:not(.logged-in) .confirm-box-desc {
     display: none !important;
 }
+
+/* ===================================
+   Mobile Menu Full Screen
+   =================================== */
+
+/* Hide mobile menu on desktop */
+@media (min-width: 992px) {
+    .stirjoy-mobile-menu {
+        display: none !important;
+    }
+}
+
+.stirjoy-mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #FFFFEB;
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+}
+
+@media (max-width: 991px) {
+    .stirjoy-mobile-menu.active {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translateX(0) !important;
+        pointer-events: auto !important;
+    }
+    
+    /* Ensure all child elements are visible */
+    .stirjoy-mobile-menu.active * {
+        visibility: visible !important;
+    }
+    
+    .stirjoy-mobile-menu.active .stirjoy-mobile-menu-header,
+    .stirjoy-mobile-menu.active .stirjoy-mobile-menu-content,
+    .stirjoy-mobile-menu.active .stirjoy-mobile-menu-footer {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+.stirjoy-mobile-menu-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #FFFFEB;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 60px;
+}
+
+.stirjoy-mobile-menu-logo {
+    flex: 1;
+}
+
+.stirjoy-mobile-menu-logo img {
+    max-width: 174px;
+    height: auto;
+}
+
+.stirjoy-mobile-menu-close {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #2d5a27;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.stirjoy-mobile-menu-close:hover {
+    background: rgba(45, 90, 39, 0.1);
+}
+
+.stirjoy-mobile-menu-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+.stirjoy-mobile-menu-content {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 40px;
+    min-height: 200px;
+}
+
+.stirjoy-mobile-menu-cta {
+    background: #a8d574;
+    color: #2d5a27;
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: inline-block;
+    min-width: 280px;
+}
+
+.stirjoy-mobile-menu-cta:hover {
+    background: #9ac863;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stirjoy-mobile-menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.stirjoy-mobile-menu-link {
+    color: #2d5a27;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 12px 0;
+    transition: color 0.2s ease;
+    width: 100%;
+}
+
+.stirjoy-mobile-menu-link:hover {
+    color: #a8d574;
+}
+
+.stirjoy-mobile-menu-footer {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #2d5a27;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 60px;
+}
+
+.stirjoy-mobile-menu-social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+}
+
+.stirjoy-mobile-menu-social:hover {
+    opacity: 0.8;
+}
+
+.stirjoy-mobile-menu-social img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Hide page content when mobile menu is open */
+@media (max-width: 991px) {
+    body.mobile-menu-open {
+        overflow: hidden;
+    }
+
+    body.mobile-menu-open #page {
+        display: none !important;
+    }
+
+    body.mobile-menu-open header {
+        display: none !important;
+    }
+    
+    /* Hide old mobile menu when new menu is open */
+    body.mobile-menu-open #navbar1 {
+        display: none !important;
+    }
+    
+    /* Ensure mobile menu is visible when active */
+    body.mobile-menu-open .stirjoy-mobile-menu.active {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .stirjoy-mobile-menu-header {
+        padding: 16px;
+    }
+    
+    .stirjoy-mobile-menu-content {
+        padding: 30px 20px;
+        gap: 30px;
+    }
+    
+    .stirjoy-mobile-menu-cta {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .stirjoy-mobile-menu-nav {
+        gap: 20px;
+    }
+    
+    .stirjoy-mobile-menu-link {
+        font-size: 14px;
+    }
+    
+    .stirjoy-mobile-menu-footer {
+        padding: 16px;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .stirjoy-mobile-menu-social {
+        width: 100%;
+        justify-content: center;
+    }
+}
