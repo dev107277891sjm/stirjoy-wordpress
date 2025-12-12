@@ -507,6 +507,37 @@ header .top-header {
     padding-left: 0;
 }
 
+/* Center all elements vertically within thecrate-header-icons-group */
+header .thecrate-header-icons-group {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    top: 0 !important;
+}
+
+/* Center thecrate-account-link vertically within thecrate-header-icons-group */
+header .thecrate-header-icons-group .thecrate-account-link {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    top: 0 !important;
+    vertical-align: middle;
+}
+
+/* Center log-in-text within account link */
+header .thecrate-header-icons-group .thecrate-account-link .log-in-text {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+/* Override parent theme's top offset for account link */
+header .header-nav-actions .thecrate-account-link {
+    top: 0 !important;
+}
+
 /* Header actions on the right */
 #navbar1 {
     order: 3;
@@ -515,6 +546,7 @@ header .top-header {
 }
 
 header .header-nav-actions {
+    display: flex;
     text-align: right;
     padding: 0;
 }

@@ -28,8 +28,10 @@
 
   <?php if ( class_exists( 'WooCommerce' ) ) { ?>
     <?php if ( is_user_logged_in() ) { ?>
+      
       <a href="<?php echo esc_url(get_permalink( get_option('woocommerce_myaccount_page_id') )); ?>" class="thecrate-account-link thecrate-account-link-loggedin">
-        <i class="far fa-user-circle"></i>
+        <!-- <i class="far fa-user-circle"></i> -->
+        <span class="log-in-text">MY ACCOUNT</span>
       </a>
       <a class="cart-contents" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
         <?php echo thecrate_cart_svg(); ?>
