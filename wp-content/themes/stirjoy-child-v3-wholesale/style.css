@@ -2543,15 +2543,28 @@ footer p.card-icons {
         overflow: hidden;
     }
     
-    /* When Expanded (Bootstrap adds .in or .show class) */
-    #navbar1.collapse.in,
-    #navbar1.collapse.show {
-        display: flex !important;
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
-        position: relative !important;
-        top: 0 !important;
+    /* When Expanded (Bootstrap adds .in or .show class) - Desktop only */
+    @media (min-width: 992px) {
+        #navbar1.collapse.in,
+        #navbar1.collapse.show {
+            display: flex !important;
+            flex-direction: column;
+            height: auto;
+            overflow: visible;
+            position: relative !important;
+            top: 0 !important;
+        }
+    }
+    
+    /* On mobile, always hide navbar1 even when Bootstrap tries to show it */
+    @media (max-width: 991px) {
+        #navbar1.collapse.in,
+        #navbar1.collapse.show {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
     }
     
     /* During collapse animation - keep overflow hidden for smooth animation */
@@ -5512,6 +5525,25 @@ body:not(.logged-in) .confirm-box-desc {
     /* Hide old mobile menu when new menu is open */
     body.mobile-menu-open #navbar1 {
         display: none !important;
+    }
+    
+    /* Always hide navbar1 on mobile - use custom menu instead */
+    #navbar1 {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Prevent navbar1 from showing even if Bootstrap tries to show it */
+    #navbar1.collapse.in,
+    #navbar1.collapse.show,
+    #navbar1.in,
+    #navbar1.show {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
     
     /* Ensure mobile menu is visible when active */

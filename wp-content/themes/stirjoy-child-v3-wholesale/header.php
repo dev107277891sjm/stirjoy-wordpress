@@ -113,7 +113,7 @@
                 <a href="<?php echo esc_url( wc_get_page_permalink( 'home' ) ); ?>/#how-it-works" class="stirjoy-mobile-menu-link">HOW IT WORKS</a>
                 <a href="<?php echo esc_url( wc_get_page_permalink( 'home' ) ); ?>/#our-story" class="stirjoy-mobile-menu-link">OUR STORY</a>
                 <a href="<?php echo esc_url( wc_get_page_permalink( 'my account' ) ); ?>" class="stirjoy-mobile-menu-link">MY ACCOUNT</a>
-                <a href="<?php echo esc_url( get_permalink( get_page_by_path( 'delivery' ) ) ?: '#' ); ?>" class="stirjoy-mobile-menu-link">FAQs</a>
+                <a href="<?php echo esc_url( wc_get_page_permalink( 'home' ) ); ?>/#faqs" class="stirjoy-mobile-menu-link">FAQs</a>
             </nav>
         </div>
         

@@ -286,7 +286,7 @@ remove_action('thecrate_before_primary_area', 'thecrate_header_title_breadcrumbs
 </section>
 
 <!-- FAQs Section -->
-<section class="stirjoy-faqs">
+<section class="stirjoy-faqs" id="faqs">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">

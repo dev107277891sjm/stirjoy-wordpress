@@ -148,7 +148,7 @@
             console.log('Shipping elements found:', $('.shipping-progress').length);
             console.log('Gift elements found:', $('.gift-progress').length);
         }
-        
+
         function updateFreeShippingAndGiftBar() {
             fetch('/wp-json/wc/store/v1/cart')
                 .then(response => response.json())
@@ -259,7 +259,7 @@
         // Cart Item Remove Icon
         $(document).on('click', '.mini_cart_item a.remove', function(e) {
             e.preventDefault();
-            
+
             // Check if user is logged in
             if (!stirjoyData.isLoggedIn) {
                 var message = 'Please log in to manage your cart.';
@@ -1715,13 +1715,27 @@
         /**
          * Listen for Bootstrap collapse events to update header height SMOOTHLY
          * Use 'show' and 'hide' events (fire before animation) for smooth synchronized animation
+         * Only on desktop - prevent on mobile
          */
-        $(document).on('show.bs.collapse', '#navbar1', function() {
+        $(document).on('show.bs.collapse', '#navbar1', function(e) {
+            // Don't handle on mobile - use custom menu instead
+            if ($(window).width() <= 991) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            
             // Menu is about to open - expand header IMMEDIATELY (at same time as collapse animation starts)
             $('#theme-main-head, .navbar-default').addClass('menu-open');
         });
         
-        $(document).on('hide.bs.collapse', '#navbar1', function() {
+        $(document).on('hide.bs.collapse', '#navbar1', function(e) {
+            // Don't handle on mobile - use custom menu instead
+            if ($(window).width() <= 991) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
             // Menu is about to close - collapse header SMOOTHLY
             var $header = $('#theme-main-head, .navbar-default');
             var $container = $('#theme-main-head > .container');
@@ -1764,7 +1778,14 @@
         /**
          * Backup: Ensure state is correct after animation completes
          */
-        $(document).on('shown.bs.collapse', '#navbar1', function() {
+        $(document).on('shown.bs.collapse', '#navbar1', function(e) {
+            // Don't handle on mobile
+            if ($(window).width() <= 991) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            
             var $header = $('#theme-main-head, .navbar-default');
             $header.addClass('menu-open');
             // Reset height to auto after transition completes
@@ -1776,7 +1797,14 @@
             }, 350);
         });
         
-        $(document).on('hidden.bs.collapse', '#navbar1', function() {
+        $(document).on('hidden.bs.collapse', '#navbar1', function(e) {
+            // Don't handle on mobile
+            if ($(window).width() <= 991) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            
             var $header = $('#theme-main-head, .navbar-default');
             var $container = $('#theme-main-head > .container');
             // Ensure fixed height after transition completes
@@ -1793,7 +1821,35 @@
         });
         
         /**
+         * Initialize: Remove Bootstrap collapse attributes on mobile and ensure navbar1 is hidden
+         */
+        function initMobileMenu() {
+            if ($(window).width() <= 991) {
+                // Remove Bootstrap collapse attributes from toggle button
+                $('.navbar-toggle').removeAttr('data-toggle').removeAttr('data-target');
+                
+                // Ensure navbar1 is always hidden on mobile
+                var $navbar1 = $('#navbar1');
+                $navbar1.removeClass('in show');
+                $navbar1.addClass('collapse');
+                $navbar1.hide();
+                
+                // Ensure toggle button is in collapsed state
+                $('.navbar-toggle').addClass('collapsed').attr('aria-expanded', 'false');
+            }
+        }
+        
+        // Initialize on page load
+        initMobileMenu();
+        
+        // Re-initialize on window resize
+        $(window).on('resize', function() {
+            initMobileMenu();
+        });
+        
+        /**
          * Mobile Menu Toggle - Open/Close Full Screen Mobile Menu
+         * Prevent Bootstrap collapse from working on mobile
          */
         $(document).on('click', '.navbar-toggle', function(e) {
             // Only handle on mobile devices
@@ -1801,28 +1857,35 @@
                 return;
             }
             
+            // Prevent Bootstrap collapse completely
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
             
-            // Prevent Bootstrap collapse from interfering
+            // Remove Bootstrap data attributes to prevent collapse
+            var $toggle = $(this);
+            $toggle.removeAttr('data-toggle');
+            $toggle.removeAttr('data-target');
+            
+            // Ensure navbar1 is always hidden on mobile
             var $navbar1 = $('#navbar1');
-            if ($navbar1.hasClass('in') || $navbar1.hasClass('show')) {
-                $navbar1.collapse('hide');
-            }
+            $navbar1.removeClass('in show');
+            $navbar1.addClass('collapse');
+            $navbar1.collapse('hide');
+            
+            // Update button state
+            $toggle.addClass('collapsed');
+            $toggle.attr('aria-expanded', 'false');
             
             var $mobileMenu = $('#stirjoy-mobile-menu');
-            console.log('Mobile menu toggle clicked. Menu element:', $mobileMenu.length);
-            console.log('Current classes:', $mobileMenu.attr('class'));
             
             if ($mobileMenu.length === 0) {
                 console.error('Mobile menu element not found!');
-                return;
+                return false;
             }
             
             if ($mobileMenu.hasClass('active')) {
                 // Close menu
-                console.log('Closing menu');
                 $mobileMenu.removeClass('active');
                 $('body').removeClass('mobile-menu-open');
                 
@@ -1835,7 +1898,6 @@
                 });
             } else {
                 // Open menu
-                console.log('Opening menu');
                 $mobileMenu.addClass('active');
                 $('body').addClass('mobile-menu-open');
                 
@@ -1847,14 +1909,21 @@
                         'opacity': '1',
                         'transform': 'translateX(0)'
                     });
-                    console.log('Menu classes after opening:', $mobileMenu.attr('class'));
-                    console.log('Menu computed display:', $mobileMenu.css('display'));
-                    console.log('Menu computed visibility:', $mobileMenu.css('visibility'));
-                    console.log('Menu computed opacity:', $mobileMenu.css('opacity'));
                 }, 10);
             }
             
             return false;
+        });
+        
+        /**
+         * Prevent Bootstrap collapse events on mobile
+         */
+        $(document).on('show.bs.collapse hide.bs.collapse', '#navbar1', function(e) {
+            if ($(window).width() <= 991) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
         });
         
         /**
