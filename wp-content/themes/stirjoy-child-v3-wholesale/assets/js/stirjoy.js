@@ -1885,31 +1885,76 @@
             }
             
             if ($mobileMenu.hasClass('active')) {
-                // Close menu
-                $mobileMenu.removeClass('active');
-                $('body').removeClass('mobile-menu-open');
-                
-                // Remove inline styles
-                $mobileMenu.css({
-                    'display': '',
-                    'visibility': '',
-                    'opacity': '',
-                    'transform': ''
-                });
-            } else {
-                // Open menu
-                $mobileMenu.addClass('active');
-                $('body').addClass('mobile-menu-open');
-                
-                // Force display with a small delay to ensure CSS is applied
-                setTimeout(function() {
+                // Close menu - slide up and fade out
+                // Use requestAnimationFrame for smooth animation
+                requestAnimationFrame(function() {
+                    // Ensure transition is set
                     $mobileMenu.css({
-                        'display': 'flex',
-                        'visibility': 'visible',
-                        'opacity': '1',
-                        'transform': 'translateX(0)'
+                        'transition': 'transform 0.8s ease-in-out, opacity 0.8s ease-in-out'
                     });
-                }, 10);
+                    
+                    // Trigger animation by setting final state
+                    requestAnimationFrame(function() {
+                        $mobileMenu.css({
+                            'transform': 'translateY(-100%)',
+                            'opacity': '0'
+                        });
+                    });
+                });
+                
+                // Wait for animation to complete before hiding
+                setTimeout(function() {
+                    $mobileMenu.removeClass('active');
+                    $('body').removeClass('mobile-menu-open');
+                    
+                    // Remove inline styles
+                    $mobileMenu.css({
+                        'display': '',
+                        'visibility': '',
+                        'opacity': '',
+                        'transform': '',
+                        'transition': ''
+                    });
+                }, 800); // Match CSS transition duration
+            } else {
+                // Open menu - slide down from top
+                // First, set initial state (hidden above viewport) without transition
+                $mobileMenu.css({
+                    'display': 'flex',
+                    'visibility': 'visible',
+                    'opacity': '0',
+                    'transform': 'translateY(-100%)',
+                    'transition': 'none' // No transition for initial state
+                });
+                
+                // Force reflow to ensure initial state is applied
+                $mobileMenu[0].offsetHeight;
+                
+                // Use requestAnimationFrame to ensure smooth transition
+                requestAnimationFrame(function() {
+                    // Now enable transition and add active class
+                    $mobileMenu.css({
+                        'transition': 'transform 0.8s ease-in-out, opacity 0.8s ease-in-out'
+                    });
+                    
+                    $mobileMenu.addClass('active');
+                    // Don't add mobile-menu-open class yet - wait for animation to complete
+                    // This keeps homepage visible during slide animation
+                    
+                    // Trigger animation by setting final state
+                    requestAnimationFrame(function() {
+                        $mobileMenu.css({
+                            'opacity': '1',
+                            'transform': 'translateY(0)'
+                        });
+                        
+                        // Add mobile-menu-open class after animation completes
+                        // This will hide homepage only after menu is fully visible
+                        setTimeout(function() {
+                            $('body').addClass('mobile-menu-open');
+                        }, 800); // Match CSS transition duration
+                    });
+                });
             }
             
             return false;
@@ -1927,66 +1972,128 @@
         });
         
         /**
-         * Close Mobile Menu with X button
+         * Close Mobile Menu with X button - smooth slide up animation
          */
         $(document).on('click', '.stirjoy-mobile-menu-close', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Close button clicked');
             var $mobileMenu = $('#stirjoy-mobile-menu');
             
-            // Remove active class
-            $mobileMenu.removeClass('active');
-            
-            // Remove body class
+            // Remove mobile-menu-open class immediately to show homepage during slide up
             $('body').removeClass('mobile-menu-open');
             
-            // Remove inline styles that were added on open
-            $mobileMenu.css({
-                'display': '',
-                'visibility': '',
-                'opacity': '',
-                'transform': ''
+            // Use requestAnimationFrame for smooth animation
+            requestAnimationFrame(function() {
+                // Ensure transition is set
+                $mobileMenu.css({
+                    'transition': 'transform 0.8s ease-in-out, opacity 0.8s ease-in-out'
+                });
+                
+                // Trigger animation
+                requestAnimationFrame(function() {
+                    $mobileMenu.css({
+                        'transform': 'translateY(-100%)',
+                        'opacity': '0'
+                    });
+                });
             });
             
-            console.log('Menu closed');
-        });
-        
-        /**
-         * Close Mobile Menu when clicking on menu links
-         */
-        $(document).on('click', '.stirjoy-mobile-menu-link, .stirjoy-mobile-menu-cta', function() {
-            var $mobileMenu = $('#stirjoy-mobile-menu');
-            $mobileMenu.removeClass('active');
-            $('body').removeClass('mobile-menu-open');
-            
-            // Remove inline styles
-            $mobileMenu.css({
-                'display': '',
-                'visibility': '',
-                'opacity': '',
-                'transform': ''
-            });
-        });
-        
-        /**
-         * Close Mobile Menu when clicking outside (on overlay)
-         */
-        $(document).on('click', '.stirjoy-mobile-menu', function(e) {
-            // Only close if clicking directly on the menu container (not on children)
-            // Don't close if clicking the close button
-            if ($(e.target).hasClass('stirjoy-mobile-menu') && !$(e.target).closest('.stirjoy-mobile-menu-close').length) {
-                var $mobileMenu = $('#stirjoy-mobile-menu');
+            // Wait for animation to complete before hiding
+            setTimeout(function() {
                 $mobileMenu.removeClass('active');
-                $('body').removeClass('mobile-menu-open');
                 
                 // Remove inline styles
                 $mobileMenu.css({
                     'display': '',
                     'visibility': '',
                     'opacity': '',
-                    'transform': ''
+                    'transform': '',
+                    'transition': ''
                 });
+            }, 800); // Match CSS transition duration
+        });
+        
+        /**
+         * Close Mobile Menu when clicking on menu links - smooth slide up animation
+         */
+        $(document).on('click', '.stirjoy-mobile-menu-link, .stirjoy-mobile-menu-cta', function() {
+            var $mobileMenu = $('#stirjoy-mobile-menu');
+            
+            // Remove mobile-menu-open class immediately to show homepage during slide up
+            $('body').removeClass('mobile-menu-open');
+            
+            // Use requestAnimationFrame for smooth animation
+            requestAnimationFrame(function() {
+                // Ensure transition is set
+                $mobileMenu.css({
+                    'transition': 'transform 0.8s ease-in-out, opacity 0.8s ease-in-out'
+                });
+                
+                // Trigger animation
+                requestAnimationFrame(function() {
+                    $mobileMenu.css({
+                        'transform': 'translateY(-100%)',
+                        'opacity': '0'
+                    });
+                });
+            });
+            
+            // Wait for animation to complete before hiding
+            setTimeout(function() {
+                $mobileMenu.removeClass('active');
+                
+                // Remove inline styles
+                $mobileMenu.css({
+                    'display': '',
+                    'visibility': '',
+                    'opacity': '',
+                    'transform': '',
+                    'transition': ''
+                });
+            }, 800); // Match CSS transition duration
+        });
+        
+        /**
+         * Close Mobile Menu when clicking outside (on overlay) - smooth slide up animation
+         */
+        $(document).on('click', '.stirjoy-mobile-menu', function(e) {
+            // Only close if clicking directly on the menu container (not on children)
+            // Don't close if clicking the close button
+            if ($(e.target).hasClass('stirjoy-mobile-menu') && !$(e.target).closest('.stirjoy-mobile-menu-close').length) {
+                var $mobileMenu = $('#stirjoy-mobile-menu');
+                
+                // Remove mobile-menu-open class immediately to show homepage during slide up
+                $('body').removeClass('mobile-menu-open');
+                
+                // Use requestAnimationFrame for smooth animation
+                requestAnimationFrame(function() {
+                    // Ensure transition is set
+                    $mobileMenu.css({
+                        'transition': 'transform 0.8s ease-in-out, opacity 0.8s ease-in-out'
+                    });
+                    
+                    // Trigger animation
+                    requestAnimationFrame(function() {
+                        $mobileMenu.css({
+                            'transform': 'translateY(-100%)',
+                            'opacity': '0'
+                        });
+                    });
+                });
+                
+                // Wait for animation to complete before hiding
+                setTimeout(function() {
+                    $mobileMenu.removeClass('active');
+                    
+                    // Remove inline styles
+                    $mobileMenu.css({
+                        'display': '',
+                        'visibility': '',
+                        'opacity': '',
+                        'transform': '',
+                        'transition': ''
+                    });
+                }, 800); // Match CSS transition duration
             }
         });
         
