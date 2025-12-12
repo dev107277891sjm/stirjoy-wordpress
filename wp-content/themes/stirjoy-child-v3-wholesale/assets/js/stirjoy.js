@@ -1825,6 +1825,14 @@
                 console.log('Closing menu');
                 $mobileMenu.removeClass('active');
                 $('body').removeClass('mobile-menu-open');
+                
+                // Remove inline styles
+                $mobileMenu.css({
+                    'display': '',
+                    'visibility': '',
+                    'opacity': '',
+                    'transform': ''
+                });
             } else {
                 // Open menu
                 console.log('Opening menu');
@@ -1854,9 +1862,25 @@
          */
         $(document).on('click', '.stirjoy-mobile-menu-close', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            console.log('Close button clicked');
             var $mobileMenu = $('#stirjoy-mobile-menu');
+            
+            // Remove active class
             $mobileMenu.removeClass('active');
+            
+            // Remove body class
             $('body').removeClass('mobile-menu-open');
+            
+            // Remove inline styles that were added on open
+            $mobileMenu.css({
+                'display': '',
+                'visibility': '',
+                'opacity': '',
+                'transform': ''
+            });
+            
+            console.log('Menu closed');
         });
         
         /**
@@ -1866,6 +1890,14 @@
             var $mobileMenu = $('#stirjoy-mobile-menu');
             $mobileMenu.removeClass('active');
             $('body').removeClass('mobile-menu-open');
+            
+            // Remove inline styles
+            $mobileMenu.css({
+                'display': '',
+                'visibility': '',
+                'opacity': '',
+                'transform': ''
+            });
         });
         
         /**
@@ -1873,18 +1905,30 @@
          */
         $(document).on('click', '.stirjoy-mobile-menu', function(e) {
             // Only close if clicking directly on the menu container (not on children)
-            if ($(e.target).hasClass('stirjoy-mobile-menu')) {
+            // Don't close if clicking the close button
+            if ($(e.target).hasClass('stirjoy-mobile-menu') && !$(e.target).closest('.stirjoy-mobile-menu-close').length) {
                 var $mobileMenu = $('#stirjoy-mobile-menu');
                 $mobileMenu.removeClass('active');
                 $('body').removeClass('mobile-menu-open');
+                
+                // Remove inline styles
+                $mobileMenu.css({
+                    'display': '',
+                    'visibility': '',
+                    'opacity': '',
+                    'transform': ''
+                });
             }
         });
         
         /**
-         * Prevent closing when clicking inside menu content
+         * Prevent closing when clicking inside menu content (but allow close button)
          */
         $(document).on('click', '.stirjoy-mobile-menu-header, .stirjoy-mobile-menu-content, .stirjoy-mobile-menu-footer', function(e) {
-            e.stopPropagation();
+            // Don't stop propagation if clicking the close button
+            if (!$(e.target).closest('.stirjoy-mobile-menu-close').length) {
+                e.stopPropagation();
+            }
         });
         
         /**

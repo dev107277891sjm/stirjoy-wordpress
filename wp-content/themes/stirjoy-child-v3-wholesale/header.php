@@ -76,6 +76,12 @@
 
     <!-- Mobile Menu Full Screen -->
     <div class="stirjoy-mobile-menu" id="stirjoy-mobile-menu">
+        <!-- Top Shipping Bar -->
+        <div class="stirjoy-mobile-menu-top-bar">
+            <span class="stirjoy-mobile-menu-shipping-text">FREE SHIPPING WITH ORDERS ABOVE $75</span>
+        </div>
+        
+        <!-- Main Header with Logo and Close Button -->
         <div class="stirjoy-mobile-menu-header">
             <div class="stirjoy-mobile-menu-logo">
                 <?php if(thecrate_redux('thecrate_logo','url')){ ?>
@@ -94,6 +100,10 @@
             </button>
         </div>
         
+        <div class="stirjoy-mobile-menu-image">
+            <img src="<?php echo esc_url(stirjoy_get_image_url('b540a01beb06ce5ccaf783b4c8aca1f2985e3dc6.jpg')); ?>" alt="STIRJOY">
+        </div>
+
         <div class="stirjoy-mobile-menu-content">
             <a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="stirjoy-mobile-menu-cta">
                 CUSTOMIZE YOUR BOX
@@ -109,11 +119,11 @@
         
         <div class="stirjoy-mobile-menu-footer">
             <a href="https://www.tiktok.com/@stirjoy" target="_blank" rel="noopener" class="stirjoy-mobile-menu-social">
-                <img src="<?php echo esc_url(stirjoy_get_image_url('Group (1).png')); ?>" alt="TIKTOK">
+                <img src="<?php echo esc_url(stirjoy_get_image_url('Group (3).png')); ?>" alt="TIKTOK">
                 <span>TIKTOK</span>
             </a>
             <a href="https://www.instagram.com/stirjoy" target="_blank" rel="noopener" class="stirjoy-mobile-menu-social">
-                <img src="<?php echo esc_url(stirjoy_get_image_url('Group (2).png')); ?>" alt="INSTAGRAM">
+                <img src="<?php echo esc_url(stirjoy_get_image_url('Group (4).png')); ?>" alt="INSTAGRAM">
                 <span>INSTAGRAM</span>
             </a>
         </div>
