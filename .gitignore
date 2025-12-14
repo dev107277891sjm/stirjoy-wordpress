@@ -1,2 +1,27 @@
+# WordPress core
+/wp-admin/
+/wp-includes/
+
+# Uploads
+/wp-content/uploads/
+
+# Cache
+/wp-content/cache/
+wp-content/upgrade/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+wp-config.php
+
+# Node / vendor (if exists)
+node_modules/
+vendor/
+
 *.zip
-*.wpress
+/wp-content/ai1wm-backups/*.wpress
