@@ -33,7 +33,7 @@
         <!-- <i class="far fa-user-circle"></i> -->
         <span class="log-in-text">MY ACCOUNT</span>
       </a>
-      <a class="cart-contents" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
+      <a class="cart-contents-custom" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
         <img src="<?php echo esc_url(stirjoy_get_image_url('shopping-basket.png')); ?>" alt="FAQ">
         <span>(<?php echo WC()->cart->get_cart_contents_count(); ?>)</span>
       </a>
