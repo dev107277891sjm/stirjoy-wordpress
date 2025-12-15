@@ -165,7 +165,7 @@
     });
 
     jQuery(document).ready(function() {
-        jQuery(document).on( "click", '.header-nav-actions .cart-contents', function(event) {
+        jQuery(document).on( "click", '.header-nav-actions .cart-contents-custom', function(event) {
             // Check if user is logged in (if stirjoyData is available)
             if (typeof stirjoyData !== 'undefined' && !stirjoyData.isLoggedIn) {
                 event.preventDefault();

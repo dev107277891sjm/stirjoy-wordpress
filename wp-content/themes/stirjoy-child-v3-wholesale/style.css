@@ -554,7 +554,8 @@ header .header-nav-actions {
 .is-sticky .header-nav-actions .thecrate-search-icon {
     padding: 0;
 }
-header .cart-contents span {
+header .cart-contents span,
+header .cart-contents-custom span {
     background: #2D5A27;
 }
 .header-nav-actions .header-btn {

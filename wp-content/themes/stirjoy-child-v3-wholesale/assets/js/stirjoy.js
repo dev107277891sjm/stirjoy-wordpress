@@ -193,7 +193,9 @@
                 //$('body').addClass('overflow-disabled');
             }
 
-            var cartCount = $(".header-nav-actions .cart-contents span").text() || '0';
+            var cartCountText = $(".header-nav-actions .cart-contents-custom span").text() || '(0)';
+            // Extract number from parentheses format (X) or just X
+            var cartCount = cartCountText.replace(/[()]/g, '') || '0';
             var itemText = cartCount === '1' ? 'item' : 'items';
             $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + cartCount + ' ' + itemText + '</span>');
 
@@ -201,7 +203,9 @@
         });
 
         $('body').on( 'removed_from_cart', function(){
-            var cartCount = $(".header-nav-actions .cart-contents span").text() || '0';
+            var cartCountText = $(".header-nav-actions .cart-contents-custom span").text() || '(0)';
+            // Extract number from parentheses format (X) or just X
+            var cartCount = cartCountText.replace(/[()]/g, '') || '0';
             var itemText = cartCount === '1' ? 'item' : 'items';
             $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + cartCount + ' ' + itemText + '</span>');
 
@@ -1003,7 +1007,7 @@
                         $('.your-box-total').html(response.data.total_html); // Use .html() to render HTML properly
                         
                         // Update main header cart badge
-                        $('.cart-contents span').text(response.data.count);
+                        $('.cart-contents-custom span').text('(' + response.data.count + ')');
                         
                         // Update cart sidebar widget title
                         var itemText = response.data.count === 1 ? 'item' : 'items';

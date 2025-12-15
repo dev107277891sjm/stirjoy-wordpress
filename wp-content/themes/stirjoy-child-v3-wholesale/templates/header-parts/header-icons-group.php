@@ -28,14 +28,13 @@
 
   <?php if ( class_exists( 'WooCommerce' ) ) { ?>
     <?php if ( is_user_logged_in() ) { ?>
-
       <a href="<?php echo esc_url(get_permalink( get_option('woocommerce_myaccount_page_id') )); ?>" class="thecrate-account-link thecrate-account-link-loggedin">
         <!-- <i class="far fa-user-circle"></i> -->
         <span class="log-in-text">MY ACCOUNT</span>
       </a>
-      <a class="cart-contents" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
-        <?php echo thecrate_cart_svg(); ?>
-        <span><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+      <a class="cart-contents-custom" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
+        <img src="<?php echo esc_url(stirjoy_get_image_url('shopping-basket.png')); ?>" alt="Cart">
+        <span>(<?php echo WC()->cart->get_cart_contents_count(); ?>)</span>
       </a>
     <?php }else{ ?>
       <a href="<?php echo esc_url(get_permalink( get_option('woocommerce_myaccount_page_id') )); ?>" class="thecrate-account-link thecrate-account-link-loggedout">
@@ -73,3 +72,4 @@
   </div>
   <?php } ?>
 <?php } ?>
+
