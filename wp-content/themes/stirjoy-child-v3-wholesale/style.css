@@ -6122,7 +6122,7 @@ body.woocommerce-account #customer_login {
     }
     
     .stirjoy-login-card {
-        padding: 40px 24px;
+        /* padding: 40px 24px; */
         max-width: 100%;
         border-radius: 8px;
     }
@@ -6768,5 +6768,13 @@ body.woocommerce-account #customer_login .u-columns {
     .stirjoy-register-button {
         padding: 16px 24px !important;
         font-size: 16px !important;
+    }
+
+    .page article.type-page {
+        padding: 0 !important;
+    }
+
+    .stirjoy-login-card-top {
+        padding: 40px 24px 0 24px!important;
     }
 }
