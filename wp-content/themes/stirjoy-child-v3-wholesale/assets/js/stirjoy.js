@@ -1004,8 +1004,9 @@
         
         /**
          * Update Your Box Header Display
+         * Made globally accessible for use in other scripts
          */
-        function updateYourBoxHeader() {
+        window.updateYourBoxHeader = function updateYourBoxHeader() {
             $.ajax({
                 url: stirjoyData.ajaxUrl,
                 type: 'POST',
@@ -1053,10 +1054,10 @@
             });
         }
         
-        // Initialize cart count on page load for shop pages
+        // Initialize cart count on page load for shop pages and My Account page
         // This ensures the cart count is accurate even if the page was reloaded
         // after AJAX cart operations. Must be called after updateYourBoxHeader is defined.
-        if ($('body').hasClass('stirjoy-shop-page') || $('body').hasClass('woocommerce-shop')) {
+        if ($('body').hasClass('stirjoy-shop-page') || $('body').hasClass('woocommerce-shop') || $('body').hasClass('woocommerce-account')) {
             // Update cart count immediately on page load to ensure accuracy
             updateYourBoxHeader();
         }

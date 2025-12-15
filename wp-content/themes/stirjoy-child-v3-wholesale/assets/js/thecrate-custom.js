@@ -169,11 +169,20 @@
             // Allow all users (logged in or not) to view cart
             // Login will be required at checkout, not when viewing cart
             
-            if (jQuery("body").hasClass("thecrate_fixed_sidebar_cart_on")) {
+            var $cartSidebar = jQuery('.fixed-sidebar-menu-minicart');
+            var isOpening = !$cartSidebar.hasClass('open');
+            
+            if (jQuery("body").hasClass("thecrate_fixed_sidebar_cart_on") || $cartSidebar.length > 0) {
                 event.preventDefault();
-                jQuery('.fixed-sidebar-menu-minicart').toggleClass('open');
+                $cartSidebar.toggleClass('open');
                 //jQuery('.fixed-sidebar-menu-overlay').addClass('visible');
                 //jQuery('body').addClass('overflow-disabled');
+                
+                // Update cart count when opening the sidebar to ensure accuracy
+                // Check if updateYourBoxHeader function exists (from stirjoy.js)
+                if (isOpening && typeof window.updateYourBoxHeader === 'function') {
+                    window.updateYourBoxHeader();
+                }
             }
         });
     });
