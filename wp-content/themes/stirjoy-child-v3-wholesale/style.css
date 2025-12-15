@@ -533,6 +533,18 @@ header .thecrate-header-icons-group .thecrate-account-link .log-in-text {
     padding: 0;
 }
 
+/* Log-in text styles - moved from parent theme */
+.log-in-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.log-in-text:hover {
+    color: #e67c22;
+    text-decoration: none;
+}
+
 /* Override parent theme's top offset for account link */
 header .header-nav-actions .thecrate-account-link {
     top: 0 !important;
@@ -557,6 +569,16 @@ header .header-nav-actions {
 header .cart-contents span,
 header .cart-contents-custom span {
     background: #2D5A27;
+}
+
+/* Custom cart contents styles - moved from parent theme */
+header .cart-contents-custom span {
+    color: white;
+    padding-right: 20px;
+}
+
+header .cart-contents-custom span:hover {
+    color: #e67e22;
 }
 .header-nav-actions .header-btn {
     background: #E2EE48;

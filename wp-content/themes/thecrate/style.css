@@ -1737,13 +1737,6 @@ header .cart-contents svg {
 header .cart-contents {
     position: relative;
 }
-header .cart-contents-custom span{
-    color:white;
-    padding-right: 20px;
-}
-header .cart-contents-custom span:hover{
-    color:#e67e22;
-}
 
 /*Top Header*/
 .top-header .left-side, .top-header .right-side {
@@ -10239,15 +10232,4 @@ a.col-2.sbtn:hover{
 
 .single .summary > button.woosw-btn {
     display: none;
-}
-
-.log-in-text {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-}
-
-.log-in-text:hover {
-    color: #e67c22;
-    text-decoration: none;
 }
