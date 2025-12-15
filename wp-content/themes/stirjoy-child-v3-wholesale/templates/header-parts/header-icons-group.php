@@ -40,8 +40,21 @@
       </a>
     <?php } ?>
 
+    <?php
+      // Determine which cart icon to use based on page
+      if ( is_account_page() || is_page( get_option('woocommerce_myaccount_page_id') ) ) {
+        // My Account page - use green icon
+        $cart_icon = 'shopping-basket-green.png';
+      } elseif ( is_front_page() || is_home() ) {
+        // Home page - use white icon
+        $cart_icon = 'shopping-basket-white.png';
+      } else {
+        // Other pages - use white icon (default)
+        $cart_icon = 'shopping-basket-white.png';
+      }
+    ?>
     <a class="cart-contents-custom" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
-      <img src="<?php echo esc_url(stirjoy_get_image_url('shopping-basket.png')); ?>" alt="Cart">
+      <img src="<?php echo esc_url(stirjoy_get_image_url($cart_icon)); ?>" alt="Cart">
       <span>(<?php echo WC()->cart->get_cart_contents_count(); ?>)</span>
     </a>
 

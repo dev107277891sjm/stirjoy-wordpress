@@ -1400,6 +1400,120 @@ footer p.card-icons {
 .meals-category-title h3 img {
     margin: 0;
 }
+/* ===================================
+   My Account Page Header Customization
+   Based on Figma Design
+   =================================== */
+
+/* My Account Page - Header Background and Colors */
+body.woocommerce-account #theme-main-head,
+body.woocommerce-account header #theme-main-head {
+    background: #ffffff !important;
+    /* border-bottom: 1px solid #e0e0e0; */
+}
+
+/* Top Header Bar - White Background with Dark Green Text */
+body.woocommerce-account .top-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+body.woocommerce-account .top-header span {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* Main Header - White Background */
+body.woocommerce-account #theme-main-head > .container,
+body.woocommerce-account header #theme-main-head > .container {
+    background: #ffffff !important;
+}
+
+/* Navigation Links - Dark Green */
+body.woocommerce-account #navbar .menu-item > a,
+body.woocommerce-account #navbar .menu > .menu-item > a {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.woocommerce-account #navbar .menu-item > a:hover,
+body.woocommerce-account #navbar .menu > .menu-item > a:hover {
+    color: #e67c22 !important;
+}
+
+/* Logo - Lime Green (if text-based) */
+body.woocommerce-account .navbar-header .logo a,
+body.woocommerce-account .logo a {
+    color: #E2EE48 !important; /* Lime green */
+}
+
+/* MY ACCOUNT Text - Dark Green */
+body.woocommerce-account .log-in-text {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.woocommerce-account .log-in-text:hover {
+    color: #e67c22 !important;
+}
+
+/* Cart badge on My Account page - white background, dark green text */
+body.woocommerce-account .cart-contents-custom span {
+    background: #ffffff !important; /* White background */
+    color: #2d5a27 !important; /* Dark green text */
+    /* border: 1px solid #2d5a27; */
+}
+
+body.woocommerce-account .cart-contents-custom span:hover {
+    /* background: #f5f5f5 !important; */
+    color: #e67c22 !important;
+}
+
+/* Subscribe Button - Lime Green Background, Dark Green Text */
+body.woocommerce-account .header-nav-actions .header-btn {
+    background: #E2EE48 !important; /* Lime green */
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+}
+
+body.woocommerce-account .header-nav-actions .header-btn:hover {
+    background: #E8643C !important;
+    color: #ffffff !important;
+}
+
+/* Search Icon - Dark Green */
+body.woocommerce-account .thecrate-search-icon i {
+    color: #2d5a27 !important; /* Dark green */
+}
+
+body.woocommerce-account .thecrate-search-icon:hover i {
+    color: #2d5a27 !important;
+    opacity: 0.8;
+}
+
+/* Account Link Icon - Dark Green (if icon is visible) */
+body.woocommerce-account .thecrate-account-link i {
+    color: #2d5a27 !important; /* Dark green */
+}
+
+/* Ensure header stays white on scroll */
+body.woocommerce-account .is-sticky #theme-main-head,
+body.woocommerce-account header.is-sticky #theme-main-head {
+    background: #ffffff !important;
+}
+
+body.woocommerce-account .is-sticky #theme-main-head > .container,
+body.woocommerce-account header.is-sticky #theme-main-head > .container {
+    background: #ffffff !important;
+}
+
 .woocommerce-MyAccount-navigation.thecrate-woocommerce-account-tabs,
 .woocommerce-MyAccount-navigation.thecrate-woocommerce-account-tabs.visible {
     z-index: 1002;
