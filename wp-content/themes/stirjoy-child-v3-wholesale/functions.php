@@ -739,3 +739,25 @@ function stirjoy_remove_parent_theme_shop_hooks() {
     }
 }
 add_action( 'wp', 'stirjoy_remove_parent_theme_shop_hooks' );
+
+/**
+ * Override the login form template when action=register
+ * This intercepts WooCommerce's template loading to show registration form instead
+ */
+function stirjoy_override_login_form_template( $template, $template_name, $template_path ) {
+    // Only override the login form template when not logged in
+    if ( 'myaccount/form-login.php' === $template_name && ! is_user_logged_in() ) {
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+        
+        // Check if we're on the account page or if action=register is set
+        if ( 'register' === $action && 'yes' === get_option( 'woocommerce_enable_myaccount_registration' ) ) {
+            // Use registration form template instead
+            $child_template = get_stylesheet_directory() . '/woocommerce/myaccount/form-register.php';
+            if ( file_exists( $child_template ) ) {
+                return $child_template;
+            }
+        }
+    }
+    return $template;
+}
+add_filter( 'woocommerce_locate_template', 'stirjoy_override_login_form_template', 10, 3 );
