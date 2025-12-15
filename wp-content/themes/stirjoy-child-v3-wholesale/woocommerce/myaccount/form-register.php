@@ -32,7 +32,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 
 					<!-- Create Your Account Section -->
 					<div class="stirjoy-form-section">
-						<h2 class="stirjoy-section-title"><?php esc_html_e( 'Create Your Account', 'woocommerce' ); ?></h2>
+						<h2 class="stirjoy-section-title-big"><?php esc_html_e( 'Create Your Account', 'woocommerce' ); ?></h2>
 						
 						<!-- Social Login Buttons -->
 						<div class="stirjoy-social-login">

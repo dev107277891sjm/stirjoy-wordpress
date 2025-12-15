@@ -6210,7 +6210,8 @@ body.woocommerce-account #customer_login .u-columns {
 .stirjoy-register-page {
     background: #ffffff;
     min-height: 100vh;
-    padding: 60px 20px 100px;
+    /* padding: 60px 20px 100px; */
+    margin: 0 -11px;
     box-sizing: border-box;
 }
 
@@ -6222,22 +6223,23 @@ body.woocommerce-account #customer_login .u-columns {
 
 /* Page Header - Pixel Perfect */
 .stirjoy-register-header {
-    text-align: center;
-    margin-bottom: 48px;
+    text-align: left;
+    margin-bottom: 10px;
 }
 
 .stirjoy-register-title {
     color: #2d5a27;
     font-size: 48px;
-    font-weight: 700;
+    font-weight: 500;
+    font-style: italic;
     line-height: 1.2;
-    margin: 0 0 12px 0;
+    margin: -20px 0 12px 0;
     letter-spacing: -1px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .stirjoy-register-subtitle {
-    color: #666666;
+    color: #2d5a27;
     font-size: 18px;
     line-height: 1.5;
     margin: 0;
@@ -6248,9 +6250,15 @@ body.woocommerce-account #customer_login .u-columns {
 /* Two Column Layout - Pixel Perfect */
 .stirjoy-register-content {
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 64px;
     gap: 80px;
     align-items: start;
+}
+
+.woocommerce form.register {
+    margin-top: 0 !important;
+    border-radius: 12px !important;
 }
 
 /* Left Column - Form - Pixel Perfect */
@@ -6282,14 +6290,22 @@ body.woocommerce-account #customer_login .u-columns {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-/* Social Login Buttons - Pixel Perfect */
-.stirjoy-social-login {
+.stirjoy-section-title-big{
+    font-size: 36px;
+    text-align: center;
+    margin: 4px 0 34px 0;
+    font-style: italic;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-social-login{
+    margin: 0 42px;
+    justify-content: center;
     display: flex;
     flex-direction: column;
     gap: 14px;
     margin-bottom: 24px;
 }
-
 .stirjoy-social-btn {
     display: flex;
     align-items: center;
@@ -6297,7 +6313,7 @@ body.woocommerce-account #customer_login .u-columns {
     gap: 12px;
     padding: 16px 24px;
     border: 1px solid #2d5a27;
-    border-radius: 8px;
+    border-radius: 48px;
     background: #ffffff;
     color: #2d5a27;
     font-size: 16px;
@@ -6360,8 +6376,8 @@ body.woocommerce-account #customer_login .u-columns {
 
 .stirjoy-divider-text {
     padding: 0 16px;
-    color: #999999;
-    font-size: 14px;
+    color: #2d5a27;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.5;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
