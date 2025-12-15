@@ -1113,14 +1113,51 @@ footer p.card-icons {
     background-color: #15803d;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart {
-    position: relative;
+    position: relative !important;
     /* border-top: solid 1px #e0e0e0; */
     width: 100% !important;
     height: 0;
-    right: 0;
+    right: 0 !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: auto !important;
     overflow: hidden;
     transition: height 0.3s ease-in-out;
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+    background: #fff !important;
+}
+
+/* Override parent theme's header7 fixed sidebar positioning */
+.header7 .fixed-sidebar-menu.fixed-sidebar-menu-minicart {
+    right: 0 !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 0 !important;
+}
+
+.header7 .fixed-sidebar-menu.fixed-sidebar-menu-minicart.open {
+    right: 0 !important;
+    position: relative !important;
+    height: 550px !important;
+}
+
+/* Ensure fixed-sidebar-menu-holder doesn't interfere */
+.fixed-sidebar-menu-holder.header7 {
+    position: relative !important;
+    margin: 0 !important;
+}
+
+.fixed-sidebar-menu-holder.header7 .fixed-sidebar-menu.fixed-sidebar-menu-minicart {
+    position: relative !important;
+    width: 100% !important;
+    height: 0 !important;
+}
+
+.fixed-sidebar-menu-holder.header7 .fixed-sidebar-menu.fixed-sidebar-menu-minicart.open {
+    height: 550px !important;
 }
 .navbar .fixed-sidebar-menu > div {
     overflow: hidden;
@@ -1173,10 +1210,12 @@ footer p.card-icons {
 }
 
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .left-side {
-    float: none;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    float: none !important;
+    padding: 20px 0 !important;
     position: relative;
+    box-sizing: border-box;
+    height: auto;
+    width: 100%;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .left-side .widget_shopping_cart {
     margin: 0 40px;
@@ -6712,6 +6751,12 @@ body.woocommerce-account #customer_login .u-columns {
 
 .stirjoy-register-form .woocommerce-form-row:last-of-type {
     margin-bottom: 0;
+}
+
+.fixed-sidebar-menu-holder .widget {
+    /* margin-top: 20px; */
+    display: block !important;
+    /* overflow: hidden; */
 }
 
 /* Responsive Design - Pixel Perfect */
