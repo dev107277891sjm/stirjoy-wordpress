@@ -1118,6 +1118,8 @@ footer p.card-icons {
     width: 100% !important;
     height: 0;
     right: 0;
+    overflow: hidden;
+    transition: height 0.3s ease-in-out;
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
 }
 .navbar .fixed-sidebar-menu > div {
@@ -1125,6 +1127,7 @@ footer p.card-icons {
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart.open {
     height: 550px;
+    overflow: visible;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .icon-close {
     display: none;
@@ -1176,7 +1179,7 @@ footer p.card-icons {
     position: relative;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .left-side .widget_shopping_cart {
-    margin: 0;
+    margin: 0 40px;
 }
 .fixed-sidebar-menu.fixed-sidebar-menu-minicart .left-side .widget_shopping_cart .widgettitle {
     margin: 0;
@@ -2520,7 +2523,8 @@ body.woocommerce-account header.is-sticky #theme-main-head > .container {
 
 @media (min-width: 1250px) {
     .fixed-sidebar-menu-minicart.open .cart-box-close-button {
-        right: calc((100% - 1250px) / 2);
+        right: calc((100% - 1160px) / 2);
+        top: 8px;
     }
 }
 
@@ -2906,6 +2910,19 @@ body.woocommerce-account header.is-sticky #theme-main-head > .container {
     padding: 12px 0;
     margin: 0 0 0 0;
     width: 100%;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+    overflow: hidden;
+    max-height: 100px; /* Set a reasonable max-height for transition */
+}
+
+/* Hide cart bar when cart box is open */
+.your-box-header.cart-open {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: none;
+    pointer-events: none;
 }
 
 .your-box-header .container {
@@ -5399,31 +5416,25 @@ body.page-template-front-page header.header1 + .stirjoy-hero-section {
 }
 
 /* ===================================
-   Hide Cart Elements for Logged-Out Users
+   Cart Elements Visibility
    =================================== */
 
-/* Hide cart buttons for logged-out users */
-body:not(.logged-in) .add-to-cart-btn,
-body:not(.logged-in) .remove-from-cart-btn {
-    display: none !important;
-}
+/* Allow cart buttons for all users (logged-in and non-logged-in) */
+/* Users can add/remove products before logging in */
+/* Login is only required at checkout */
 
-/* Hide cart sidebar for logged-out users */
-body:not(.logged-in) .fixed-sidebar-menu-minicart {
+/* Hide cart sidebar for logged-out users (optional - can be enabled if needed) */
+/* body:not(.logged-in) .fixed-sidebar-menu-minicart {
     display: none !important;
-}
+} */
 
-/* Hide "Your Box" header for logged-out users */
-body:not(.logged-in) .your-box-header {
+/* Hide "Your Box" header for logged-out users (optional - can be enabled if needed) */
+/* body:not(.logged-in) .your-box-header {
     display: none !important;
-}
+} */
 
-/* Hide mini cart remove buttons for logged-out users */
-body:not(.logged-in) .mini_cart_item a.remove,
-body:not(.logged-in) .remove_from_cart_button {
-    display: none !important;
-    pointer-events: none !important;
-}
+/* Allow mini cart remove buttons for all users */
+/* Users can remove products from cart before logging in */
 
 /* Hide confirm box button for logged-out users */
 body:not(.logged-in) .confirm-my-box,

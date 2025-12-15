@@ -166,15 +166,8 @@
 
     jQuery(document).ready(function() {
         jQuery(document).on( "click", '.header-nav-actions .cart-contents-custom', function(event) {
-            // Check if user is logged in (if stirjoyData is available)
-            if (typeof stirjoyData !== 'undefined' && !stirjoyData.isLoggedIn) {
-                event.preventDefault();
-                var message = 'Please log in to view your cart.';
-                if (confirm(message + '\n\nWould you like to go to the login page?')) {
-                    window.location.href = stirjoyData.loginUrl;
-                }
-                return false;
-            }
+            // Allow all users (logged in or not) to view cart
+            // Login will be required at checkout, not when viewing cart
             
             if (jQuery("body").hasClass("thecrate_fixed_sidebar_cart_on")) {
                 event.preventDefault();

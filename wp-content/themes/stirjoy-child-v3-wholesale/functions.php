@@ -128,13 +128,16 @@ add_filter( 'body_class', 'stirjoy_child_body_classes' );
 
 /**
  * Modify product loop to add cart sidebar
+ * Note: Cart sidebar is now rendered directly in archive-product.php after the cart bar
+ * This function is kept for backward compatibility but does nothing
  */
 function stirjoy_add_cart_sidebar() {
-    if ( is_shop() || is_product_category() || is_product_tag() ) {
-        get_template_part( 'woocommerce/cart-sidebar' );
-    }
+    // Cart sidebar is now rendered directly in archive-product.php template
+    // after the cart bar for better positioning
+    return;
 }
-add_action( 'woocommerce_after_main_content', 'stirjoy_add_cart_sidebar', 5 );
+// Removed hook - cart sidebar is now in template
+// add_action( 'woocommerce_after_main_content', 'stirjoy_add_cart_sidebar', 5 );
 
 function register_custom_sidebars1() {
     register_sidebar(array(
@@ -510,19 +513,10 @@ add_action( 'wp_ajax_nopriv_stirjoy_get_calendar_month', 'stirjoy_get_calendar_m
 
 /**
  * AJAX: Add product to cart
+ * Allows both logged-in and non-logged-in users to add products to cart
  */
 function stirjoy_add_to_cart() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
-    
-    // Check if user is logged in
-    if ( ! is_user_logged_in() ) {
-        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
-        wp_send_json_error( array( 
-            'message' => 'Please log in to add products to your cart.',
-            'login_required' => true,
-            'login_url' => $login_url
-        ) );
-    }
     
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
     // Force quantity to 1 - each product can only be added once
@@ -562,19 +556,10 @@ add_action( 'wp_ajax_nopriv_stirjoy_add_to_cart', 'stirjoy_add_to_cart' );
 
 /**
  * AJAX: Remove product from cart
+ * Allows both logged-in and non-logged-in users to remove products from cart
  */
 function stirjoy_remove_from_cart() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
-    
-    // Check if user is logged in
-    if ( ! is_user_logged_in() ) {
-        $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
-        wp_send_json_error( array( 
-            'message' => 'Please log in to manage your cart.',
-            'login_required' => true,
-            'login_url' => $login_url
-        ) );
-    }
     
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
     
@@ -610,24 +595,12 @@ add_action( 'wp_ajax_nopriv_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart
 
 /**
  * AJAX: Get cart info for header update
+ * Works for both logged-in and non-logged-in users
  */
 function stirjoy_get_cart_info() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
-    // Check if user is logged in
-    if ( ! is_user_logged_in() ) {
-        wp_send_json_success( array(
-            'count' => 0,
-            'total_html' => wc_price( 0 ),
-            'total_plain' => wc_price( 0 ),
-            'cart_subtotal_numeric' => 0,
-            'cart_hash' => '',
-            'product_ids' => array(),
-            'logged_in' => false
-        ) );
-    }
-    
-    // Get cart total as HTML
+    // Get cart total as HTML (works for both logged-in and guest users)
     $cart_subtotal_html = WC()->cart->get_cart_subtotal();
     
     // Also get plain number for potential use
@@ -646,7 +619,7 @@ function stirjoy_get_cart_info() {
         'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
         'cart_hash' => WC()->cart->get_cart_hash(),
         'product_ids' => $product_ids_in_cart,
-        'logged_in' => true
+        'logged_in' => is_user_logged_in()
     ) );
 }
 add_action( 'wp_ajax_stirjoy_get_cart_info', 'stirjoy_get_cart_info' );
@@ -761,3 +734,38 @@ function stirjoy_override_login_form_template( $template, $template_name, $templ
     return $template;
 }
 add_filter( 'woocommerce_locate_template', 'stirjoy_override_login_form_template', 10, 3 );
+
+/**
+ * Require login at checkout (standard WooCommerce business logic)
+ * Users can add/remove products to/from cart before logging in,
+ * but must be logged in to proceed to checkout
+ */
+function stirjoy_require_login_at_checkout() {
+    // Only require login at checkout, not for cart operations
+    if ( is_checkout() && ! is_user_logged_in() ) {
+        // Redirect to login page with return URL to checkout
+        $checkout_url = wc_get_checkout_url();
+        $login_url = add_query_arg( 'redirect_to', urlencode( $checkout_url ), wc_get_page_permalink( 'myaccount' ) );
+        wp_safe_redirect( $login_url );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'stirjoy_require_login_at_checkout' );
+
+/**
+ * Ensure checkout requires account creation/login
+ * This enforces the standard WooCommerce behavior
+ */
+function stirjoy_enforce_checkout_login_requirement( $value ) {
+    // Require account creation at checkout
+    return true;
+}
+add_filter( 'woocommerce_checkout_registration_required', 'stirjoy_enforce_checkout_login_requirement', 10, 1 );
+
+/**
+ * Disable guest checkout to require login
+ */
+function stirjoy_disable_guest_checkout( $value ) {
+    return false; // Disable guest checkout, require login
+}
+add_filter( 'woocommerce_enable_guest_checkout', 'stirjoy_disable_guest_checkout', 10, 1 );

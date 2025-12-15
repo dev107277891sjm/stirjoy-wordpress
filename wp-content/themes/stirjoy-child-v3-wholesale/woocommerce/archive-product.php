@@ -87,6 +87,9 @@ get_header( 'shop' );
 		</div>
 	</div>
 
+	<!-- Cart Sidebar - Rendered right after cart bar -->
+	<?php get_template_part( 'woocommerce/cart-sidebar' ); ?>
+
 	<!-- Main Content -->
 	<div class="container customize-box-container">
 		

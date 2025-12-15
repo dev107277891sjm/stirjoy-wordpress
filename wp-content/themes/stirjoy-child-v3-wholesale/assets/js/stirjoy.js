@@ -150,38 +150,53 @@
         }
 
         function updateFreeShippingAndGiftBar() {
-            fetch('/wp-json/wc/store/v1/cart')
-                .then(response => response.json())
-                .then(cart => {
-                    const subtotal = cart.totals.total_items / 100;
-                    const freeShippingThreshold = $(".free-shipping-bar").attr('data-threshold');
-                    var rest = freeShippingThreshold - subtotal;
-                    var caption2 = 'Complete!';
-                    var width = 100;
-                    if(rest > 0) {
-                        caption2 = '$' + rest + ' to go';
-                        width = (subtotal / freeShippingThreshold) * 100;
-                    }
-                    
-                    $(".free-shipping-bar .caption2").text(caption2);
-                    $(".free-shipping-bar .bar > div").width(width + '%');
+            // Use existing AJAX handler instead of WooCommerce Store API
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_get_cart_info',
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        // Get subtotal from response (already a number, not in cents)
+                        const subtotal = parseFloat(response.data.cart_subtotal_numeric) || 0;
+                        
+                        // Update free shipping bar
+                        const freeShippingThreshold = parseFloat($(".free-shipping-bar").attr('data-threshold')) || 80;
+                        var rest = freeShippingThreshold - subtotal;
+                        var caption2 = 'Complete!';
+                        var width = 100;
+                        if(rest > 0) {
+                            caption2 = '$' + rest.toFixed(2) + ' to go';
+                            width = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+                        }
+                        
+                        $(".free-shipping-bar .caption2").text(caption2);
+                        $(".free-shipping-bar .bar > div").css('width', width + '%');
 
-                    const freeGiftThreshold = $(".free-gift-bar").attr('data-threshold');
-                    rest = freeGiftThreshold - subtotal;
-                    caption2 = 'Complete!';
-                    width = 100;
-                    if(rest > 0) {
-                        caption2 = '$' + rest + ' to go';
-                        width = (subtotal / freeGiftThreshold) * 100;
+                        // Update free gift bar
+                        const freeGiftThreshold = parseFloat($(".free-gift-bar").attr('data-threshold')) || 120;
+                        rest = freeGiftThreshold - subtotal;
+                        caption2 = 'Complete!';
+                        width = 100;
+                        if(rest > 0) {
+                            caption2 = '$' + rest.toFixed(2) + ' to go';
+                            width = Math.min(100, (subtotal / freeGiftThreshold) * 100);
+                        }
+                        
+                        $(".free-gift-bar .caption2").text(caption2);
+                        $(".free-gift-bar .bar > div").css('width', width + '%');
+                        
+                        // Update cart bar progress bars (Shop page header)
+                        updateCartBarProgressBars(subtotal);
                     }
-                    
-                    $(".free-gift-bar .caption2").text(caption2);
-                    $(".free-gift-bar .bar > div").width(width + '%');
-                    
-                    // Update cart bar progress bars (Shop page header)
-                    updateCartBarProgressBars(subtotal);
-                })
-                .catch(error => console.error('Error:', error));
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating free shipping and gift bar:', error);
+                }
+            });
         }
 
         $('body').on( 'added_to_cart', function(){
@@ -193,23 +208,15 @@
                 //$('body').addClass('overflow-disabled');
             }
 
-            var cartCountText = $(".header-nav-actions .cart-contents-custom span").text() || '(0)';
-            // Extract number from parentheses format (X) or just X
-            var cartCount = cartCountText.replace(/[()]/g, '') || '0';
-            var itemText = cartCount === '1' ? 'item' : 'items';
-            $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + cartCount + ' ' + itemText + '</span>');
-
-            updateFreeShippingAndGiftBar();
+            // Use updateYourBoxHeader() to get accurate cart count from server
+            // This ensures we always have the correct count instead of reading stale data
+            updateYourBoxHeader();
         });
 
         $('body').on( 'removed_from_cart', function(){
-            var cartCountText = $(".header-nav-actions .cart-contents-custom span").text() || '(0)';
-            // Extract number from parentheses format (X) or just X
-            var cartCount = cartCountText.replace(/[()]/g, '') || '0';
-            var itemText = cartCount === '1' ? 'item' : 'items';
-            $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + cartCount + ' ' + itemText + '</span>');
-
-            updateFreeShippingAndGiftBar();
+            // Use updateYourBoxHeader() to get accurate cart count from server
+            // This ensures we always have the correct count instead of reading stale data
+            updateYourBoxHeader();
         });
 
         setTimeout(function(){
@@ -261,17 +268,9 @@
         });
 
         // Cart Item Remove Icon
+        // Allows both logged-in and non-logged-in users to remove products from cart
         $(document).on('click', '.mini_cart_item a.remove', function(e) {
             e.preventDefault();
-
-            // Check if user is logged in
-            if (!stirjoyData.isLoggedIn) {
-                var message = 'Please log in to manage your cart.';
-                if (confirm(message + '\n\nWould you like to go to the login page?')) {
-                    window.location.href = stirjoyData.loginUrl;
-                }
-                return false;
-            }
 
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
@@ -669,21 +668,34 @@
         
         /**
          * Toggle Cart Sidebar from Shop Page
+         * Allows both logged-in and non-logged-in users to view cart
          */
         $(document).on('click', '.toggle-cart-sidebar', function(e) {
             e.preventDefault();
             
-            // Check if user is logged in
-            if (!stirjoyData.isLoggedIn) {
-                var message = 'Please log in to view your cart.';
-                if (confirm(message + '\n\nWould you like to go to the login page?')) {
-                    window.location.href = stirjoyData.loginUrl;
-                }
-                return false;
+            var $cartSidebar = $('.fixed-sidebar-menu-minicart');
+            var $yourBoxHeader = $('.your-box-header');
+            
+            console.log('Toggle cart sidebar clicked');
+            console.log('Cart sidebar found:', $cartSidebar.length);
+            console.log('Your box header found:', $yourBoxHeader.length);
+            
+            if ($cartSidebar.length === 0) {
+                console.error('Cart sidebar element not found!');
+                return;
             }
             
-            $('.fixed-sidebar-menu-minicart').toggleClass('open');
-            $('.your-box-header').toggleClass('cart-open');
+            var isOpening = !$cartSidebar.hasClass('open');
+            
+            $cartSidebar.toggleClass('open');
+            $yourBoxHeader.toggleClass('cart-open');
+            
+            // Update cart count when opening the sidebar to ensure accuracy
+            if (isOpening) {
+                updateYourBoxHeader();
+            }
+            
+            console.log('Cart sidebar open class:', $cartSidebar.hasClass('open'));
         });
         
         /**
@@ -746,18 +758,10 @@
         
         /**
          * Add to Cart Button
+         * Allows both logged-in and non-logged-in users to add products to cart
          */
         $(document).on('click', '.add-to-cart-btn', function(e) {
             e.preventDefault();
-            
-            // Check if user is logged in
-            if (!stirjoyData.isLoggedIn) {
-                var message = 'Please log in to add products to your cart.';
-                if (confirm(message + '\n\nWould you like to go to the login page?')) {
-                    window.location.href = stirjoyData.loginUrl;
-                }
-                return false;
-            }
             
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
@@ -856,18 +860,10 @@
         
         /**
          * Remove from Cart Button
+         * Allows both logged-in and non-logged-in users to remove products from cart
          */
         $(document).on('click', '.remove-from-cart-btn', function(e) {
             e.preventDefault();
-            
-            // Check if user is logged in
-            if (!stirjoyData.isLoggedIn) {
-                var message = 'Please log in to manage your cart.';
-                if (confirm(message + '\n\nWould you like to go to the login page?')) {
-                    window.location.href = stirjoyData.loginUrl;
-                }
-                return false;
-            }
             
             // Check if another operation is in progress
             if (isCartOperationInProgress) {
@@ -988,6 +984,25 @@
         }
         
         /**
+         * Update cart sidebar widget title with accurate count
+         * This ensures consistency across all updates
+         */
+        function updateCartSidebarWidgetTitle(count) {
+            // Ensure count is a number
+            count = parseInt(count) || 0;
+            var itemText = count === 1 ? 'item' : 'items';
+            
+            // Update the widget title with accurate count
+            $(".widget_shopping_cart .widgettitle").html(
+                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true">' +
+                '<circle cx="8" cy="21" r="1"></circle>' +
+                '<circle cx="19" cy="21" r="1"></circle>' +
+                '<path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>' +
+                '</svg>Your Box <span>' + count + ' ' + itemText + '</span>'
+            );
+        }
+        
+        /**
          * Update Your Box Header Display
          */
         function updateYourBoxHeader() {
@@ -1002,16 +1017,18 @@
                     if (response.success && response.data) {
                         console.log('updateYourBoxHeader response:', response.data);
                         
+                        // Ensure count is a number
+                        var cartCount = parseInt(response.data.count) || 0;
+                        
                         // Update Your Box header
-                        $('.your-box-count').text(response.data.count);
+                        $('.your-box-count').text(cartCount);
                         $('.your-box-total').html(response.data.total_html); // Use .html() to render HTML properly
                         
                         // Update main header cart badge
-                        $('.cart-contents-custom span').text('(' + response.data.count + ')');
+                        $('.cart-contents-custom span').text('(' + cartCount + ')');
                         
-                        // Update cart sidebar widget title
-                        var itemText = response.data.count === 1 ? 'item' : 'items';
-                        $(".widget_shopping_cart .widgettitle").html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-6 h-6 mr-2 text-primary" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>Your Box <span>' + response.data.count + ' ' + itemText + '</span>');
+                        // Update cart sidebar widget title using helper function
+                        updateCartSidebarWidgetTitle(cartCount);
                         
                         // Update cart bar progress bars immediately
                         if (response.data.cart_subtotal_numeric !== undefined) {
@@ -1029,8 +1046,19 @@
                         // Trigger cart updated event for other scripts
                         $(document.body).trigger('wc_fragment_refresh');
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating cart header:', error);
                 }
             });
+        }
+        
+        // Initialize cart count on page load for shop pages
+        // This ensures the cart count is accurate even if the page was reloaded
+        // after AJAX cart operations. Must be called after updateYourBoxHeader is defined.
+        if ($('body').hasClass('stirjoy-shop-page') || $('body').hasClass('woocommerce-shop')) {
+            // Update cart count immediately on page load to ensure accuracy
+            updateYourBoxHeader();
         }
         
         /**
