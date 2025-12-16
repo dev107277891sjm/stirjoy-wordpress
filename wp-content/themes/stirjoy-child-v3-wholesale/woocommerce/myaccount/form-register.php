@@ -63,10 +63,16 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 					<div class="stirjoy-form-section">
 						<h2 class="stirjoy-section-title"><?php esc_html_e( 'Contact', 'woocommerce' ); ?></h2>
 						
+						<!-- Full Name Field - Always Visible -->
+						<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+							<label for="reg_full_name"><?php esc_html_e( 'Full Name', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+							<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="full_name" id="reg_full_name" autocomplete="name" placeholder="<?php esc_attr_e( 'Your name', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['full_name'] ) ) ? esc_attr( wp_unslash( $_POST['full_name'] ) ) : ''; ?>" required aria-required="true" />
+						</p>
+						
 						<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
 							<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-								<label for="reg_username"><?php esc_html_e( 'Full Name', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
-								<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" placeholder="<?php esc_attr_e( 'Your name', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
+								<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+								<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" placeholder="<?php esc_attr_e( 'Choose a username', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
 							</p>
 						<?php endif; ?>
 
@@ -128,17 +134,16 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 						<h2 class="stirjoy-section-title"><?php esc_html_e( 'Payment', 'woocommerce' ); ?></h2>
 						<p class="stirjoy-security-text"><?php esc_html_e( 'All transactions are secure and encrypted.', 'woocommerce' ); ?></p>
 						
-						<div class="stirjoy-payment-methods">
-							<span class="stirjoy-payment-icons">
-								<span class="stirjoy-payment-icon">MC</span>
-								<span class="stirjoy-payment-icon">VISA</span>
-								<span class="stirjoy-payment-icon">AMEX</span>
-								<span class="stirjoy-payment-icon">+ 4</span>
-							</span>
-						</div>
-
 						<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
 							<label for="card_number"><?php esc_html_e( 'Credit card', 'woocommerce' ); ?></label>
+							<div class="stirjoy-payment-methods">
+								<span class="stirjoy-payment-icons">
+									<span class="stirjoy-payment-icon">MC</span>
+									<span class="stirjoy-payment-icon">VISA</span>
+									<span class="stirjoy-payment-icon">AMEX</span>
+									<span class="stirjoy-payment-icon">+ 4</span>
+								</span>
+							</div>
 							<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="card_number" id="card_number" placeholder="<?php esc_attr_e( 'Card number', 'woocommerce' ); ?>" autocomplete="cc-number" />
 						</p>
 
@@ -207,32 +212,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 			<!-- Right Column - Order Summary -->
 			<div class="stirjoy-register-sidebar">
 				<div class="stirjoy-order-summary">
-					<h2 class="stirjoy-sidebar-title"><?php esc_html_e( 'What You Get', 'woocommerce' ); ?></h2>
-					
-					<div class="stirjoy-order-details">
-						<div class="stirjoy-order-item">
-							<span class="stirjoy-order-label"><?php esc_html_e( '6-Meal Box', 'woocommerce' ); ?></span>
-							<span class="stirjoy-order-value"><?php echo wc_price( 72.00 ); ?></span>
-						</div>
-						<div class="stirjoy-order-item">
-							<span class="stirjoy-order-label"><?php esc_html_e( 'Shipping', 'woocommerce' ); ?></span>
-							<span class="stirjoy-order-value stirjoy-shipping-placeholder"><?php esc_html_e( 'Enter shipping address', 'woocommerce' ); ?></span>
-						</div>
-						<div class="stirjoy-order-item stirjoy-order-total">
-							<span class="stirjoy-order-label"><?php esc_html_e( 'Total', 'woocommerce' ); ?></span>
-							<span class="stirjoy-order-value"><?php echo wc_price( 72.00 ); ?></span>
-						</div>
-					</div>
-
-					<div class="stirjoy-delivery-schedule">
-						<p class="stirjoy-schedule-text">
-							<strong><?php esc_html_e( 'Your box arrives on the 15th of each month', 'woocommerce' ); ?></strong>
-						</p>
-						<p class="stirjoy-schedule-text">
-							<?php esc_html_e( 'Cutoff to customize: 7 days before', 'woocommerce' ); ?>
-						</p>
-					</div>
-
+					<!-- Our Promise Section - First -->
 					<div class="stirjoy-promise-section">
 						<h3 class="stirjoy-promise-title"><?php esc_html_e( 'Our promise', 'woocommerce' ); ?></h3>
 						<ul class="stirjoy-promise-list">
@@ -257,6 +237,35 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 						</ul>
 					</div>
 
+					<!-- What You Get Section - Second -->
+					<h2 class="stirjoy-sidebar-title"><?php esc_html_e( 'What You Get', 'woocommerce' ); ?></h2>
+					
+					<div class="stirjoy-order-details">
+						<div class="stirjoy-order-item">
+							<span class="stirjoy-order-label"><?php esc_html_e( '6-Meal Box', 'woocommerce' ); ?></span>
+							<span class="stirjoy-order-value"><?php echo wc_price( 72.00 ); ?></span>
+						</div>
+						<div class="stirjoy-order-item">
+							<span class="stirjoy-order-label"><?php esc_html_e( 'Shipping', 'woocommerce' ); ?></span>
+							<span class="stirjoy-order-value stirjoy-shipping-placeholder"><?php esc_html_e( 'Enter shipping address', 'woocommerce' ); ?></span>
+						</div>
+						<div class="stirjoy-order-item stirjoy-order-total">
+							<span class="stirjoy-order-label"><?php esc_html_e( 'Total', 'woocommerce' ); ?></span>
+							<span class="stirjoy-order-value"><?php echo wc_price( 72.00 ); ?></span>
+						</div>
+					</div>
+
+					<!-- Delivery Schedule Section - Third -->
+					<div class="stirjoy-delivery-schedule">
+						<p class="stirjoy-schedule-text">
+							<strong><?php esc_html_e( 'Your box arrives on the 15th of each month', 'woocommerce' ); ?></strong>
+						</p>
+						<p class="stirjoy-schedule-text">
+							<?php esc_html_e( 'Cutoff to customize: 7 days before', 'woocommerce' ); ?>
+						</p>
+					</div>
+
+					<!-- Tip Box - Fourth -->
 					<div class="stirjoy-tip-box">
 						<p><?php esc_html_e( 'After signing up, you\'ll customize your first box with your favorite meals!', 'woocommerce' ); ?></p>
 					</div>

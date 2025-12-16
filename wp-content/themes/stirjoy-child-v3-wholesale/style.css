@@ -678,7 +678,7 @@ header .cart-contents-custom span:hover {
     display: flex;
     gap: 0;
     border-radius: 8px;
-    border: 3px solid #396A26;
+    border: 2px solid #396A26;
     align-items: center;
     margin-bottom: 30px;
 }
@@ -705,7 +705,7 @@ header .cart-contents-custom span:hover {
 .stirjoy-submit-btn {
     background: #E2EE48 !important;
     color: #396A26 !important;
-    border: 3px solid #396A26!important;
+    border: 2px solid #396A26!important;
     border-top: none!important;
     border-right: none!important;
     border-bottom: none!important;
@@ -6269,9 +6269,9 @@ body.woocommerce-account #customer_login .u-columns {
 
 /* Form Sections - Pixel Perfect */
 .stirjoy-form-section {
-    margin-bottom: 48px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid #e0e0e0;
+    /* margin-bottom: 34px; */
+    padding-bottom: 0;
+    /* border-bottom: 1px solid #e0e0e0; */
 }
 
 .stirjoy-form-section:last-of-type {
@@ -6282,10 +6282,10 @@ body.woocommerce-account #customer_login .u-columns {
 
 .stirjoy-section-title {
     color: #2d5a27;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     line-height: 1.3;
-    margin: 0 0 24px 0;
+    margin: 0 0 20px 0;
     letter-spacing: -0.3px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
@@ -6362,7 +6362,7 @@ body.woocommerce-account #customer_login .u-columns {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 32px 0;
+    margin: 34px 0;
 }
 
 .stirjoy-divider::before,
@@ -6488,7 +6488,7 @@ body.woocommerce-account #customer_login .u-columns {
 
 /* Payment Icons - Pixel Perfect */
 .stirjoy-payment-methods {
-    margin-bottom: 20px;
+    margin: 10px 0 16px 0;
 }
 
 .stirjoy-payment-icons {
@@ -6614,9 +6614,13 @@ body.woocommerce-account #customer_login .u-columns {
     font-size: 28px;
     font-weight: 700;
     line-height: 1.2;
-    margin: 0 0 28px 0;
+    margin: 32px 0 28px 0;
     letter-spacing: -0.5px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-order-summary .stirjoy-sidebar-title:first-child {
+    margin-top: 0;
 }
 
 /* Order Details - Pixel Perfect */
@@ -6700,7 +6704,9 @@ body.woocommerce-account #customer_login .u-columns {
 
 /* Promise Section - Pixel Perfect */
 .stirjoy-promise-section {
-    margin-bottom: 28px;
+    margin-bottom: 0;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .stirjoy-promise-title {

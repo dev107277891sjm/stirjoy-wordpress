@@ -769,3 +769,40 @@ function stirjoy_disable_guest_checkout( $value ) {
     return false; // Disable guest checkout, require login
 }
 add_filter( 'woocommerce_enable_guest_checkout', 'stirjoy_disable_guest_checkout', 10, 1 );
+
+/**
+ * Save full name from registration form
+ * Splits full name into first_name and last_name and saves to user meta
+ */
+function stirjoy_save_registration_full_name( $customer_id ) {
+    if ( isset( $_POST['full_name'] ) && ! empty( $_POST['full_name'] ) ) {
+        $full_name = sanitize_text_field( wp_unslash( $_POST['full_name'] ) );
+        
+        // Split full name into first and last name
+        $name_parts = explode( ' ', trim( $full_name ), 2 );
+        $first_name = ! empty( $name_parts[0] ) ? $name_parts[0] : '';
+        $last_name = ! empty( $name_parts[1] ) ? $name_parts[1] : '';
+        
+        // If no last name, use first name as last name too
+        if ( empty( $last_name ) ) {
+            $last_name = $first_name;
+        }
+        
+        // Update WordPress user meta
+        update_user_meta( $customer_id, 'first_name', $first_name );
+        update_user_meta( $customer_id, 'last_name', $last_name );
+        
+        // Update WooCommerce billing meta
+        update_user_meta( $customer_id, 'billing_first_name', $first_name );
+        update_user_meta( $customer_id, 'billing_last_name', $last_name );
+        
+        // Update user display name
+        wp_update_user( array(
+            'ID' => $customer_id,
+            'display_name' => $full_name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+        ) );
+    }
+}
+add_action( 'woocommerce_created_customer', 'stirjoy_save_registration_full_name', 10, 1 );
