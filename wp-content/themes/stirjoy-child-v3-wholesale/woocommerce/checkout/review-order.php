@@ -157,9 +157,10 @@ defined( 'ABSPATH' ) || exit;
 			<circle cx="18.5" cy="18.5" r="2.5" stroke="currentColor" stroke-width="2"/>
 		</svg>
 		<div class="stirjoy-delivery-schedule-content">
+			<h3 class="stirjoy-delivery-schedule-title"><?php esc_html_e( 'Delivery Schedule', 'woocommerce' ); ?></h3>
 			<p class="stirjoy-delivery-schedule-text">
-				<strong><?php esc_html_e( 'Your box arrives on the 15th of each month', 'woocommerce' ); ?></strong><br>
-				<?php esc_html_e( 'Cutoff to customize: 7 days before', 'woocommerce' ); ?>
+				<?php esc_html_e( 'Your box arrives on the 15th of each month', 'woocommerce' ); ?><br>
+				<?php esc_html_e( 'Cutoff to customize: 7 days before.', 'woocommerce' ); ?>
 			</p>
 		</div>
 	</div>

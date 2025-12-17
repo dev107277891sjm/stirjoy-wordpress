@@ -36,7 +36,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 						
 						<!-- Social Login Buttons -->
 						<div class="stirjoy-social-login">
-							<button type="button" class="stirjoy-social-btn stirjoy-google-btn">
+							<button type="button" class="stirjoy-social-btn stirjoy-google-btn" data-provider="google">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M19.6 10.2273C19.6 9.51818 19.5364 8.83636 19.4182 8.18182H10V11.85H15.3818C15.15 12.95 14.4455 13.85 13.4 14.4V16.8H16.6182C18.5091 15.05 19.6 12.7273 19.6 10.2273Z" fill="#4285F4"/>
 									<path d="M10 20C12.7 20 14.9636 19.1045 16.6182 17.6L13.4 14.4C12.4909 15.0045 11.3455 15.3818 10 15.3818C7.39545 15.3818 5.19091 13.5364 4.40455 11.1H1.06364V13.5909C2.70909 16.8091 6.09091 20 10 20Z" fill="#34A853"/>
@@ -45,19 +45,29 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 								</svg>
 								<span><?php esc_html_e( 'Connect with Google', 'woocommerce' ); ?></span>
 							</button>
-							<button type="button" class="stirjoy-social-btn stirjoy-facebook-btn">
+							<button type="button" class="stirjoy-social-btn stirjoy-facebook-btn" data-provider="facebook">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" fill="#1877F2"/>
 								</svg>
 								<span><?php esc_html_e( 'Connect with Facebook', 'woocommerce' ); ?></span>
 							</button>
-							<button type="button" class="stirjoy-social-btn stirjoy-apple-btn">
+							<button type="button" class="stirjoy-social-btn stirjoy-apple-btn" data-provider="apple">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M15.075 1.667c-.833.833-2.083 1.25-3.333 1.25-.417 0-.833-.083-1.25-.083.417-1.25 1.25-2.5 2.5-3.333.833-.417 1.667-.833 2.5-.833.417 0 .833.083 1.25.083-.417 1.25-1.25 2.083-1.667 2.5zm-1.25 2.5c-2.083 0-3.75 1.667-3.75 4.167 0 3.75 3.333 7.5 3.75 7.5.417 0 .833-.417 1.667-.417.833 0 1.25.417 1.667.417.417 0 1.25-1.25 1.667-2.5-1.25-.417-2.083-1.667-2.083-3.333 0-1.667 1.25-3.333 2.5-4.167-.833-.833-1.667-1.25-2.5-1.25-.417 0-.833.083-1.25.083z" fill="#000000"/>
 								</svg>
 								<span><?php esc_html_e( 'Connect with Apple', 'woocommerce' ); ?></span>
 							</button>
 						</div>
+						
+						<!-- Social Login SDKs -->
+						<?php if ( is_account_page() && isset( $_GET['action'] ) && $_GET['action'] === 'register' ) : ?>
+							<!-- Google Sign-In SDK -->
+							<script src="https://accounts.google.com/gsi/client" async defer></script>
+							<!-- Facebook SDK -->
+							<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+							<!-- Apple Sign-In SDK -->
+							<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+						<?php endif; ?>
 
 						<!-- Divider -->
 						<div class="stirjoy-divider">

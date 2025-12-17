@@ -2192,4 +2192,196 @@
 
     }); // End document ready
 
+    /**
+     * Social Login Handlers
+     */
+    if ($('body').hasClass('woocommerce-account') && $('.stirjoy-social-login').length > 0) {
+        
+        // Google Sign-In Handler
+        $(document).on('click', '.stirjoy-google-btn', function(e) {
+            e.preventDefault();
+            var $button = $(this);
+            $button.prop('disabled', true).addClass('loading');
+            
+            // Wait for Google SDK to load
+            if (typeof google === 'undefined' || !google.accounts) {
+                // Wait a bit for SDK to load
+                setTimeout(function() {
+                    if (typeof google !== 'undefined' && google.accounts && stirjoyData.googleClientId) {
+                        initializeGoogleSignIn($button);
+                    } else {
+                        alert('Google Sign-In SDK is not loaded. Please refresh the page and ensure Google Client ID is configured.');
+                        $button.prop('disabled', false).removeClass('loading');
+                    }
+                }, 500);
+            } else {
+                initializeGoogleSignIn($button);
+            }
+        });
+        
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn($button) {
+            if (!stirjoyData.googleClientId) {
+                alert('Google Client ID is not configured. Please contact the site administrator.');
+                $button.prop('disabled', false).removeClass('loading');
+                return;
+            }
+            
+            google.accounts.id.initialize({
+                client_id: stirjoyData.googleClientId,
+                callback: handleGoogleSignIn
+            });
+            
+            // Use One Tap or button flow
+            google.accounts.id.prompt(function(notification) {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    // Fallback to button flow
+                    google.accounts.oauth2.initTokenClient({
+                        client_id: stirjoyData.googleClientId,
+                        scope: 'email profile',
+                        callback: function(response) {
+                            if (response.access_token) {
+                                // Get user info using access token
+                                fetch('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + response.access_token)
+                                    .then(function(res) { return res.json(); })
+                                    .then(function(userInfo) {
+                                        handleSocialLogin('google', {
+                                            id: userInfo.id,
+                                            email: userInfo.email || '',
+                                            name: userInfo.name || '',
+                                            first_name: userInfo.given_name || '',
+                                            last_name: userInfo.family_name || '',
+                                            access_token: response.access_token
+                                        });
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Google API Error:', error);
+                                        $button.prop('disabled', false).removeClass('loading');
+                                        alert('Failed to get user information from Google.');
+                                    });
+                            }
+                        }
+                    }).requestAccessToken();
+                }
+            });
+        }
+        
+        // Facebook Login Handler
+        $(document).on('click', '.stirjoy-facebook-btn', function(e) {
+            e.preventDefault();
+            var $button = $(this);
+            $button.prop('disabled', true).addClass('loading');
+            
+            // Initialize Facebook SDK
+            if (typeof FB !== 'undefined') {
+                FB.init({
+                    appId: stirjoyData.facebookAppId || '', // Will be set from PHP
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v18.0'
+                });
+                
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        FB.api('/me', {fields: 'id,name,email,first_name,last_name'}, function(userInfo) {
+                            handleSocialLogin('facebook', {
+                                id: userInfo.id,
+                                email: userInfo.email || '',
+                                name: userInfo.name || '',
+                                first_name: userInfo.first_name || '',
+                                last_name: userInfo.last_name || '',
+                                access_token: response.authResponse.accessToken
+                            });
+                        });
+                    } else {
+                        $button.prop('disabled', false).removeClass('loading');
+                        alert('Facebook login was cancelled.');
+                    }
+                }, {scope: 'email'});
+            } else {
+                alert('Facebook SDK is not loaded. Please refresh the page.');
+                $button.prop('disabled', false).removeClass('loading');
+            }
+        });
+        
+        // Apple Sign-In Handler
+        $(document).on('click', '.stirjoy-apple-btn', function(e) {
+            e.preventDefault();
+            var $button = $(this);
+            $button.prop('disabled', true).addClass('loading');
+            
+            // Initialize Apple Sign-In
+            if (typeof AppleID !== 'undefined') {
+                AppleID.auth.init({
+                    clientId: stirjoyData.appleClientId || '', // Will be set from PHP
+                    scope: 'name email',
+                    redirectURI: window.location.origin + '/wp-admin/admin-ajax.php?action=stirjoy_apple_callback',
+                    usePopup: true
+                });
+                
+                AppleID.auth.signIn().then(function(response) {
+                    handleSocialLogin('apple', {
+                        id: response.user,
+                        email: response.email || '',
+                        name: response.name ? (response.name.firstName + ' ' + response.name.lastName) : '',
+                        first_name: response.name ? response.name.firstName : '',
+                        last_name: response.name ? response.name.lastName : '',
+                        identity_token: response.authorization.id_token
+                    });
+                }).catch(function(error) {
+                    console.error('Apple Sign-In Error:', error);
+                    $button.prop('disabled', false).removeClass('loading');
+                    alert('Apple Sign-In was cancelled or failed.');
+                });
+            } else {
+                alert('Apple Sign-In SDK is not loaded. Please refresh the page.');
+                $button.prop('disabled', false).removeClass('loading');
+            }
+        });
+        
+        // Google Sign-In Callback
+        function handleGoogleSignIn(response) {
+            if (response.credential) {
+                // Decode JWT token (simplified - in production, verify on server)
+                var payload = JSON.parse(atob(response.credential.split('.')[1]));
+                
+                handleSocialLogin('google', {
+                    id: payload.sub,
+                    email: payload.email || '',
+                    name: payload.name || '',
+                    first_name: payload.given_name || '',
+                    last_name: payload.family_name || '',
+                    id_token: response.credential
+                });
+            }
+        }
+        
+        // Handle Social Login Data
+        function handleSocialLogin(provider, userData) {
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_social_login',
+                    provider: provider,
+                    user_data: userData,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Redirect to checkout
+                        window.location.href = response.data.redirect_url || stirjoyData.checkoutUrl || '/checkout';
+                    } else {
+                        alert(response.data.message || 'Login failed. Please try again.');
+                        $('.stirjoy-social-btn').prop('disabled', false).removeClass('loading');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                    $('.stirjoy-social-btn').prop('disabled', false).removeClass('loading');
+                }
+            });
+        }
+    }
+
 })(jQuery);

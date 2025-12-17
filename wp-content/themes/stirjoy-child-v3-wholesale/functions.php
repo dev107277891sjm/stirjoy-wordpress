@@ -52,11 +52,22 @@ function stirjoy_child_enqueue_styles() {
 
     // Localize script for AJAX
     $login_url = get_permalink( get_option('woocommerce_myaccount_page_id') );
+    $checkout_url = wc_get_checkout_url();
+    
+    // Social login credentials (these should be set in wp-config.php or theme options)
+    $google_client_id = defined( 'STIRJOY_GOOGLE_CLIENT_ID' ) ? STIRJOY_GOOGLE_CLIENT_ID : '';
+    $facebook_app_id = defined( 'STIRJOY_FACEBOOK_APP_ID' ) ? STIRJOY_FACEBOOK_APP_ID : '';
+    $apple_client_id = defined( 'STIRJOY_APPLE_CLIENT_ID' ) ? STIRJOY_APPLE_CLIENT_ID : '';
+    
     wp_localize_script( 'stirjoy-child-script', 'stirjoyData', array(
         'ajaxUrl' => admin_url( 'admin-ajax.php' ),
         'nonce' => wp_create_nonce( 'stirjoy_nonce' ),
         'isLoggedIn' => is_user_logged_in(),
         'loginUrl' => $login_url ? $login_url : wp_login_url(),
+        'checkoutUrl' => $checkout_url ? $checkout_url : '',
+        'googleClientId' => $google_client_id,
+        'facebookAppId' => $facebook_app_id,
+        'appleClientId' => $apple_client_id,
     ));
 
     wp_dequeue_script( 'thecrate-custom' );
@@ -114,6 +125,78 @@ function stirjoy_child_woocommerce_setup() {
     add_theme_support( 'wc-product-gallery-slider' );
 }
 add_action( 'after_setup_theme', 'stirjoy_child_woocommerce_setup' );
+
+/**
+ * Remove default order review hook since we're rendering it manually in our custom checkout template
+ * This prevents duplicate rendering of the order summary
+ */
+function stirjoy_remove_default_order_review() {
+    remove_action( 'woocommerce_checkout_order_review', 'woocommerce_order_review', 10 );
+}
+add_action( 'woocommerce_init', 'stirjoy_remove_default_order_review', 20 );
+
+/**
+ * Remove coupon form from checkout page
+ */
+function stirjoy_remove_checkout_coupon_form() {
+    if ( is_checkout() ) {
+        remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+    }
+}
+add_action( 'wp', 'stirjoy_remove_checkout_coupon_form', 10 );
+
+/**
+ * Remove notices wrapper from checkout page
+ */
+function stirjoy_remove_checkout_notices() {
+    if ( is_checkout() ) {
+        remove_action( 'woocommerce_before_checkout_form', 'woocommerce_output_all_notices', 10 );
+        remove_action( 'woocommerce_before_checkout_form_cart_notices', 'woocommerce_output_all_notices', 10 );
+    }
+}
+add_action( 'wp', 'stirjoy_remove_checkout_notices', 10 );
+
+/**
+ * Fix AJAX order review fragments to extract only the table from the returned template
+ * This prevents the wrapper from being nested inside stirjoy-box-summary during AJAX updates
+ */
+function stirjoy_fix_order_review_ajax_fragments( $fragments ) {
+    // WooCommerce AJAX returns the entire review-order.php template (with wrapper)
+    // but tries to replace only .woocommerce-checkout-review-order-table
+    // We need to extract only the table element from the returned HTML
+    if ( isset( $fragments['.woocommerce-checkout-review-order-table'] ) ) {
+        $full_html = $fragments['.woocommerce-checkout-review-order-table'];
+        
+        // If the returned HTML contains the wrapper, extract only the table
+        if ( strpos( $full_html, 'stirjoy-order-summary-wrapper' ) !== false ) {
+            // Use DOMDocument to properly extract the table element
+            $dom = new DOMDocument();
+            @$dom->loadHTML( '<?xml encoding="UTF-8">' . $full_html );
+            $xpath = new DOMXPath( $dom );
+            
+            // Find the table with the class woocommerce-checkout-review-order-table
+            $tables = $xpath->query( '//table[contains(@class, "woocommerce-checkout-review-order-table")]' );
+            
+            if ( $tables->length > 0 ) {
+                $table = $tables->item( 0 );
+                // Get the table HTML
+                $table_html = $dom->saveHTML( $table );
+                // Clean up the HTML (remove XML declaration if present)
+                $table_html = preg_replace( '/^<\?xml[^>]*\?>/', '', $table_html );
+                $fragments['.woocommerce-checkout-review-order-table'] = trim( $table_html );
+            } else {
+                // Fallback: use regex to extract the table
+                preg_match( '/<table[^>]*class="[^"]*woocommerce-checkout-review-order-table[^"]*"[^>]*>.*?<\/table>/s', $full_html, $matches );
+                if ( ! empty( $matches[0] ) ) {
+                    $fragments['.woocommerce-checkout-review-order-table'] = $matches[0];
+                }
+            }
+        }
+    }
+    
+    return $fragments;
+}
+add_filter( 'woocommerce_update_order_review_fragments', 'stirjoy_fix_order_review_ajax_fragments', 10, 1 );
 
 /**
  * Add custom body classes
@@ -931,3 +1014,282 @@ function stirjoy_force_checkout_redirect_after_registration() {
     }
 }
 add_action( 'template_redirect', 'stirjoy_force_checkout_redirect_after_registration', 30 );
+
+/**
+ * Transfer guest cart to user when they log in
+ * This ensures cart persists even with caching/speed optimizers
+ */
+function stirjoy_transfer_guest_cart_to_user( $user_login, $user ) {
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    
+    // Get the current cart (guest cart)
+    $cart = WC()->cart;
+    
+    if ( ! $cart || $cart->is_empty() ) {
+        return;
+    }
+    
+    // Force session save to ensure guest cart is persisted
+    if ( WC()->session ) {
+        WC()->session->save_data();
+    }
+    
+    // WooCommerce should automatically migrate the session, but we'll ensure it happens
+    // The session handler will migrate guest session to user session on next page load
+    // But we need to ensure the cart is preserved
+    
+    // Store cart contents temporarily
+    $cart_contents = $cart->get_cart();
+    
+    if ( ! empty( $cart_contents ) ) {
+        // Force cart to persist by updating session
+        WC()->session->set( 'cart', $cart_contents );
+        WC()->session->set( 'cart_totals', $cart->get_totals() );
+        WC()->session->set( 'applied_coupons', $cart->get_applied_coupons() );
+        
+        // Save session data immediately
+        WC()->session->save_data();
+        
+        // Clear cart cache
+        wp_cache_delete( 'cart_' . $user->ID, 'woocommerce' );
+    }
+}
+add_action( 'wp_login', 'stirjoy_transfer_guest_cart_to_user', 10, 2 );
+
+/**
+ * Ensure cart is loaded after login/registration
+ * This handles cases where session migration doesn't happen immediately
+ */
+function stirjoy_ensure_cart_after_login() {
+    if ( ! is_user_logged_in() || ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    
+    // Force WooCommerce to initialize session
+    if ( WC()->session && ! WC()->session->has_session() ) {
+        WC()->session->set_customer_session_cookie( true );
+    }
+    
+    // Ensure cart is loaded
+    if ( WC()->cart ) {
+        WC()->cart->get_cart();
+    }
+}
+add_action( 'wp_loaded', 'stirjoy_ensure_cart_after_login', 20 );
+
+/**
+ * Prevent caching of cart-related AJAX requests
+ * This ensures cart operations work properly with speed optimizers
+ */
+function stirjoy_prevent_cart_ajax_caching() {
+    // Only for AJAX requests
+    if ( ! wp_doing_ajax() ) {
+        return;
+    }
+    
+    // Check if it's a cart-related AJAX request
+    $cart_actions = array(
+        'stirjoy_add_to_cart',
+        'stirjoy_remove_from_cart',
+        'stirjoy_get_cart_info',
+        'stirjoy_social_login',
+        'woocommerce_add_to_cart',
+        'woocommerce_remove_from_cart',
+        'woocommerce_get_cart',
+        'woocommerce_update_order_review',
+    );
+    
+    $action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : '';
+    
+    if ( in_array( $action, $cart_actions, true ) ) {
+        // Prevent caching
+        nocache_headers();
+        
+        // Set headers to prevent caching
+        header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+        
+        // Ensure session is started
+        if ( ! session_id() && class_exists( 'WooCommerce' ) && WC()->session ) {
+            WC()->session->init();
+        }
+    }
+}
+add_action( 'admin_init', 'stirjoy_prevent_cart_ajax_caching', 1 );
+add_action( 'init', 'stirjoy_prevent_cart_ajax_caching', 1 );
+
+
+/**
+ * AJAX Handler for Social Login
+ * Processes Google, Facebook, and Apple login data
+ */
+function stirjoy_social_login_handler() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'stirjoy_nonce' ) ) {
+        wp_send_json_error( array( 'message' => 'Security check failed.' ) );
+        return;
+    }
+    
+    // Get provider and user data
+    $provider = isset( $_POST['provider'] ) ? sanitize_text_field( $_POST['provider'] ) : '';
+    $user_data = isset( $_POST['user_data'] ) ? $_POST['user_data'] : array();
+    
+    if ( empty( $provider ) || empty( $user_data ) ) {
+        wp_send_json_error( array( 'message' => 'Invalid request data.' ) );
+        return;
+    }
+    
+    // Extract user information
+    $social_id = isset( $user_data['id'] ) ? sanitize_text_field( $user_data['id'] ) : '';
+    $email = isset( $user_data['email'] ) ? sanitize_email( $user_data['email'] ) : '';
+    $first_name = isset( $user_data['first_name'] ) ? sanitize_text_field( $user_data['first_name'] ) : '';
+    $last_name = isset( $user_data['last_name'] ) ? sanitize_text_field( $user_data['last_name'] ) : '';
+    $name = isset( $user_data['name'] ) ? sanitize_text_field( $user_data['name'] ) : '';
+    
+    // If no email, generate a placeholder (some providers don't provide email)
+    if ( empty( $email ) ) {
+        $email = $provider . '_' . $social_id . '@' . $provider . '.temp';
+    }
+    
+    // Check if user already exists by email
+    $user = email_exists( $email ) ? get_user_by( 'email', $email ) : false;
+    
+    // If user doesn't exist, create new user
+    if ( ! $user ) {
+        // Generate username from email or name
+        $username = ! empty( $email ) ? sanitize_user( current( explode( '@', $email ) ) ) : sanitize_user( $name );
+        
+        // If username exists, append number
+        if ( username_exists( $username ) ) {
+            $username = $username . '_' . rand( 1000, 9999 );
+        }
+        
+        // If still empty, use provider + ID
+        if ( empty( $username ) ) {
+            $username = $provider . '_' . $social_id;
+        }
+        
+        // Generate random password (user won't need it for social login)
+        $password = wp_generate_password( 20, false );
+        
+        // Create user
+        $user_id = wp_create_user( $username, $password, $email );
+        
+        if ( is_wp_error( $user_id ) ) {
+            wp_send_json_error( array( 'message' => $user_id->get_error_message() ) );
+            return;
+        }
+        
+        // Get user object
+        $user = get_user_by( 'id', $user_id );
+        
+        // Update user meta
+        if ( ! empty( $first_name ) ) {
+            update_user_meta( $user_id, 'first_name', $first_name );
+            update_user_meta( $user_id, 'billing_first_name', $first_name );
+        }
+        if ( ! empty( $last_name ) ) {
+            update_user_meta( $user_id, 'last_name', $last_name );
+            update_user_meta( $user_id, 'billing_last_name', $last_name );
+        }
+        
+        // Set display name
+        $display_name = ! empty( $name ) ? $name : ( trim( $first_name . ' ' . $last_name ) );
+        if ( ! empty( $display_name ) ) {
+            wp_update_user( array(
+                'ID' => $user_id,
+                'display_name' => $display_name
+            ) );
+        }
+        
+        // Store social login provider info
+        update_user_meta( $user_id, '_stirjoy_social_provider', $provider );
+        update_user_meta( $user_id, '_stirjoy_social_id', $social_id );
+        update_user_meta( $user_id, '_stirjoy_just_registered', time() );
+        
+        // Set user role (WooCommerce customer)
+        $user->set_role( 'customer' );
+        
+        // Trigger WooCommerce customer creation hook
+        do_action( 'woocommerce_created_customer', $user_id, array(
+            'user_login' => $username,
+            'user_email' => $email,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+        ), $password );
+    } else {
+        // User exists, update social login info
+        update_user_meta( $user->ID, '_stirjoy_social_provider', $provider );
+        update_user_meta( $user->ID, '_stirjoy_social_id', $social_id );
+    }
+    
+    // Save guest cart before login (if WooCommerce is active)
+    $guest_cart_contents = array();
+    if ( class_exists( 'WooCommerce' ) && WC()->cart && ! WC()->cart->is_empty() ) {
+        $guest_cart_contents = WC()->cart->get_cart();
+        // Force save session before login
+        if ( WC()->session ) {
+            WC()->session->save_data();
+        }
+    }
+    
+    // Log the user in
+    wp_clear_auth_cookie();
+    wp_set_current_user( $user->ID );
+    wp_set_auth_cookie( $user->ID, true );
+    do_action( 'wp_login', $user->user_login, $user );
+    
+    // After login, ensure cart is transferred
+    if ( class_exists( 'WooCommerce' ) && WC()->cart && ! empty( $guest_cart_contents ) ) {
+        // Reinitialize WooCommerce session for logged-in user
+        WC()->session->init();
+        
+        // Get current user cart
+        $user_cart = WC()->cart->get_cart();
+        
+        // Merge guest cart with user cart (avoid duplicates)
+        foreach ( $guest_cart_contents as $cart_item_key => $cart_item ) {
+            $product_id = $cart_item['product_id'];
+            $variation_id = isset( $cart_item['variation_id'] ) ? $cart_item['variation_id'] : 0;
+            $quantity = $cart_item['quantity'];
+            
+            // Check if product already exists in user cart
+            $found = false;
+            foreach ( $user_cart as $user_cart_item_key => $user_cart_item ) {
+                if ( $user_cart_item['product_id'] == $product_id && 
+                     $user_cart_item['variation_id'] == $variation_id ) {
+                    // Update quantity
+                    WC()->cart->set_quantity( $user_cart_item_key, $user_cart_item['quantity'] + $quantity );
+                    $found = true;
+                    break;
+                }
+            }
+            
+            // If not found, add to cart
+            if ( ! $found ) {
+                WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, isset( $cart_item['variation'] ) ? $cart_item['variation'] : array() );
+            }
+        }
+        
+        // Save cart
+        WC()->cart->calculate_totals();
+        if ( WC()->session ) {
+            WC()->session->save_data();
+        }
+    }
+    
+    // Redirect to checkout
+    $checkout_url = wc_get_checkout_url();
+    
+    wp_send_json_success( array(
+        'message' => 'Login successful!',
+        'redirect_url' => $checkout_url,
+        'user_id' => $user->ID,
+        'cart_count' => class_exists( 'WooCommerce' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0
+    ) );
+}
+add_action( 'wp_ajax_stirjoy_social_login', 'stirjoy_social_login_handler' );
+add_action( 'wp_ajax_nopriv_stirjoy_social_login', 'stirjoy_social_login_handler' );

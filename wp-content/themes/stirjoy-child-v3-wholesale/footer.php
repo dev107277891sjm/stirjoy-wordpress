@@ -23,8 +23,9 @@
                     <div class="col-md-3 stirjoy-footer-col">
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'contact' ) ) ?: '#' ); ?>">CONTACT US</a></p>
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'delivery' ) ) ?: '#' ); ?>">FAQs</a></p>
-                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'terms-conditions' ) ) ?: wc_get_page_permalink( 'terms' ) ); ?>">TERMS & CONDITIONS</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'terms-conditions' ) ) ?: wc_get_page_permalink( 'terms-conditions' ) ); ?>">TERMS & CONDITIONS</a></p>
                         <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'privacy-policy' ) ) ?: get_privacy_policy_url() ); ?>">PRIVACY POLICY</a></p>
+                        <p class="stirjoy-footer-item"><a href="<?php echo esc_url( get_permalink( get_page_by_path( 'cookie-policy' ) ) ?: wc_get_page_permalink( 'cookie-policy' ) ); ?>">COOKIE POLICY</a></p>
                     </div>
                     
                     <!-- Right Column - Newsletter & Social -->

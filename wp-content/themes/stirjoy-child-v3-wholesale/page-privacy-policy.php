@@ -22,8 +22,9 @@ get_header(); ?>
 		<p class="stirjoy-privacy-policy-date"><?php esc_html_e( '(Last updated: Oct 25, 2025)', 'stirjoy-child' ); ?></p>
 		
 		<!-- Introduction -->
-		<p class="stirjoy-privacy-policy-intro"><?php esc_html_e( 'Your privacy matters to us. We collect only what we need to serve you better.', 'stirjoy-child' ); ?></p>
-		
+		<div class="stirjoy-privacy-section stirjoy-privacy-section-intro">
+			<p class="stirjoy-privacy-policy-intro"><?php esc_html_e( 'Your privacy matters to us. We collect only what we need to serve you better.', 'stirjoy-child' ); ?></p>
+		</div>
 		<!-- Information We Collect Section -->
 		<div class="stirjoy-privacy-section">
 			<h2 class="stirjoy-privacy-section-title"><?php esc_html_e( 'Information We Collect', 'stirjoy-child' ); ?></h2>
