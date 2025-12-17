@@ -763,6 +763,60 @@ function stirjoy_enforce_checkout_login_requirement( $value ) {
 add_filter( 'woocommerce_checkout_registration_required', 'stirjoy_enforce_checkout_login_requirement', 10, 1 );
 
 /**
+ * Override checkout form template location
+ * This ensures our custom checkout template is used
+ * Priority 20 to ensure it runs after other filters
+ */
+function stirjoy_override_checkout_template( $template, $template_name, $template_path ) {
+    // Override checkout form template
+    if ( 'checkout/form-checkout.php' === $template_name ) {
+        $child_template = get_stylesheet_directory() . '/woocommerce/checkout/form-checkout.php';
+        if ( file_exists( $child_template ) ) {
+            return $child_template;
+        }
+    }
+    // Override review order template
+    if ( 'checkout/review-order.php' === $template_name ) {
+        $child_template = get_stylesheet_directory() . '/woocommerce/checkout/review-order.php';
+        if ( file_exists( $child_template ) ) {
+            return $child_template;
+        }
+    }
+    // Override billing form template
+    if ( 'checkout/form-billing.php' === $template_name ) {
+        $child_template = get_stylesheet_directory() . '/woocommerce/checkout/form-billing.php';
+        if ( file_exists( $child_template ) ) {
+            return $child_template;
+        }
+    }
+    // Override shipping form template
+    if ( 'checkout/form-shipping.php' === $template_name ) {
+        $child_template = get_stylesheet_directory() . '/woocommerce/checkout/form-shipping.php';
+        if ( file_exists( $child_template ) ) {
+            return $child_template;
+        }
+    }
+    return $template;
+}
+add_filter( 'woocommerce_locate_template', 'stirjoy_override_checkout_template', 20, 3 );
+
+/**
+ * Disable WooCommerce block templates for checkout page
+ * Force use of PHP templates instead of block templates
+ */
+function stirjoy_disable_checkout_block_template( $templates ) {
+    // Remove block template from hierarchy on checkout page
+    if ( is_checkout() && ! is_wc_endpoint_url() ) {
+        // Remove page-checkout.html and checkout block templates
+        $templates = array_values( array_filter( $templates, function( $template ) {
+            return ! in_array( $template, array( 'page-checkout.html', 'checkout' ), true );
+        } ) );
+    }
+    return $templates;
+}
+add_filter( 'page_template_hierarchy', 'stirjoy_disable_checkout_block_template', 20, 1 );
+
+/**
  * Disable guest checkout to require login
  */
 function stirjoy_disable_guest_checkout( $value ) {
@@ -818,3 +872,62 @@ function stirjoy_save_registration_name( $customer_id ) {
     }
 }
 add_action( 'woocommerce_created_customer', 'stirjoy_save_registration_name', 10, 1 );
+
+/**
+ * Redirect to checkout after successful registration
+ * When user clicks "CONTINUE TO DELIVERY" on register page, redirect to checkout
+ */
+function stirjoy_redirect_after_registration( $redirect ) {
+    // Always redirect to checkout after registration
+    // The button says "CONTINUE TO DELIVERY" which means checkout
+    return wc_get_checkout_url();
+}
+add_filter( 'woocommerce_registration_redirect', 'stirjoy_redirect_after_registration', 20, 1 );
+
+/**
+ * Mark user as just registered for fallback redirect
+ */
+function stirjoy_mark_user_registered( $customer_id ) {
+    update_user_meta( $customer_id, '_stirjoy_just_registered', time() );
+}
+add_action( 'woocommerce_created_customer', 'stirjoy_mark_user_registered', 5, 1 );
+
+/**
+ * Hook into wholesale plugin's registration hooks to redirect to checkout
+ * This runs BEFORE the wholesale plugin's redirect (priority 5)
+ */
+function stirjoy_wholesale_registration_redirect_to_checkout( $user_id ) {
+    // Mark user as just registered
+    update_user_meta( $user_id, '_stirjoy_just_registered', time() );
+    
+    // Redirect to checkout immediately - this happens before wholesale plugin's redirect
+    wp_safe_redirect( wc_get_checkout_url() );
+    exit;
+}
+// Hook into wholesale plugin's registration hooks with HIGH priority (5) to run FIRST
+add_action( 'wwp_wholesale_new_registered_request', 'stirjoy_wholesale_registration_redirect_to_checkout', 5, 1 );
+add_action( 'wwp_wholesale_new_request_submitted', 'stirjoy_wholesale_registration_redirect_to_checkout', 5, 1 );
+
+/**
+ * Force redirect to checkout if user just registered and landed on my account page
+ * This is a fallback in case other plugins redirect to my account
+ */
+function stirjoy_force_checkout_redirect_after_registration() {
+    // Only run if user is logged in and on my account page
+    if ( is_account_page() && is_user_logged_in() ) {
+        $user_id = get_current_user_id();
+        
+        // Check if user just registered (within last 10 seconds)
+        $user_registered = get_user_meta( $user_id, '_stirjoy_just_registered', true );
+        
+        if ( $user_registered && ( time() - intval( $user_registered ) ) < 10 ) {
+            // Clear the flag
+            delete_user_meta( $user_id, '_stirjoy_just_registered' );
+            
+            // Redirect to checkout
+            wp_safe_redirect( wc_get_checkout_url() );
+            exit;
+        }
+    }
+}
+add_action( 'template_redirect', 'stirjoy_force_checkout_redirect_after_registration', 30 );

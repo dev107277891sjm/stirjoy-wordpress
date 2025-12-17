@@ -72,31 +72,31 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 						<!-- First Name and Last Name Fields - Side by Side -->
 						<div class="stirjoy-name-row">
 							<p class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
-								<label for="reg_first_name"><?php esc_html_e( 'First Name', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+								<label for="reg_first_name"><?php esc_html_e( 'First Name', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
 								<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="billing_first_name" id="reg_first_name" autocomplete="given-name" placeholder="<?php esc_attr_e( 'First name', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['billing_first_name'] ) ) ? esc_attr( wp_unslash( $_POST['billing_first_name'] ) ) : ''; ?>" required aria-required="true" />
 							</p>
 
 							<p class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
-								<label for="reg_last_name"><?php esc_html_e( 'Last Name', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+								<label for="reg_last_name"><?php esc_html_e( 'Last Name', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
 								<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="billing_last_name" id="reg_last_name" autocomplete="family-name" placeholder="<?php esc_attr_e( 'Last name', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['billing_last_name'] ) ) ? esc_attr( wp_unslash( $_POST['billing_last_name'] ) ) : ''; ?>" required aria-required="true" />
 							</p>
 						</div>
 						
 						<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
 							<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-								<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+								<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
 								<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" placeholder="<?php esc_attr_e( 'Choose a username', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
 							</p>
 						<?php endif; ?>
 
 						<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-							<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+							<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
 							<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" placeholder="<?php esc_attr_e( 'Your email', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
 						</p>
 
 						<?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
 							<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-								<label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?>&nbsp;<span class="required" aria-hidden="true">*</span></label>
+								<label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
 								<input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" placeholder="<?php esc_attr_e( 'Choose password', 'woocommerce' ); ?>" required aria-required="true" />
 							</p>
 						<?php else : ?>
