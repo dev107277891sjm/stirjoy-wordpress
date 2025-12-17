@@ -33,6 +33,15 @@ function stirjoy_child_enqueue_styles() {
         wp_get_theme()->get('Version')
     );
     
+    // Enqueue My Account CSS on My Account page
+    if ( is_account_page() ) {
+        wp_enqueue_style( 'stirjoy-my-account-style',
+            get_stylesheet_directory_uri() . '/assets/css/my-account.css',
+            array( 'stirjoy-child-style' ),
+            wp_get_theme()->get('Version')
+        );
+    }
+    
     // Enqueue wholesale CSS on wholesale page
     if ( is_page_template( 'template-wholesale.php' ) ) {
         wp_enqueue_style( 'stirjoy-wholesale-style',

@@ -1,0 +1,902 @@
+/**
+ * My Account Page Styles
+ *
+ * @package Stirjoy_Child
+ * @since 1.0.0
+ */
+
+/* ===================================
+   My Account Page - Footer Background
+   =================================== */
+
+body.woocommerce-account .stirjoy-footer {
+    background: #ffffeb !important;
+}
+
+body.woocommerce-account footer,
+body.woocommerce-account footer .footer,
+body.woocommerce-account footer .footer-top {
+    background: #ffffeb !important;
+}
+
+/* ===================================
+   My Account Page Header Customization
+   Based on Figma Design
+   =================================== */
+
+/* My Account Page - Body Background */
+body.woocommerce-account {
+    background: #ffffeb !important;
+}
+
+/* My Account Page - Header Background and Colors */
+body.woocommerce-account #theme-main-head,
+body.woocommerce-account header #theme-main-head {
+    background: #ffffeb !important;
+    /* border-bottom: 1px solid #e0e0e0; */
+}
+
+/* Top Header Bar - Cream Background with Dark Green Text */
+body.woocommerce-account .top-header {
+    background: #ffffeb !important;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+body.woocommerce-account .top-header span {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* Main Header - Cream Background */
+body.woocommerce-account #theme-main-head > .container,
+body.woocommerce-account header #theme-main-head > .container {
+    background: #ffffeb !important;
+}
+
+/* Navigation Links - Dark Green */
+body.woocommerce-account #navbar .menu-item > a,
+body.woocommerce-account #navbar .menu > .menu-item > a {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.woocommerce-account #navbar .menu-item > a:hover,
+body.woocommerce-account #navbar .menu > .menu-item > a:hover {
+    color: #e67c22 !important;
+}
+
+/* Logo - Lime Green (if text-based) */
+body.woocommerce-account .navbar-header .logo a,
+body.woocommerce-account .logo a {
+    color: #E2EE48 !important; /* Lime green */
+}
+
+/* MY ACCOUNT Text - Dark Green */
+body.woocommerce-account .log-in-text {
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.woocommerce-account .log-in-text:hover {
+    color: #e67c22 !important;
+}
+
+/* Cart badge on My Account page - white background, dark green text */
+body.woocommerce-account .cart-contents-custom span {
+    background: #ffffeb !important; /* White background */
+    color: #2d5a27 !important; /* Dark green text */
+    /* border: 1px solid #2d5a27; */
+}
+
+body.woocommerce-account .cart-contents-custom span:hover {
+    /* background: #f5f5f5 !important; */
+    color: #e67c22 !important;
+}
+
+/* Subscribe Button - Lime Green Background, Dark Green Text */
+body.woocommerce-account .header-nav-actions .header-btn {
+    background: #E2EE48 !important; /* Lime green */
+    color: #2d5a27 !important; /* Dark green */
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+}
+
+body.woocommerce-account .header-nav-actions .header-btn:hover {
+    background: #E8643C !important;
+    color: #ffffff !important;
+}
+
+/* Search Icon - Dark Green */
+body.woocommerce-account .thecrate-search-icon i {
+    color: #2d5a27 !important; /* Dark green */
+}
+
+body.woocommerce-account .thecrate-search-icon:hover i {
+    color: #2d5a27 !important;
+    opacity: 0.8;
+}
+
+/* Account Link Icon - Dark Green (if icon is visible) */
+body.woocommerce-account .thecrate-account-link i {
+    color: #2d5a27 !important; /* Dark green */
+}
+
+/* Ensure header stays cream on scroll */
+body.woocommerce-account .is-sticky #theme-main-head,
+body.woocommerce-account header.is-sticky #theme-main-head {
+    background: #ffffeb !important;
+}
+
+body.woocommerce-account .is-sticky #theme-main-head > .container,
+body.woocommerce-account header.is-sticky #theme-main-head > .container {
+    background: #ffffeb !important;
+}
+
+.woocommerce-MyAccount-navigation.thecrate-woocommerce-account-tabs,
+.woocommerce-MyAccount-navigation.thecrate-woocommerce-account-tabs.visible {
+    z-index: 1002;
+}
+
+/* ===================================
+   My Account Dashboard Content
+   =================================== */
+
+/* My Account page */
+.woocommerce-dashboard .woocommerce-MyAccount-navigation,
+.woocommerce-dashboard .header-title-breadcrumb {
+    display: none;
+}
+
+.woocommerce-dashboard .woocommerce-MyAccount-content {
+    width: 100%;
+}
+
+.woocommerce-dashboard .woocommerce-MyAccount-content h2.title {
+    font-size: 48px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .woocommerce-MyAccount-content h3.subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 15px 0 25px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content {
+    display: flex;
+    gap: 32px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block {
+    width: 68%;
+}
+
+.woocommerce-dashboard .my-account-content .left-block > div {
+    margin-bottom: 32px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block > div:last-child {
+    margin-bottom: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary > div {
+    border-radius: 14px;
+    border: solid 1px #ddd;
+    padding: 45px 24px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary .icon-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} 
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary .icon-block span {
+    font-size: 12px;
+    background: #2d5a27;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    text-transform: capitalize;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary svg {
+    width: 20px;
+    height: 20px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary h4 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #396A26;
+    margin: 6px 0 5px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary h3 {
+    margin: 0;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .subscription-summary h5 {
+    font-size: 12px;
+    font-weight: 400;
+    color: #396A26;
+    margin: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item {
+    border-radius: 10px;
+    border: solid 1px #ddd;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item:last-child {
+    margin-bottom: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-number {
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-number span:first-child {
+    border: solid 1px #ddd;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-number span:last-child {
+    border: solid 1px #a8d5a8;
+    padding: 3px 8px;
+    border-radius: 8px;
+    background: #a8d5a8;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-price {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .order-price span {
+    font-weight: 700;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item.past-order .order-number span:last-child {
+    background: #00c951;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item.past-order .order-number span:last-child svg,
+.woocommerce-dashboard .my-account-content .left-block .order-item .cutoff svg,
+.woocommerce-dashboard .my-account-content .left-block .order-item .delivery svg {
+    width: 12px;
+    height: 12px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .cutoff {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .order-item .delivery {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+}
+
+/* Delivery Calendar Styles */
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar {
+    border-radius: 14px;
+    border: solid 1px #ddd;
+    padding: 24px;
+    margin-bottom: 24px;
+    background: #ffffeb;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #396A26;
+    background: #ffffeb;
+    color: #396A26;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-nav-btn:hover {
+    background: #396A26;
+    color: #fff;
+    border-color: #396A26;
+    transform: scale(1.05);
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-nav-btn svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-month-year {
+    font-size: 18px;
+    font-weight: 700;
+    color: #396A26;
+    min-width: 180px;
+    text-align: center;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-grid {
+    margin-bottom: 20px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day-header {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #396A26;
+    padding: 8px 4px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 4px;
+    position: relative;
+    background: #ffffeb;
+    transition: all 0.2s ease;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day:hover {
+    border: 2px solid #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.empty {
+    border: none;
+    background: transparent;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.today {
+    border: 2px solid #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day .day-number {
+    font-size: 14px;
+    font-weight: 500;
+    color: #396A26;
+    z-index: 1;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day .calendar-icon {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    z-index: 0;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.cutoff-date {
+    background: #d4edda;
+    border-color: #a8d5a8;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.cutoff-date .calendar-icon {
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date .day-number {
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-day.delivery-date .calendar-icon {
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.cutoff-color {
+    background: #d4edda;
+    border-color: #a8d5a8;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.delivery-color {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .legend-color.paused-color {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-info {
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 13px;
+    color: #396A26;
+    line-height: 1.6;
+}
+
+.woocommerce-dashboard .my-account-content .left-block .delivery-calendar .calendar-info p {
+    margin: 4px 0;
+}
+
+/* Delivery Options Modal Styles */
+.delivery-options-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delivery-options-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+.delivery-options-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+}
+
+.delivery-options-modal-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #396A26;
+}
+
+.delivery-options-modal-content .selected-date {
+    font-size: 16px;
+    color: #396A26;
+    margin: 0 0 24px 0;
+}
+
+.delivery-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.delivery-option-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.delivery-option-card:hover {
+    background: #e67e22;
+}
+
+.delivery-option-card:hover .option-title{
+    color: white;
+}
+
+.delivery-option-card .option-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #396A26;
+    margin-bottom: 8px;
+}
+
+.delivery-option-card .option-description {
+    font-size: 14px;
+    color: #396A26;
+    line-height: 1.5;
+}
+
+.delivery-options-cancel-btn {
+    width: 100%;
+    padding: 12px 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    color: #396A26;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delivery-options-cancel-btn:hover {
+    background: #e67e22;
+    color:white;
+}
+
+.woocommerce-dashboard .my-account-content .right-block {
+    width: 32%;
+}
+
+.woocommerce-dashboard .my-account-content .right-block > div {
+    margin-bottom: 24px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block > div:last-child {
+    margin-bottom: 0;
+}
+
+.woocommerce-dashboard .my-account-content .right-block > div,
+.woocommerce-dashboard .my-account-content .left-block .upcoming-deliveries,
+.woocommerce-dashboard .my-account-content .left-block .past-deliveries {
+    border-radius: 14px;
+    border: solid 1px #ddd;
+    padding: 24px;
+}
+
+/* Customer Information Section - Pixel Perfect Styling */
+.woocommerce-dashboard .my-account-content .right-block .customer-info {
+    background: #ffffeb !important;
+    border: 1px solid #396A26 !important;
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.woocommerce-dashboard .my-account-content .block-title {
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan h3 {
+    font-size: 20px;
+    margin: 0;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan .subscription-name {
+    font-size: 14px;
+    font-weight: 400;
+    color: #396A26;
+    margin: 3px 0 8px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan .subscription-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan .subscription-price span {
+    font-weight: 600;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan .delivery-freq {
+    border-top: solid 1px #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0 13px;
+    padding-top: 18px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan .delivery-freq p {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 700;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button {
+    margin: 0;
+    padding: 8px;
+    border-radius: 8px;
+    border: 0;
+    background: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button:hover {
+    background: #e67e22;
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .right-block svg {
+    width: 16px;
+    height: 16px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan h5 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #396A26;
+    border-bottom: solid 1px #ddd;
+    padding-bottom: 15px;
+    margin: 0 0 16px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.pause-subscription,
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.reactivate-subscription {
+    border: solid 1px #ddd;
+    width: 100%;
+    justify-content: center;
+    padding: 7px 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.pause-subscription:hover,
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.reactivate-subscription:hover {
+    background: #e67e22;
+    border-color: #e67e22;
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.cancel-subscription {
+    width: 100%;
+    justify-content: center;
+    padding: 7px 8px;
+    border-radius: 8px;
+    color: #c10007;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .current-plan button.cancel-subscription:hover {
+    background: #fef2f2;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .customer-info .block-title,
+.woocommerce-dashboard .my-account-content .right-block .delivery-address .block-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-weight: 700;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .block-title .edit-icon {
+    line-height: 1;
+    padding: 8px 10px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #396A26;
+    display: flex;
+    align-items: center;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .block-title .edit-icon svg {
+    width: 16px;
+    height: 16px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .right-block .block-title .edit-icon:hover {
+    background: #e67e22;
+    color: #fff;
+}
+
+.woocommerce-dashboard .my-account-content .line-with-left-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #E2EE48;
+}
+
+/* Customer Information Icons - Light Yellow-Green */
+.woocommerce-dashboard .my-account-content .customer-info .line-with-left-icon svg {
+    color: #E2EE48;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Customer Information Text Section */
+.woocommerce-dashboard .my-account-content .customer-info .customer-info-text {
+    margin-top: 0;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info .line-with-left-icon span {
+    color: #396A26;
+    font-size: 14px;
+}
+
+.woocommerce-dashboard .my-account-content .line-with-left-icon:last-child {
+    margin-bottom: 0;
+}
+
+.woocommerce-dashboard .my-account-content .delivery-address .line-with-left-icon {
+    align-items: flex-start;
+}
+
+.woocommerce-dashboard .my-account-content .delivery-address .line-with-left-icon svg {
+    margin-top: 3px;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form label,
+.woocommerce-dashboard .my-account-content .customer-info-form input {
+    display: block;
+    font-size: 14px;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form label {
+    font-weight: 700;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form input {
+    border: solid 1px #ddd;
+    border-radius: 8px;
+    padding: 9px 12px;
+    width: 100%;
+    margin-bottom: 12px;
+    color: #396A26;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form .button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form .customer-info-save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 75%;
+    border: solid 1px #396A26;
+    background: #396A26;
+    border-radius: 8px;
+    color: #fff;
+    padding: 5px 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form .customer-info-save:hover {
+    background: #396A26e6;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form .customer-info-cancel {
+    width: 25%;
+    border: solid 1px #ddd;
+    background: transparent;
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.woocommerce-dashboard .my-account-content .customer-info-form .customer-info-cancel:hover {
+    border-color: #e67e22;
+    background: #e67e22;
+    color: #fff;
+}
+

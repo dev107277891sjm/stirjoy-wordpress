@@ -169,67 +169,6 @@ if($last_subscription_id > 0){
 
 <div class="my-account-content">
 	<div class="left-block">
-		<div class="subscription-summary">
-			<div class="subscription-status">
-				<div class="icon-block">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package w-5 h-5 text-primary" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><path d="m7.5 4.27 9 5.15"></path></svg>
-					<?php if($last_subscription_id > 0): ?>
-						<?php
-							switch ($wps_status) {
-								case 'active':
-									$bgColor = '#2d5a27';
-									break;
-								case 'on-hold':
-									$bgColor = '#e67e22';
-									break;
-								case 'cancelled':
-									$bgColor = '#c10007';
-									break;
-								case 'paused':
-									$bgColor = '#e67e22';
-									break;
-								case 'pending':
-									$bgColor = '#e67e22';
-									break;
-								case 'expired':
-									$bgColor = '#e67e22';
-									break;
-								
-								default:
-									$bgColor = '#e67e22';
-									break;
-							}
-						?>
-						<span style="background: <?= esc_attr( $bgColor ) ?>"><?= esc_html( ucfirst( $wps_status ) ) ?></span>
-					<?php endif; ?>
-				</div>
-				<h4>Subscription Status</h4>
-				<?php if($last_subscription_id > 0): ?>
-					<h3>Monthly Plan</h3>
-				<?php else: ?>
-					<h3>- - -</h3>
-				<?php endif; ?>
-			</div>
-			<div class="next-delivery">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-5 h-5 text-primary mb-2" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
-				<h4>Next Delivery</h4>
-				<?php if($wps_status === 'active'): ?>
-					<h3><?= esc_html( $next_delivery_date ) ?></h3>
-					<h5><?= esc_html( $next_delivery_year ) ?></h5>
-				<?php else: ?>
-					<h3>- - -</h3>
-				<?php endif; ?>
-			</div>
-			<div class="total-deliveries">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck w-5 h-5 text-primary mb-2" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path><path d="M15 18H9"></path><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path><circle cx="17" cy="18" r="2"></circle><circle cx="7" cy="18" r="2"></circle></svg>
-				<h4>Total Deliveries</h4>
-				<h3><?= esc_html( $total_delivery_count ) ?></h3>
-				<?php if ( ! empty( $first_delivery_date ) ): ?>
-				<h5>since <?= esc_html( $first_delivery_date ) ?></h5>
-				<?php endif; ?>
-			</div>
-		</div>
-
 		<?php
 		// Calculate delivery calendar dates
 		$calendar_cutoff_dates = array();
@@ -302,9 +241,17 @@ if($last_subscription_id > 0){
 		<div class="delivery-calendar" data-current-month="<?= esc_attr( $current_month ) ?>" data-current-year="<?= esc_attr( $current_year ) ?>">
 			<div class="block-title">Delivery Calendar</div>
 			<div class="calendar-navigation">
-				<button type="button" class="calendar-nav-btn calendar-prev" data-month="<?= esc_attr( $prev_month ) ?>" data-year="<?= esc_attr( $prev_year ) ?>">‹</button>
+				<button type="button" class="calendar-nav-btn calendar-prev" data-month="<?= esc_attr( $prev_month ) ?>" data-year="<?= esc_attr( $prev_year ) ?>">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
 				<span class="calendar-month-year"><?= esc_html( $month_name ) ?></span>
-				<button type="button" class="calendar-nav-btn calendar-next" data-month="<?= esc_attr( $next_month ) ?>" data-year="<?= esc_attr( $next_year ) ?>">›</button>
+				<button type="button" class="calendar-nav-btn calendar-next" data-month="<?= esc_attr( $next_month ) ?>" data-year="<?= esc_attr( $next_year ) ?>">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
 			</div>
 			<div class="calendar-grid">
 				<div class="calendar-header">
@@ -475,7 +422,7 @@ if($last_subscription_id > 0){
 
 	<div class="right-block">
 		<div class="current-plan">
-			<div class="block-title">Current Plan</div>
+			<div class="block-title">Subscription</div>
 
 			<?php if($last_subscription_id > 0): ?>
 				<h3>Monthly Plan</h3>
@@ -484,7 +431,9 @@ if($last_subscription_id > 0){
 				<div class="delivery-freq">
 					<p>Delivery Frequency</p>
 					<button type="button">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen w-3 h-3 mr-1" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
+						</svg>
 						Edit Frequency
 					</button>
 				</div>
@@ -517,7 +466,9 @@ if($last_subscription_id > 0){
 			<div class="block-title">
 				Customer Information
 				<div class="edit-icon">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen w-3 h-3" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
+					</svg>
 				</div>
 			</div>
 			<div class="customer-info-text">
@@ -556,7 +507,9 @@ if($last_subscription_id > 0){
 			<div class="block-title">
 				Delivery Address
 				<div class="edit-icon">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen w-3 h-3" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z" fill="currentColor"/>
+					</svg>
 				</div>
 			</div>
 			<div class="line-with-left-icon">
