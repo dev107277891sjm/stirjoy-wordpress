@@ -2189,6 +2189,7 @@
             $('.navbar-toggle').addClass('collapsed').attr('aria-expanded', 'false');
         }
 
+
     }); // End document ready
 
 })(jQuery);
