@@ -5781,12 +5781,19 @@ body.woocommerce-account #customer_login .u-columns {
     visibility: hidden !important;
 }
 
-#wc-stripe-express-checkout-element{
+/* Hide Stripe Express Checkout elements on checkout page */
+#wc-stripe-express-checkout-element,
+#wc-stripe-express-checkout-button-separator,
+#wc-stripe-express-checkout__order-attribution-inputs {
+    display: none !important;
     visibility: hidden !important;
-}
-
-#wc-stripe-express-checkout-button-separator{
-    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 
 .woocommerce-checkout-payment{
@@ -6495,7 +6502,7 @@ body.woocommerce-account #customer_login .u-columns {
 .stirjoy-checkout-page {
     background: #ffffeb;
     min-height: 100vh;
-    padding: 0 76px;
+    padding: 0 17px;
     margin: 0;
     box-sizing: border-box;
 }
@@ -6517,8 +6524,10 @@ body.woocommerce-checkout .site-content {
     color: #2d5a27;
     font-size: 48px;
     font-weight: 700;
+    text-align: center; 
+    font-style: italic;
     line-height: 1.2;
-    margin: 0 0 40px 0;
+    margin: 0 0 44px 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
@@ -6535,15 +6544,15 @@ body.woocommerce-checkout .site-content {
     background: #ffffeb;
     border-radius: 12px;
     border: 1px solid #396A2666;
-    padding: 40px;
+    padding: 44px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 /* Checkout Sections */
 .stirjoy-checkout-section {
-    margin-bottom: 48px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid #e0e0e0;
+    /* margin-bottom: 48px; */
+    padding-bottom: 19px;
+    /* border-bottom: 1px solid #e0e0e0; */
 }
 
 .stirjoy-checkout-section:last-of-type {
@@ -6566,6 +6575,7 @@ body.woocommerce-checkout .site-content {
 .stirjoy-security-text {
     color: #2d5a27;
     font-size: 14px;
+    font-weight: 600;
     line-height: 1.5;
     margin: 0 0 24px 0;
 }
@@ -6637,7 +6647,7 @@ body.woocommerce-checkout .site-content {
 .stirjoy-address-section,
 .stirjoy-phone-section,
 .stirjoy-notes-section {
-    margin-bottom: 24px;
+    margin-bottom: 5px;
 }
 
 .stirjoy-notes-section {
@@ -6672,7 +6682,7 @@ body.woocommerce-checkout .site-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .stirjoy-city-postcode-row .form-row {
@@ -6735,8 +6745,9 @@ body.woocommerce-checkout .site-content {
 .stirjoy-card-container {
     background: #ffffeb;
     border-radius: 8px;
-    padding: 24px;
+    padding: 0;
     margin-top: 24px;
+    border: 1px solid #396A2666;
 }
 
 /* Payment Methods Label */
@@ -6745,6 +6756,8 @@ body.woocommerce-checkout .site-content {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+    border-bottom: 1px solid #396A2666;
+    padding: 14px 14px 19px 14px;
     flex-wrap: wrap;
     gap: 12px;
 }
@@ -6826,6 +6839,7 @@ body.woocommerce-checkout .site-content {
 /* Credit Card Fields */
 .stirjoy-card-fields {
     margin-top: 20px;
+    padding: 0 14px 14px 14px;
 }
 
 .stirjoy-card-fields .form-row {
@@ -6849,7 +6863,7 @@ body.woocommerce-checkout .site-content {
 .stirjoy-lock-icon {
     position: absolute;
     right: 16px;
-    top: 50%;
+    top: 20%;
     transform: translateY(-50%);
     color: #2d5a27;
     pointer-events: none;
@@ -6961,11 +6975,11 @@ body.woocommerce-checkout .site-content {
 
 /* Submit Button */
 .stirjoy-checkout-button {
-    width: 100%;
     background: #E2EE48 !important;
     color: #2d5a27 !important;
     border: none !important;
     padding: 18px 32px !important;
+    margin: 34px auto 0 auto !important;
     font-size: 18px !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
@@ -6974,11 +6988,12 @@ body.woocommerce-checkout .site-content {
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    margin: 24px 0 16px 0;
+    display: block !important;
 }
 
 .stirjoy-checkout-button:hover {
-    background: #d4e03a !important;
+    background: #E8643C !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(226, 238, 72, 0.3);
 }
@@ -6990,10 +7005,11 @@ body.woocommerce-checkout .site-content {
 /* Payment Disclaimer */
 .stirjoy-payment-disclaimer {
     text-align: center;
-    color: #666666;
-    font-size: 12px;
+    color: #2d5a27;
+    font-size: 14px;
     line-height: 1.6;
-    margin: 16px 0 0 0;
+    font-weight: 600;
+    margin: 34px 0 0 0;
 }
 
 /* Right Column - Order Summary */

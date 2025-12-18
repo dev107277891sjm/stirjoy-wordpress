@@ -24,7 +24,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 <div class="stirjoy-checkout-page">
 	<div class="stirjoy-checkout-container">
 		<!-- Page Title -->
-		<h1 class="stirjoy-checkout-title"><?php esc_html_e( 'Checkout', 'woocommerce' ); ?></h1>
+		<h1 class="stirjoy-checkout-title"><?php esc_html_e( 'Checkout and subscribe', 'woocommerce' ); ?></h1>
 
 		<div class="stirjoy-checkout-content">
 			<!-- Left Column - Forms -->
@@ -84,6 +84,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 							
 							<!-- Phone Number Section -->
 							<div class="stirjoy-phone-section">
+								<label class="stirjoy-section-label"><?php esc_html_e( 'Phone Number', 'woocommerce' ); ?></label>
 								<?php 
 								// Display phone number field
 								if ( isset( $billing_fields['billing_phone'] ) ) {
@@ -100,7 +101,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 							<div class="stirjoy-notes-section">
 								<p class="form-row form-row-wide stirjoy-order-notes">
 									<label for="order_comments" class="stirjoy-field-label"><?php esc_html_e( 'Notes for Driver (Optional)', 'woocommerce' ); ?></label>
-									<textarea name="order_comments" class="input-text" id="order_comments" placeholder="<?php esc_attr_e( 'e.g. Front door, back gate', 'woocommerce' ); ?>" rows="2" cols="5"></textarea>
+									<input type="text" name="order_comments" class="input-text" id="order_comments" placeholder="<?php esc_attr_e( 'e.g. Front door, back gate', 'woocommerce' ); ?>" rows="2" cols="5">
 								</p>
 							</div>
 						</div>
@@ -121,9 +122,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 							<div class="stirjoy-payment-methods-label">
 								<label class="stirjoy-field-label"><?php esc_html_e( 'Credit card', 'woocommerce' ); ?></label>
 								<div class="stirjoy-payment-icons">
-									<span class="stirjoy-payment-icon">Mastercard</span>
-									<span class="stirjoy-payment-icon">Visa</span>
-									<span class="stirjoy-payment-icon">Card</span>
+								<img src="<?php echo esc_url(stirjoy_get_image_url('Frame 215.png')); ?>" alt="Mastercard">
 									<span class="stirjoy-payment-icon">+ 4</span>
 								</div>
 							</div>
@@ -131,19 +130,16 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 							<!-- Credit Card Fields -->
 							<div class="stirjoy-card-fields">
 								<p class="form-row form-row-wide">
-									<label for="card_number" class="stirjoy-field-label"><?php esc_html_e( 'Card number', 'woocommerce' ); ?></label>
 									<input type="text" class="input-text stirjoy-card-input" name="card_number" id="card_number" placeholder="<?php esc_attr_e( 'Card number', 'woocommerce' ); ?>" />
 								</p>
 								
 								<div class="stirjoy-card-row">
 									<p class="form-row form-row-first">
-										<label for="card_expiry" class="stirjoy-field-label"><?php esc_html_e( 'Expiration date (MM/YY)', 'woocommerce' ); ?></label>
-										<input type="text" class="input-text stirjoy-card-input" name="card_expiry" id="card_expiry" placeholder="<?php esc_attr_e( 'MM/YY', 'woocommerce' ); ?>" maxlength="5" />
+										<input type="text" class="input-text stirjoy-card-input" name="card_expiry" id="card_expiry" placeholder="<?php esc_attr_e( 'Expiration date (MM/YY)', 'woocommerce' ); ?>" maxlength="5" />
 									</p>
 									
 									<p class="form-row form-row-last stirjoy-cvc-wrapper">
-										<label for="card_cvc" class="stirjoy-field-label"><?php esc_html_e( 'Security code', 'woocommerce' ); ?></label>
-										<input type="text" class="input-text stirjoy-card-input" name="card_cvc" id="card_cvc" placeholder="<?php esc_attr_e( 'CVC', 'woocommerce' ); ?>" maxlength="4" />
+										<input type="text" class="input-text stirjoy-card-input" name="card_cvc" id="card_cvc" placeholder="<?php esc_attr_e( 'Security code', 'woocommerce' ); ?>" maxlength="4" />
 										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stirjoy-lock-icon">
 											<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
 											<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -152,7 +148,6 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 								</div>
 								
 								<p class="form-row form-row-wide">
-									<label for="card_name" class="stirjoy-field-label"><?php esc_html_e( 'Name on card', 'woocommerce' ); ?></label>
 									<input type="text" class="input-text stirjoy-card-input" name="card_name" id="card_name" placeholder="<?php esc_attr_e( 'Name on card', 'woocommerce' ); ?>" />
 								</p>
 								<?php
@@ -176,24 +171,11 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 						<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
 
-						<!-- Checkboxes -->
-						<div class="stirjoy-checkout-checkboxes">
-							
-
-							<!-- Newsletter subscription checkbox -->
-							<p class="form-row form-row-wide stirjoy-checkbox-row">
-								<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
-									<input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" id="newsletter_subscribe" type="checkbox" name="newsletter_subscribe" value="1" />
-									<span><?php esc_html_e( 'Subscribe to our newsletter', 'woocommerce' ); ?></span>
-								</label>
-							</p>
-						</div>
-
 						<?php wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' ); ?>
 
 						<!-- Submit Button -->
-						<button type="submit" class="button alt wp-element-button stirjoy-checkout-button" name="woocommerce_checkout_place_order" id="place_order" value="<?php esc_attr_e( 'Place order', 'woocommerce' ); ?>" data-value="<?php esc_attr_e( 'Place order', 'woocommerce' ); ?>">
-							<?php esc_html_e( 'PLACE ORDER', 'woocommerce' ); ?>
+						<button type="submit" class="button alt wp-element-button stirjoy-checkout-button" name="woocommerce_checkout_place_order" id="place_order" value="<?php esc_attr_e( 'pay and subscribe', 'woocommerce' ); ?>" data-value="<?php esc_attr_e( 'pay and subscribe', 'woocommerce' ); ?>">
+							<?php esc_html_e( 'PAY AND SUBSCRIBE', 'woocommerce' ); ?>
 						</button>
 
 						<p class="stirjoy-payment-disclaimer">
@@ -216,4 +198,36 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 </div>
 
 <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
+
+<script>
+jQuery(document).ready(function($) {
+	// Function to remove Stripe Express Checkout elements
+	function removeStripeExpressElements() {
+		$('#wc-stripe-express-checkout-element, #wc-stripe-express-checkout-button-separator, #wc-stripe-express-checkout__order-attribution-inputs').remove();
+	}
+	
+	// Remove immediately on page load
+	removeStripeExpressElements();
+	
+	// Watch for dynamically added elements using MutationObserver
+	if (window.MutationObserver) {
+		var observer = new MutationObserver(function(mutations) {
+			removeStripeExpressElements();
+		});
+		
+		// Observe the document body for changes
+		if (document.body) {
+			observer.observe(document.body, {
+				childList: true,
+				subtree: true
+			});
+		}
+	}
+	
+	// Also check after short delays to catch elements added after page load
+	setTimeout(removeStripeExpressElements, 100);
+	setTimeout(removeStripeExpressElements, 500);
+	setTimeout(removeStripeExpressElements, 1000);
+});
+</script>
 
