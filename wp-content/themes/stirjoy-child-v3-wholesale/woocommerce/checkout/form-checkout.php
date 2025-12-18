@@ -180,7 +180,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 								$order_fields = $checkout->get_checkout_fields( 'order' );
 								if ( isset( $order_fields['order_comments'] ) ) {
 									$order_comments_field = $order_fields['order_comments'];
-									$order_comments_field['label'] = __( 'Notes for Driver (Optional)', 'woocommerce' );
+									$order_comments_field['label'] = __( 'Notes for Driver', 'woocommerce' );
 									$order_comments_field['placeholder'] = __( 'e.g. Front door, back gate', 'woocommerce' );
 									$order_comments_field['type'] = 'text'; // Change from textarea to text for design
 									$order_comments_field['class'] = array( 'form-row-wide', 'stirjoy-order-notes' );
@@ -189,7 +189,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 									// Fallback if field doesn't exist
 									?>
 									<p class="form-row form-row-wide stirjoy-order-notes">
-										<label for="order_comments" class="stirjoy-field-label"><?php esc_html_e( 'Notes for Driver (Optional)', 'woocommerce' ); ?></label>
+										<label for="order_comments" class="stirjoy-field-label"><?php esc_html_e( 'Notes for Driver', 'woocommerce' ); ?></label>
 										<input type="text" name="order_comments" class="input-text" id="order_comments" placeholder="<?php esc_attr_e( 'e.g. Front door, back gate', 'woocommerce' ); ?>" value="<?php echo esc_attr( $checkout->get_value( 'order_comments' ) ); ?>">
 									</p>
 									<?php

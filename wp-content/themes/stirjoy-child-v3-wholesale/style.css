@@ -618,7 +618,7 @@ header .cart-contents-custom span:hover {
    =================================== */
 
 .stirjoy-footer {
-    background: #ffffff;
+    background: #ffffeb;
     padding: 64px 0 0 0;
     position: relative;
     overflow: hidden;
@@ -5778,7 +5778,6 @@ body.woocommerce-account #customer_login .u-columns {
 .woocommerce-checkout .woocommerce-form-coupon-toggle,
 .woocommerce-checkout .woocommerce-notices-wrapper {
     display: none !important;
-    visibility: hidden !important;
 }
 
 /* Hide Stripe Express Checkout elements on checkout page */
@@ -5797,7 +5796,7 @@ body.woocommerce-account #customer_login .u-columns {
 }
 
 .woocommerce-checkout-payment{
-    visibility: hidden !important;  
+    display: none !important;
 }
 
 .stirjoy-register-form input.error,
@@ -7806,44 +7805,31 @@ body.woocommerce-checkout .site-content {
 
 /* Background Graphic */
 .stirjoy-order-received-bg-graphic {
-    position: absolute;
-    bottom: -100px;
     left: 10%;
-    width: 300px;
-    height: 400px;
-    background: transparent;
-    opacity: 0.1;
-    z-index: 1;
+    width: 242px;
+    height: auto;
     pointer-events: none;
 }
 
-.stirjoy-order-received-bg-graphic::before {
-    content: '';
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border: 3px solid #E2EE48;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    top: 0;
-    left: 50px;
-    transform: rotate(-15deg);
-}
-
-.stirjoy-order-received-bg-graphic::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 120px;
-    border: 3px solid #E2EE48;
-    border-radius: 0 0 50% 50%;
-    top: 180px;
-    left: 140px;
-    transform: rotate(10deg);
-}
-
-/* Hide default WooCommerce order details */
-.stirjoy-thankyou-wrapper .woocommerce-order-overview {
-    display: none;
+/* Hide default WooCommerce order details and customer details sections */
+.stirjoy-thankyou-wrapper .woocommerce-order-overview,
+.stirjoy-thankyou-wrapper .woocommerce-order-details,
+.stirjoy-thankyou-wrapper .woocommerce-customer-details,
+.stirjoy-order-received-page .woocommerce-order-details,
+.stirjoy-order-received-page .woocommerce-customer-details,
+.woocommerce-order .woocommerce-order-details,
+.woocommerce-order .woocommerce-customer-details,
+section.woocommerce-order-details,
+section.woocommerce-customer-details {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Responsive Styles */

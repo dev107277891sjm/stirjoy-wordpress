@@ -141,9 +141,6 @@ $cutoff_day = date('j', strtotime($cutoff_date));
 				</a>
 			</div>
 		</div>
-		
-		<!-- Background Graphic -->
-		<div class="stirjoy-order-received-bg-graphic"></div>
+		<img class="stirjoy-order-received-bg-graphic" src="<?php echo esc_url(stirjoy_get_image_url('201905d2706adecae372bf8dc4d4bad416fdac3e.png')); ?>" alt="Mastercard">
 	</div>
 </div>
-

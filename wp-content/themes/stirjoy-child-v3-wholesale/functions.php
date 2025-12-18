@@ -2293,3 +2293,36 @@ function stirjoy_social_login_handler() {
 }
 add_action( 'wp_ajax_stirjoy_social_login', 'stirjoy_social_login_handler' );
 add_action( 'wp_ajax_nopriv_stirjoy_social_login', 'stirjoy_social_login_handler' );
+
+/**
+ * Remove WooCommerce order details and customer details sections from order received page
+ * These sections are always hidden to match the custom design
+ */
+function stirjoy_remove_order_details_sections() {
+	// Remove order details table from thankyou page
+	remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
+	
+	// Remove customer details from order details (displayed after order table)
+	remove_action( 'woocommerce_order_details_after_order_table', 'woocommerce_order_again_button', 10 );
+	
+	// Also hide via CSS as a fallback (in case other plugins add these sections)
+	add_action( 'wp_head', function() {
+		if ( is_wc_endpoint_url( 'order-received' ) || is_wc_endpoint_url( 'order-received' ) ) {
+			echo '<style>
+				.woocommerce-order-details,
+				.woocommerce-customer-details,
+				section.woocommerce-order-details,
+				section.woocommerce-customer-details {
+					display: none !important;
+					visibility: hidden !important;
+					height: 0 !important;
+					overflow: hidden !important;
+					position: absolute !important;
+					left: -9999px !important;
+					opacity: 0 !important;
+				}
+			</style>';
+		}
+	}, 999 );
+}
+add_action( 'init', 'stirjoy_remove_order_details_sections', 20 );
