@@ -1027,42 +1027,109 @@ add_action( 'template_redirect', 'stirjoy_force_checkout_redirect_after_registra
 /**
  * Transfer guest cart to user when they log in
  * This ensures cart persists even with caching/speed optimizers
+ * Enhanced for SiteGround hosting compatibility
  */
 function stirjoy_transfer_guest_cart_to_user( $user_login, $user ) {
     if ( ! class_exists( 'WooCommerce' ) ) {
         return;
     }
     
-    // Get the current cart (guest cart)
+    // Ensure WooCommerce is fully loaded
+    if ( ! WC()->cart || ! WC()->session ) {
+        return;
+    }
+    
+    // Get the current cart (guest cart) BEFORE login
     $cart = WC()->cart;
     
     if ( ! $cart || $cart->is_empty() ) {
         return;
     }
     
+    // Store guest cart contents BEFORE session migration
+    $guest_cart_contents = $cart->get_cart();
+    $cart_totals = $cart->get_totals();
+    $applied_coupons = $cart->get_applied_coupons();
+    $cart_hash = $cart->get_cart_hash();
+    
+    // IMPORTANT: Get existing user's persistent cart BEFORE overwriting
+    $existing_persistent_cart_meta = get_user_meta( $user->ID, '_woocommerce_persistent_cart_' . get_current_blog_id(), true );
+    $existing_user_cart = array();
+    
+    if ( is_array( $existing_persistent_cart_meta ) && isset( $existing_persistent_cart_meta['cart'] ) ) {
+        $existing_user_cart = array_filter( (array) $existing_persistent_cart_meta['cart'] );
+    }
+    
+    // Merge guest cart with existing user cart
+    // WooCommerce uses array_merge where later values override earlier ones
+    // So we merge existing_user_cart first, then guest_cart (guest cart takes precedence for duplicates)
+    // But we want to combine quantities for same products, so we'll do a smart merge
+    $merged_cart = array();
+    
+    // First, add all existing user cart items
+    foreach ( $existing_user_cart as $cart_item_key => $cart_item ) {
+        $merged_cart[ $cart_item_key ] = $cart_item;
+    }
+    
+    // Then, merge guest cart items
+    foreach ( $guest_cart_contents as $guest_item_key => $guest_item ) {
+        $product_id = $guest_item['product_id'];
+        $variation_id = isset( $guest_item['variation_id'] ) ? $guest_item['variation_id'] : 0;
+        $guest_quantity = $guest_item['quantity'];
+        
+        // Check if this product already exists in merged cart
+        $found_in_merged = false;
+        foreach ( $merged_cart as $merged_key => $merged_item ) {
+            if ( $merged_item['product_id'] == $product_id && 
+                 ( isset( $merged_item['variation_id'] ) ? $merged_item['variation_id'] : 0 ) == $variation_id ) {
+                // Same product and variation - combine quantities
+                $merged_cart[ $merged_key ]['quantity'] += $guest_quantity;
+                $found_in_merged = true;
+                break;
+            }
+        }
+        
+        // If not found, add guest item to merged cart
+        if ( ! $found_in_merged ) {
+            // Generate new cart item key for the merged cart
+            $new_key = md5( $product_id . '_' . $variation_id . '_' . time() . '_' . wp_rand() );
+            $merged_cart[ $new_key ] = $guest_item;
+        }
+    }
+    
+    // Store merged cart in transient as backup (expires in 5 minutes)
+    set_transient( 'stirjoy_guest_cart_' . $user->ID, array(
+        'cart' => $merged_cart,
+        'totals' => $cart_totals,
+        'coupons' => $applied_coupons,
+        'hash' => $cart_hash,
+    ), 300 );
+    
     // Force session save to ensure guest cart is persisted
     if ( WC()->session ) {
         WC()->session->save_data();
     }
     
-    // WooCommerce should automatically migrate the session, but we'll ensure it happens
-    // The session handler will migrate guest session to user session on next page load
-    // But we need to ensure the cart is preserved
-    
-    // Store cart contents temporarily
-    $cart_contents = $cart->get_cart();
-    
-    if ( ! empty( $cart_contents ) ) {
-        // Force cart to persist by updating session
-        WC()->session->set( 'cart', $cart_contents );
-        WC()->session->set( 'cart_totals', $cart->get_totals() );
-        WC()->session->set( 'applied_coupons', $cart->get_applied_coupons() );
+    // Save merged cart to persistent cart in user meta
+    if ( ! empty( $merged_cart ) ) {
+        update_user_meta( $user->ID, '_woocommerce_persistent_cart_' . get_current_blog_id(), array(
+            'cart' => $merged_cart,
+        ) );
+        
+        // Set flag to load saved cart after login
+        update_user_meta( $user->ID, '_woocommerce_load_saved_cart_after_login', true );
+        
+        // Also update session directly with merged cart (for immediate use)
+        WC()->session->set( 'cart', $merged_cart );
+        WC()->session->set( 'cart_totals', $cart_totals );
+        WC()->session->set( 'applied_coupons', $applied_coupons );
         
         // Save session data immediately
         WC()->session->save_data();
         
-        // Clear cart cache
+        // Clear all cart-related caches
         wp_cache_delete( 'cart_' . $user->ID, 'woocommerce' );
+        wp_cache_flush_group( 'woocommerce' );
     }
 }
 add_action( 'wp_login', 'stirjoy_transfer_guest_cart_to_user', 10, 2 );
@@ -1070,10 +1137,43 @@ add_action( 'wp_login', 'stirjoy_transfer_guest_cart_to_user', 10, 2 );
 /**
  * Ensure cart is loaded after login/registration
  * This handles cases where session migration doesn't happen immediately
+ * Enhanced for SiteGround hosting compatibility
  */
 function stirjoy_ensure_cart_after_login() {
     if ( ! is_user_logged_in() || ! class_exists( 'WooCommerce' ) ) {
         return;
+    }
+    
+    $user_id = get_current_user_id();
+    if ( ! $user_id ) {
+        return;
+    }
+    
+    // Check if we need to restore cart from transient (backup method)
+    $transient_key = 'stirjoy_guest_cart_' . $user_id;
+    $saved_cart_data = get_transient( $transient_key );
+    
+    if ( $saved_cart_data && WC()->cart && WC()->session ) {
+        // Restore cart from transient if session cart is empty
+        $current_cart = WC()->cart->get_cart();
+        
+        if ( empty( $current_cart ) && ! empty( $saved_cart_data['cart'] ) ) {
+            // Restore cart from backup
+            WC()->session->set( 'cart', $saved_cart_data['cart'] );
+            WC()->session->set( 'cart_totals', $saved_cart_data['totals'] );
+            WC()->session->set( 'applied_coupons', $saved_cart_data['coupons'] );
+            WC()->session->save_data();
+            
+            // Force cart recalculation
+            WC()->cart->get_cart();
+            WC()->cart->calculate_totals();
+            
+            // Delete transient after successful restore
+            delete_transient( $transient_key );
+        } elseif ( ! empty( $current_cart ) ) {
+            // Cart exists, delete transient
+            delete_transient( $transient_key );
+        }
     }
     
     // Force WooCommerce to initialize session
@@ -1081,9 +1181,18 @@ function stirjoy_ensure_cart_after_login() {
         WC()->session->set_customer_session_cookie( true );
     }
     
-    // Ensure cart is loaded
+    // Ensure cart is loaded and persistent cart is merged
     if ( WC()->cart ) {
+        // Trigger cart load from session (this will merge persistent cart)
         WC()->cart->get_cart();
+        
+        // Ensure persistent cart flag is processed
+        $load_saved_cart = get_user_meta( $user_id, '_woocommerce_load_saved_cart_after_login', true );
+        if ( $load_saved_cart ) {
+            // Force cart recalculation to ensure persistent cart is loaded
+            WC()->cart->calculate_totals();
+            delete_user_meta( $user_id, '_woocommerce_load_saved_cart_after_login' );
+        }
     }
 }
 add_action( 'wp_loaded', 'stirjoy_ensure_cart_after_login', 20 );
@@ -1129,6 +1238,85 @@ function stirjoy_prevent_cart_ajax_caching() {
 }
 add_action( 'admin_init', 'stirjoy_prevent_cart_ajax_caching', 1 );
 add_action( 'init', 'stirjoy_prevent_cart_ajax_caching', 1 );
+
+/**
+ * SiteGround-specific fixes for cart session handling
+ * Excludes WooCommerce cookies from caching and ensures proper session handling
+ */
+function stirjoy_siteground_cart_fixes() {
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    
+    // Exclude WooCommerce cookies from SiteGround cache
+    if ( function_exists( 'sg_cachepress_purge_cache' ) || class_exists( 'SiteGround_Optimizer\Supercacher\Supercacher' ) ) {
+        // Add no-cache headers for cart/checkout pages
+        if ( is_cart() || is_checkout() || is_account_page() ) {
+            nocache_headers();
+            header( 'Cache-Control: no-cache, no-store, must-revalidate, private' );
+            header( 'Pragma: no-cache' );
+            header( 'Expires: 0' );
+        }
+    }
+    
+    // Ensure WooCommerce session cookies are set correctly
+    if ( WC()->session && ! headers_sent() ) {
+        // Set session cookie parameters for better compatibility
+        $cookie_params = session_get_cookie_params();
+        
+        // Ensure cookies work across subdomains if needed
+        if ( defined( 'COOKIE_DOMAIN' ) && COOKIE_DOMAIN ) {
+            // Cookie domain is already set in wp-config
+        }
+    }
+}
+add_action( 'template_redirect', 'stirjoy_siteground_cart_fixes', 1 );
+
+/**
+ * Force cart persistence on login redirect
+ * This ensures cart is preserved during redirect after login
+ */
+function stirjoy_preserve_cart_on_login_redirect() {
+    if ( ! is_user_logged_in() || ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    
+    // Check if this is right after login (within 5 seconds)
+    $login_time = get_user_meta( get_current_user_id(), '_stirjoy_last_login_time', true );
+    if ( $login_time && ( time() - $login_time ) < 5 ) {
+        // Force cart reload from persistent storage
+        if ( WC()->cart && WC()->session ) {
+            // Trigger cart load from session
+            WC()->cart->get_cart();
+            
+            // If cart is empty, try to load from persistent cart
+            if ( WC()->cart->is_empty() ) {
+                $user_id = get_current_user_id();
+                $persistent_cart = get_user_meta( $user_id, '_woocommerce_persistent_cart_' . get_current_blog_id(), true );
+                
+                if ( $persistent_cart && isset( $persistent_cart['cart'] ) && ! empty( $persistent_cart['cart'] ) ) {
+                    // Restore cart from persistent storage
+                    WC()->session->set( 'cart', $persistent_cart['cart'] );
+                    WC()->session->save_data();
+                    WC()->cart->get_cart();
+                    WC()->cart->calculate_totals();
+                }
+            }
+        }
+        
+        // Clear the login time flag
+        delete_user_meta( get_current_user_id(), '_stirjoy_last_login_time' );
+    }
+}
+add_action( 'wp', 'stirjoy_preserve_cart_on_login_redirect', 1 );
+
+/**
+ * Track login time for cart restoration
+ */
+function stirjoy_track_login_time( $user_login, $user ) {
+    update_user_meta( $user->ID, '_stirjoy_last_login_time', time() );
+}
+add_action( 'wp_login', 'stirjoy_track_login_time', 5, 2 );
 
 
 /**
@@ -1251,36 +1439,73 @@ function stirjoy_social_login_handler() {
     wp_set_auth_cookie( $user->ID, true );
     do_action( 'wp_login', $user->user_login, $user );
     
-    // After login, ensure cart is transferred
+    // After login, ensure cart is transferred and merged with existing user cart
     if ( class_exists( 'WooCommerce' ) && WC()->cart && ! empty( $guest_cart_contents ) ) {
         // Reinitialize WooCommerce session for logged-in user
         WC()->session->init();
         
-        // Get current user cart
-        $user_cart = WC()->cart->get_cart();
+        // Get existing user's persistent cart BEFORE merging
+        $existing_persistent_cart_meta = get_user_meta( $user->ID, '_woocommerce_persistent_cart_' . get_current_blog_id(), true );
+        $existing_user_cart = array();
         
-        // Merge guest cart with user cart (avoid duplicates)
-        foreach ( $guest_cart_contents as $cart_item_key => $cart_item ) {
-            $product_id = $cart_item['product_id'];
-            $variation_id = isset( $cart_item['variation_id'] ) ? $cart_item['variation_id'] : 0;
-            $quantity = $cart_item['quantity'];
+        if ( is_array( $existing_persistent_cart_meta ) && isset( $existing_persistent_cart_meta['cart'] ) ) {
+            $existing_user_cart = array_filter( (array) $existing_persistent_cart_meta['cart'] );
+        }
+        
+        // Get current session cart (might be empty or have guest cart)
+        $current_session_cart = WC()->cart->get_cart();
+        
+        // Start with existing user cart
+        $merged_cart = $existing_user_cart;
+        
+        // Merge guest cart items with existing user cart
+        foreach ( $guest_cart_contents as $guest_item_key => $guest_item ) {
+            $product_id = $guest_item['product_id'];
+            $variation_id = isset( $guest_item['variation_id'] ) ? $guest_item['variation_id'] : 0;
+            $guest_quantity = $guest_item['quantity'];
             
-            // Check if product already exists in user cart
-            $found = false;
-            foreach ( $user_cart as $user_cart_item_key => $user_cart_item ) {
-                if ( $user_cart_item['product_id'] == $product_id && 
-                     $user_cart_item['variation_id'] == $variation_id ) {
-                    // Update quantity
-                    WC()->cart->set_quantity( $user_cart_item_key, $user_cart_item['quantity'] + $quantity );
-                    $found = true;
+            // Check if this product already exists in merged cart
+            $found_in_merged = false;
+            foreach ( $merged_cart as $merged_key => $merged_item ) {
+                if ( $merged_item['product_id'] == $product_id && 
+                     ( isset( $merged_item['variation_id'] ) ? $merged_item['variation_id'] : 0 ) == $variation_id ) {
+                    // Same product and variation - combine quantities
+                    $merged_cart[ $merged_key ]['quantity'] += $guest_quantity;
+                    $found_in_merged = true;
                     break;
                 }
             }
             
-            // If not found, add to cart
-            if ( ! $found ) {
-                WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, isset( $cart_item['variation'] ) ? $cart_item['variation'] : array() );
+            // If not found, add guest item to merged cart
+            if ( ! $found_in_merged ) {
+                // Generate new cart item key for the merged cart
+                $new_key = md5( $product_id . '_' . $variation_id . '_' . time() . '_' . wp_rand() );
+                $merged_cart[ $new_key ] = $guest_item;
             }
+        }
+        
+        // Save merged cart to persistent storage
+        if ( ! empty( $merged_cart ) ) {
+            update_user_meta( $user->ID, '_woocommerce_persistent_cart_' . get_current_blog_id(), array(
+                'cart' => $merged_cart,
+            ) );
+            
+            // Set flag to load saved cart after login
+            update_user_meta( $user->ID, '_woocommerce_load_saved_cart_after_login', true );
+        }
+        
+        // Now add items to WooCommerce cart object (for immediate display)
+        // Clear current cart first
+        WC()->cart->empty_cart( false );
+        
+        // Add all merged cart items to WooCommerce cart
+        foreach ( $merged_cart as $cart_item_key => $cart_item ) {
+            $product_id = $cart_item['product_id'];
+            $variation_id = isset( $cart_item['variation_id'] ) ? $cart_item['variation_id'] : 0;
+            $quantity = $cart_item['quantity'];
+            $variation = isset( $cart_item['variation'] ) ? $cart_item['variation'] : array();
+            
+            WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation );
         }
         
         // Save cart
