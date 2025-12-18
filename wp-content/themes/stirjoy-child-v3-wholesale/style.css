@@ -7517,3 +7517,312 @@ body.woocommerce-checkout .site-content {
         padding: 44px;
     }
 }
+
+/* ===================================
+   Order Received Page - Pixel Perfect Figma Design
+   =================================== */
+
+/* Order Received Page Container */
+.stirjoy-order-received-page {
+    background: #ffffeb;
+    min-height: 100vh;
+    padding: 60px 20px 100px;
+    margin: 0 -11px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.stirjoy-order-received-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* "You're in!" Section */
+.stirjoy-youre-in-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.stirjoy-youre-in-title {
+    color: #2d5a27;
+    font-size: 64px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.2;
+    margin: 0 0 24px 0;
+    letter-spacing: -1px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-youre-in-description {
+    color: #2d5a27;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Main Content Area */
+.stirjoy-order-received-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+/* "What's next:" Box */
+.stirjoy-whats-next-box {
+    background: #ffffeb;
+    border: 1px solid #2d5a27;
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+}
+
+.stirjoy-whats-next-title {
+    color: #2d5a27;
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.2;
+    margin: 0 0 32px 0;
+    letter-spacing: -0.5px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-whats-next-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.stirjoy-whats-next-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    position: relative;
+}
+
+.stirjoy-bullet-point {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.stirjoy-bullet-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #2d5a27;
+    background: #E2EE48;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.stirjoy-bullet-line {
+    width: 2px;
+    height: 60px;
+    background: #2d5a27;
+    margin-top: 8px;
+    flex-shrink: 0;
+}
+
+.stirjoy-whats-next-item:last-child .stirjoy-bullet-line {
+    display: none;
+}
+
+.stirjoy-whats-next-text {
+    flex: 1;
+    padding-top: 2px;
+}
+
+.stirjoy-whats-next-text-primary {
+    color: #2d5a27;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-whats-next-text-secondary {
+    color: #2d5a27;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-whats-next-text-secondary strong {
+    font-weight: 700;
+    color: #2d5a27;
+}
+
+/* "Contents:" Box */
+.stirjoy-contents-box {
+    background: #ffffeb;
+    border: 1px solid #2d5a27;
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+}
+
+.stirjoy-contents-title {
+    color: #2d5a27;
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.2;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.5px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-contents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stirjoy-contents-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stirjoy-contents-label {
+    color: #2d5a27;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-contents-value {
+    color: #2d5a27;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.stirjoy-contents-divider {
+    height: 1px;
+    background: #2d5a27;
+    margin: 8px 0;
+}
+
+.stirjoy-contents-total .stirjoy-contents-label {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.stirjoy-contents-total .stirjoy-contents-value {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Customize Box Button */
+.stirjoy-customize-box-button {
+    display: block;
+    width: 100%;
+    background: #E2EE48;
+    color: #2d5a27;
+    border: none;
+    padding: 18px 32px;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    box-sizing: border-box;
+}
+
+.stirjoy-customize-box-button:hover {
+    background: #E8643C;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(232, 100, 60, 0.3);
+}
+
+/* Background Graphic */
+.stirjoy-order-received-bg-graphic {
+    position: absolute;
+    bottom: -100px;
+    left: 10%;
+    width: 300px;
+    height: 400px;
+    background: transparent;
+    opacity: 0.1;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.stirjoy-order-received-bg-graphic::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 3px solid #E2EE48;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    top: 0;
+    left: 50px;
+    transform: rotate(-15deg);
+}
+
+.stirjoy-order-received-bg-graphic::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 120px;
+    border: 3px solid #E2EE48;
+    border-radius: 0 0 50% 50%;
+    top: 180px;
+    left: 140px;
+    transform: rotate(10deg);
+}
+
+/* Hide default WooCommerce order details */
+.stirjoy-thankyou-wrapper .woocommerce-order-overview {
+    display: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .stirjoy-order-received-content {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    
+    .stirjoy-youre-in-title {
+        font-size: 48px;
+    }
+    
+    .stirjoy-youre-in-description {
+        font-size: 16px;
+    }
+    
+    .stirjoy-whats-next-box,
+    .stirjoy-contents-box {
+        padding: 24px;
+    }
+}
