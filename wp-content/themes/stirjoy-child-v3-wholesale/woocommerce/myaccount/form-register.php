@@ -99,10 +99,10 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 							</p>
 						<?php endif; ?>
 
-						<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-							<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
-							<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" placeholder="<?php esc_attr_e( 'Your email', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
-						</p>
+					<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+						<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?><!--&nbsp;<span class="required" aria-hidden="true">*</span>--></label>
+						<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" placeholder="<?php esc_attr_e( 'Your email', 'woocommerce' ); ?>" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" required aria-required="true" /><?php // @codingStandardsIgnoreLine ?>
+					</p>
 
 						<?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
 							<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -112,6 +112,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 						<?php else : ?>
 							<p><?php esc_html_e( 'A link to set a new password will be sent to your email address.', 'woocommerce' ); ?></p>
 						<?php endif; ?>
+						<span class="stirjoy-email-error" id="stirjoy-email-error" role="alert" style="display: none;"></span>
 						
 						<!-- Newsletter Subscription Checkbox -->
 						<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide stirjoy-newsletter-checkbox-row">
@@ -141,4 +142,137 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 </div>
 
 <?php do_action( 'woocommerce_after_customer_login_form' ); ?>
+
+<script>
+(function($) {
+	var errorProcessed = false;
+	
+	// Function to hide WooCommerce error notices immediately (but not our custom error)
+	function hideWooCommerceNotices() {
+		$('.woocommerce-error, .woocommerce .woocommerce-error, .woocommerce-notices-wrapper .woocommerce-error').not('#stirjoy-email-error').css({
+			'display': 'none',
+			'visibility': 'hidden',
+			'opacity': '0',
+			'height': '0',
+			'margin': '0',
+			'padding': '0',
+			'overflow': 'hidden'
+		});
+	}
+	
+	// Function to check for email-related errors and display them below password input
+	function displayEmailError() {
+		// Hide notices first to prevent them from showing
+		hideWooCommerceNotices();
+		
+		// Look for WooCommerce error notices
+		var $errorNotices = $('.woocommerce-error, .woocommerce .woocommerce-error, .woocommerce-notices-wrapper .woocommerce-error').not('#stirjoy-email-error');
+		var emailErrorFound = false;
+		var emailErrorText = '';
+		
+		$errorNotices.each(function() {
+			var $notice = $(this);
+			var errorText = $notice.text() || $notice.html();
+			
+			// Check if this is an email-related error
+			if (errorText.toLowerCase().indexOf('email') !== -1 || 
+			    errorText.toLowerCase().indexOf('already registered') !== -1 ||
+			    errorText.toLowerCase().indexOf('account is already') !== -1) {
+				emailErrorFound = true;
+				// Extract just the error message text (remove "Error:" prefix if present)
+				emailErrorText = errorText.replace(/^.*?Error:\s*/i, '').trim();
+				// Remove HTML tags but keep text
+				emailErrorText = $('<div>').html(emailErrorText).text().trim();
+				
+				// Hide the original notice immediately
+				$notice.css({
+					'display': 'none',
+					'visibility': 'hidden',
+					'opacity': '0',
+					'height': '0',
+					'margin': '0',
+					'padding': '0',
+					'overflow': 'hidden'
+				});
+			}
+		});
+		
+		// Display error in custom container if found
+		if (emailErrorFound && emailErrorText) {
+			var $emailError = $('#stirjoy-email-error');
+			if ($emailError.length) {
+				$emailError.text(emailErrorText).css({
+					'display': 'block',
+					'visibility': 'visible',
+					'opacity': '1'
+				});
+				// Add error class to email input
+				$('#reg_email').addClass('error');
+				errorProcessed = true;
+			}
+		} else if (!errorProcessed) {
+			// Only hide if we haven't processed an error yet
+			$('#stirjoy-email-error').hide();
+			$('#reg_email').removeClass('error');
+		}
+	}
+	
+	// Run immediately when script loads (before DOM ready)
+	if (typeof jQuery !== 'undefined') {
+		hideWooCommerceNotices();
+	}
+	
+	// Run when DOM is ready
+	$(document).ready(function() {
+		hideWooCommerceNotices();
+		displayEmailError();
+		
+		// Watch for dynamically added notices using MutationObserver (with debouncing)
+		if (window.MutationObserver) {
+			var checkTimeout;
+			var observer = new MutationObserver(function(mutations) {
+				// Debounce to avoid too many calls
+				clearTimeout(checkTimeout);
+				checkTimeout = setTimeout(function() {
+					hideWooCommerceNotices();
+					displayEmailError();
+				}, 50);
+			});
+			
+			// Observe the document body for changes
+			if (document.body) {
+				observer.observe(document.body, {
+					childList: true,
+					subtree: true
+				});
+			}
+		}
+		
+		// Check immediately
+		displayEmailError();
+		
+		// Check after a very short delay to catch any notices added right after page load
+		setTimeout(function() {
+			hideWooCommerceNotices();
+			displayEmailError();
+		}, 10);
+	});
+	
+	// Clear error when user starts typing in email field
+	$(document).on('input', '#reg_email', function() {
+		$('#stirjoy-email-error').hide();
+		$(this).removeClass('error');
+		errorProcessed = false;
+	});
+	
+	// Re-check on form submit (in case of AJAX validation)
+	$(document).on('submit', '.stirjoy-register-form', function() {
+		errorProcessed = false;
+		setTimeout(function() {
+			hideWooCommerceNotices();
+			displayEmailError();
+		}, 50);
+	});
+})(jQuery);
+</script>
 
