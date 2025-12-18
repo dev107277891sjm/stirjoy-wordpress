@@ -6881,17 +6881,40 @@ body.woocommerce-checkout .site-content {
     background: #ffffeb !important;
     border: 1px solid #2d5a27 !important;
     color: #2d5a27 !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 .stirjoy-card-input:focus {
     background: #ffffeb !important;
     border-color: #2d5a27 !important;
     box-shadow: 0 0 0 3px rgba(45, 90, 39, 0.1) !important;
+    outline: none !important;
 }
 
 .stirjoy-card-input::placeholder {
     color: #2d5a27;
     opacity: 0.6;
+}
+
+/* Ensure card container and fields are interactive */
+.stirjoy-card-container {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
+}
+
+.stirjoy-card-fields {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
+}
+
+.stirjoy-card-fields input,
+.stirjoy-card-fields .stirjoy-card-input {
+    pointer-events: auto !important;
+    cursor: text !important;
 }
 
 /* Ensure card container fields have proper spacing */
@@ -6901,6 +6924,23 @@ body.woocommerce-checkout .site-content {
 
 .stirjoy-card-container .stirjoy-card-fields .form-row:last-child {
     margin-bottom: 0;
+}
+
+/* Prevent Stripe Elements from overlaying custom inputs */
+.stirjoy-card-container #stripe-card-element,
+.stirjoy-card-container #stripe-exp-element,
+.stirjoy-card-container #stripe-cvc-element,
+.stirjoy-card-container .wc-stripe-elements-field,
+.stirjoy-card-container iframe[name*="stripe"],
+.stirjoy-card-container iframe[name*="__privateStripe"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
 }
 
 /* Checkbox inside card container */

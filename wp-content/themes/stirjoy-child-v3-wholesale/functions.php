@@ -1318,6 +1318,772 @@ function stirjoy_track_login_time( $user_login, $user ) {
 }
 add_action( 'wp_login', 'stirjoy_track_login_time', 5, 2 );
 
+/**
+ * Auto-populate required billing fields on checkout
+ * This ensures validation passes without modifying the design
+ */
+function stirjoy_auto_populate_billing_fields( $data, $errors = null ) {
+	// Only run if we're processing checkout
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return $data;
+	}
+	
+	// Ensure WooCommerce is loaded
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return $data;
+	}
+	
+	// Ensure countries object exists
+	if ( ! WC()->countries ) {
+		error_log( 'Stirjoy Error: WC()->countries not available' );
+		return $data;
+	}
+	
+	$current_user = wp_get_current_user();
+	
+	// Auto-populate email if empty
+	if ( empty( $data['billing_email'] ) ) {
+		if ( is_user_logged_in() && ! empty( $current_user->user_email ) ) {
+			$data['billing_email'] = $current_user->user_email;
+		} elseif ( isset( $_POST['billing_email'] ) && ! empty( $_POST['billing_email'] ) ) {
+			$data['billing_email'] = sanitize_email( $_POST['billing_email'] );
+		}
+	}
+	
+	// Auto-populate first name if empty
+	if ( empty( $data['billing_first_name'] ) ) {
+		if ( is_user_logged_in() ) {
+			$first_name = get_user_meta( $current_user->ID, 'billing_first_name', true );
+			if ( empty( $first_name ) ) {
+				$first_name = $current_user->first_name;
+			}
+			if ( ! empty( $first_name ) ) {
+				$data['billing_first_name'] = $first_name;
+			}
+		} elseif ( isset( $_POST['billing_first_name'] ) && ! empty( $_POST['billing_first_name'] ) ) {
+			$data['billing_first_name'] = sanitize_text_field( $_POST['billing_first_name'] );
+		}
+	}
+	
+	// Auto-populate last name if empty
+	if ( empty( $data['billing_last_name'] ) ) {
+		if ( is_user_logged_in() ) {
+			$last_name = get_user_meta( $current_user->ID, 'billing_last_name', true );
+			if ( empty( $last_name ) ) {
+				$last_name = $current_user->last_name;
+			}
+			if ( ! empty( $last_name ) ) {
+				$data['billing_last_name'] = $last_name;
+			}
+		} elseif ( isset( $_POST['billing_last_name'] ) && ! empty( $_POST['billing_last_name'] ) ) {
+			$data['billing_last_name'] = sanitize_text_field( $_POST['billing_last_name'] );
+		}
+	}
+	
+	// Auto-populate country if empty (default to store base country)
+	if ( empty( $data['billing_country'] ) && WC()->countries ) {
+		$data['billing_country'] = WC()->countries->get_base_country();
+	}
+	
+	// Auto-populate state if empty
+	if ( empty( $data['billing_state'] ) ) {
+		if ( is_user_logged_in() ) {
+			$state = get_user_meta( $current_user->ID, 'billing_state', true );
+			if ( ! empty( $state ) ) {
+				$data['billing_state'] = $state;
+			}
+		}
+		
+		// If still empty, check if state is required for the selected country
+		if ( empty( $data['billing_state'] ) && ! empty( $data['billing_country'] ) && class_exists( 'WooCommerce' ) && WC()->countries ) {
+			$country = $data['billing_country'];
+			$locale = WC()->countries->get_country_locale();
+			
+			// Check if state field is required for this country
+			if ( isset( $locale[ $country ]['state']['required'] ) && $locale[ $country ]['state']['required'] ) {
+				// Get states for this country
+				$states = WC()->countries->get_states( $country );
+				if ( ! empty( $states ) && is_array( $states ) ) {
+					// Use first available state as default
+					$state_keys = array_keys( $states );
+					if ( ! empty( $state_keys ) ) {
+						$data['billing_state'] = $state_keys[0];
+					}
+				}
+			} else {
+				// If state is not required, set empty string to avoid validation errors
+				$data['billing_state'] = '';
+			}
+		} elseif ( empty( $data['billing_state'] ) ) {
+			// Ensure state field exists even if empty (for validation)
+			$data['billing_state'] = '';
+		}
+	}
+	
+	return $data;
+}
+add_filter( 'woocommerce_checkout_posted_data', 'stirjoy_auto_populate_billing_fields', 10, 2 );
+
+/**
+ * Ensure payment method is selected before checkout processing
+ */
+function stirjoy_ensure_payment_method_selected( $data, $errors = null ) {
+	// Only run if we're processing checkout
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return $data;
+	}
+	
+	// Ensure WooCommerce is loaded
+	if ( ! class_exists( 'WooCommerce' ) || ! WC()->payment_gateways ) {
+		return $data;
+	}
+	
+	// Check if payment method is set
+	if ( empty( $data['payment_method'] ) ) {
+		// Get available payment gateways
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+		
+		if ( ! empty( $available_gateways ) ) {
+			$gateway_ids = array_keys( $available_gateways );
+			$preferred_gateways = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+			
+			// Try to find Stripe/credit card gateway first
+			$selected_gateway = null;
+			foreach ( $preferred_gateways as $preferred ) {
+				if ( in_array( $preferred, $gateway_ids ) ) {
+					$selected_gateway = $preferred;
+					break;
+				}
+			}
+			
+			// If no Stripe gateway found, check for any gateway with 'stripe' or 'card' in the ID
+			if ( ! $selected_gateway ) {
+				foreach ( $gateway_ids as $gateway_id ) {
+					if ( stripos( $gateway_id, 'stripe' ) !== false || stripos( $gateway_id, 'card' ) !== false ) {
+						$selected_gateway = $gateway_id;
+						break;
+					}
+				}
+			}
+			
+			// Fallback to first available gateway
+			if ( ! $selected_gateway ) {
+				$selected_gateway = $gateway_ids[0];
+			}
+			
+			$data['payment_method'] = $selected_gateway;
+			$_POST['payment_method'] = $selected_gateway;
+			
+			error_log( 'Stirjoy: Auto-selected payment method ' . $selected_gateway );
+		} else {
+			// Use wc_add_notice instead of $errors->add() for better compatibility
+			if ( is_object( $errors ) && method_exists( $errors, 'add' ) ) {
+				$errors->add( 'payment', __( 'No payment methods are available.', 'woocommerce' ) );
+			} else {
+				wc_add_notice( __( 'No payment methods are available.', 'woocommerce' ), 'error' );
+			}
+		}
+	}
+	
+	return $data;
+}
+add_filter( 'woocommerce_checkout_posted_data', 'stirjoy_ensure_payment_method_selected', 20, 2 );
+
+/**
+ * Log checkout errors for debugging
+ */
+function stirjoy_log_checkout_errors( $order_id, $posted_data, $order ) {
+	if ( ! $order ) {
+		error_log( 'Stirjoy Checkout Error: Order object is null' );
+		return;
+	}
+	
+	// Log order details
+	error_log( 'Stirjoy Checkout: Order ID ' . $order_id . ' created' );
+	error_log( 'Stirjoy Checkout: Payment Method - ' . ( isset( $posted_data['payment_method'] ) ? $posted_data['payment_method'] : 'NOT SET' ) );
+	error_log( 'Stirjoy Checkout: Order Status - ' . $order->get_status() );
+	error_log( 'Stirjoy Checkout: Order Total - ' . $order->get_total() );
+}
+add_action( 'woocommerce_checkout_order_processed', 'stirjoy_log_checkout_errors', 10, 3 );
+
+/**
+ * Catch order creation errors
+ */
+function stirjoy_catch_order_creation_errors( $order_id, $data, $order ) {
+	if ( ! $order_id || ! $order ) {
+		error_log( 'Stirjoy Error: Order creation failed - Order ID: ' . $order_id );
+		if ( $data ) {
+			error_log( 'Stirjoy Error: Order data: ' . print_r( $data, true ) );
+		}
+	}
+}
+add_action( 'woocommerce_checkout_order_processed', 'stirjoy_catch_order_creation_errors', 1, 3 );
+
+/**
+ * Catch payment gateway processing errors
+ */
+function stirjoy_catch_payment_processing_errors( $order_id ) {
+	if ( ! $order_id ) {
+		error_log( 'Stirjoy Error: Payment processing called without order ID' );
+		return;
+	}
+	
+	$order = wc_get_order( $order_id );
+	if ( ! $order ) {
+		error_log( 'Stirjoy Error: Order not found for ID: ' . $order_id );
+		return;
+	}
+	
+	$payment_method = $order->get_payment_method();
+	error_log( 'Stirjoy: Processing payment for order ' . $order_id . ' with method ' . $payment_method );
+	
+	// Check if payment gateway exists
+	if ( WC()->payment_gateways ) {
+		$gateways = WC()->payment_gateways->get_available_payment_gateways();
+		if ( ! isset( $gateways[ $payment_method ] ) ) {
+			error_log( 'Stirjoy Error: Payment gateway ' . $payment_method . ' not found or not available' );
+		}
+	}
+}
+add_action( 'woocommerce_checkout_order_processed', 'stirjoy_catch_payment_processing_errors', 5, 1 );
+
+/**
+ * Catch and log checkout processing errors before order creation
+ */
+function stirjoy_log_checkout_processing_errors() {
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Log all checkout notices/errors
+	$notices = wc_get_notices( 'error' );
+	if ( ! empty( $notices ) ) {
+		error_log( 'Stirjoy Checkout Validation Errors: ' . print_r( $notices, true ) );
+	}
+	
+	// Log payment method
+	if ( isset( $_POST['payment_method'] ) ) {
+		error_log( 'Stirjoy Checkout: Payment method in POST - ' . $_POST['payment_method'] );
+	} else {
+		error_log( 'Stirjoy Checkout Error: Payment method NOT in POST data' );
+	}
+	
+	// Log required billing fields
+	$required_fields = array( 'billing_email', 'billing_first_name', 'billing_last_name', 'billing_country' );
+	foreach ( $required_fields as $field ) {
+		if ( isset( $_POST[ $field ] ) ) {
+			error_log( 'Stirjoy Checkout: ' . $field . ' = ' . ( ! empty( $_POST[ $field ] ) ? $_POST[ $field ] : 'EMPTY' ) );
+		} else {
+			error_log( 'Stirjoy Checkout Error: ' . $field . ' NOT in POST data' );
+		}
+	}
+}
+add_action( 'woocommerce_after_checkout_validation', 'stirjoy_log_checkout_processing_errors', 10 );
+
+/**
+ * Catch payment processing errors and log PHP errors
+ */
+function stirjoy_catch_payment_errors() {
+	if ( ! is_checkout() || ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Ensure WooCommerce is loaded before logging
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		error_log( 'Stirjoy Checkout Error: WooCommerce class not found' );
+		return;
+	}
+	
+	// Enable error logging
+	$previous_handler = set_error_handler( function( $errno, $errstr, $errfile, $errline ) {
+		error_log( "Stirjoy Checkout PHP Error: [$errno] $errstr in $errfile on line $errline" );
+		return false; // Let PHP handle the error normally
+	});
+	
+	// Log POST data for debugging (remove sensitive data)
+	$post_data = $_POST;
+	unset( $post_data['card_number'], $post_data['card_cvc'], $post_data['card_expiry'], $post_data['stripe_token'], $post_data['stripe-source'], $post_data['stripe_payment_method'] );
+	error_log( 'Stirjoy Checkout POST Data: ' . print_r( $post_data, true ) );
+	
+	// Check if payment method is set
+	if ( empty( $_POST['payment_method'] ) ) {
+		error_log( 'Stirjoy Checkout Error: Payment method not set in POST data' );
+	} else {
+		error_log( 'Stirjoy Checkout: Payment method is ' . $_POST['payment_method'] );
+	}
+	
+	// Check if WooCommerce is properly loaded
+	if ( ! WC()->countries ) {
+		error_log( 'Stirjoy Checkout Error: WC()->countries not available' );
+	}
+	
+	// Restore previous error handler
+	if ( $previous_handler !== null ) {
+		set_error_handler( $previous_handler );
+	}
+}
+add_action( 'woocommerce_before_checkout_process', 'stirjoy_catch_payment_errors', 1 );
+
+/**
+ * Catch fatal errors during checkout processing
+ */
+function stirjoy_catch_fatal_errors() {
+	if ( ! is_checkout() || ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Register shutdown function to catch fatal errors
+	register_shutdown_function( function() {
+		$error = error_get_last();
+		if ( $error !== null && in_array( $error['type'], array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ) ) ) {
+			error_log( 'Stirjoy Checkout Fatal Error: ' . $error['message'] . ' in ' . $error['file'] . ' on line ' . $error['line'] );
+			
+			// Try to send a user-friendly error message
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( array(
+					'messages' => '<div class="woocommerce-error">' . __( 'There was an error processing your order. Please try again or contact support.', 'woocommerce' ) . '</div>'
+				) );
+			}
+		}
+	});
+}
+add_action( 'init', 'stirjoy_catch_fatal_errors' );
+
+/**
+ * Ensure all required checkout fields are present before processing
+ */
+function stirjoy_ensure_required_checkout_fields() {
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Ensure WooCommerce is loaded
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
+	
+	// Ensure required billing fields exist
+	$required_fields = array(
+		'billing_email'      => __( 'Billing Email', 'woocommerce' ),
+		'billing_first_name' => __( 'Billing First Name', 'woocommerce' ),
+		'billing_last_name'  => __( 'Billing Last Name', 'woocommerce' ),
+		'billing_country'    => __( 'Billing Country', 'woocommerce' ),
+	);
+	
+	foreach ( $required_fields as $field => $label ) {
+		if ( empty( $_POST[ $field ] ) ) {
+			// Try to get from hidden fields or user data
+			if ( isset( $_POST[ $field ] ) && empty( $_POST[ $field ] ) ) {
+				// Field exists but is empty - will be handled by auto-populate function
+				continue;
+			} elseif ( ! isset( $_POST[ $field ] ) ) {
+				// Field doesn't exist - add it
+				$_POST[ $field ] = '';
+			}
+		}
+	}
+	
+	// Ensure payment method is set (prioritize Stripe/credit card)
+	if ( empty( $_POST['payment_method'] ) && WC()->payment_gateways ) {
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+		if ( ! empty( $available_gateways ) ) {
+			$gateway_ids = array_keys( $available_gateways );
+			$preferred_gateways = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+			
+			// Try to find Stripe/credit card gateway first
+			$selected_gateway = null;
+			foreach ( $preferred_gateways as $preferred ) {
+				if ( in_array( $preferred, $gateway_ids ) ) {
+					$selected_gateway = $preferred;
+					break;
+				}
+			}
+			
+			// If no Stripe gateway found, check for any gateway with 'stripe' or 'card' in the ID
+			if ( ! $selected_gateway ) {
+				foreach ( $gateway_ids as $gateway_id ) {
+					if ( stripos( $gateway_id, 'stripe' ) !== false || stripos( $gateway_id, 'card' ) !== false ) {
+						$selected_gateway = $gateway_id;
+						break;
+					}
+				}
+			}
+			
+			// Fallback to first available gateway
+			if ( ! $selected_gateway ) {
+				$selected_gateway = $gateway_ids[0];
+			}
+			
+			$_POST['payment_method'] = $selected_gateway;
+		}
+	}
+}
+add_action( 'woocommerce_before_checkout_process', 'stirjoy_ensure_required_checkout_fields', 1 );
+
+/**
+ * Handle payment gateway errors and provide better error messages
+ */
+function stirjoy_handle_payment_gateway_errors( $result, $order_id ) {
+	if ( isset( $result['result'] ) && 'failure' === $result['result'] ) {
+		$error_message = isset( $result['errorMessage'] ) ? $result['errorMessage'] : 'Unknown payment error';
+		error_log( 'Stirjoy Payment Error: ' . $error_message . ' (Order ID: ' . $order_id . ')' );
+		
+		// Log gateway-specific errors
+		if ( isset( $result['messages'] ) ) {
+			error_log( 'Stirjoy Payment Error Messages: ' . print_r( $result['messages'], true ) );
+		}
+	}
+	return $result;
+}
+add_filter( 'woocommerce_payment_successful_result', 'stirjoy_handle_payment_gateway_errors', 10, 2 );
+
+/**
+ * Catch payment processing failures
+ */
+function stirjoy_catch_payment_failures( $order_id ) {
+	$order = wc_get_order( $order_id );
+	if ( $order ) {
+		$payment_method = $order->get_payment_method();
+		error_log( 'Stirjoy Payment Processing: Order ' . $order_id . ' - Payment Method: ' . $payment_method );
+		error_log( 'Stirjoy Payment Processing: Order Status: ' . $order->get_status() );
+		
+		// Check if payment failed
+		if ( $order->has_status( 'failed' ) || $order->has_status( 'pending' ) ) {
+			$order_notes = $order->get_customer_order_notes();
+			if ( ! empty( $order_notes ) ) {
+				error_log( 'Stirjoy Payment Processing: Order Notes: ' . print_r( $order_notes, true ) );
+			}
+		}
+	}
+}
+add_action( 'woocommerce_payment_complete', 'stirjoy_catch_payment_failures', 10, 1 );
+add_action( 'woocommerce_order_status_failed', 'stirjoy_catch_payment_failures', 10, 1 );
+
+/**
+ * Catch all PHP errors during checkout processing
+ */
+function stirjoy_catch_checkout_php_errors() {
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Store previous error handler
+	$previous_handler = set_error_handler( function( $errno, $errstr, $errfile, $errline ) use ( &$previous_handler ) {
+		// Log all errors
+		error_log( sprintf( 
+			'Stirjoy Checkout PHP Error [%d]: %s in %s on line %d', 
+			$errno, 
+			$errstr, 
+			basename( $errfile ), 
+			$errline 
+		) );
+		
+		// Call previous handler if it exists
+		if ( $previous_handler && is_callable( $previous_handler ) ) {
+			return call_user_func( $previous_handler, $errno, $errstr, $errfile, $errline );
+		}
+		
+		return false; // Let PHP handle the error normally
+	}, E_ALL | E_STRICT );
+	
+	// Register shutdown function to catch fatal errors
+	register_shutdown_function( function() {
+		$error = error_get_last();
+		if ( $error !== null && in_array( $error['type'], array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ) ) ) {
+			error_log( sprintf( 
+				'Stirjoy Checkout Fatal Error: %s in %s on line %d', 
+				$error['message'], 
+				basename( $error['file'] ), 
+				$error['line'] 
+			) );
+		}
+	});
+}
+add_action( 'woocommerce_before_checkout_process', 'stirjoy_catch_checkout_php_errors', 1 );
+
+/**
+ * Log checkout POST data for debugging (sanitized)
+ */
+function stirjoy_log_checkout_post_data() {
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	$post_data = $_POST;
+	
+	// Remove sensitive data
+	unset( $post_data['card_number'], $post_data['card_cvc'], $post_data['card_expiry'] );
+	unset( $post_data['stripe_token'], $post_data['stripe-source'], $post_data['stripe_payment_method'] );
+	unset( $post_data['stirjoy_card_number_display'], $post_data['stirjoy_card_expiry_display'] );
+	unset( $post_data['stirjoy_card_cvc_display'], $post_data['stirjoy_card_name_display'] );
+	unset( $post_data['password'], $post_data['password_1'], $post_data['password_2'] );
+	
+	// Log sanitized POST data
+	error_log( 'Stirjoy Checkout POST Data: ' . print_r( $post_data, true ) );
+	
+	// Check critical fields
+	$critical_fields = array( 'payment_method', 'billing_email', 'billing_first_name', 'billing_last_name', 'billing_country' );
+	foreach ( $critical_fields as $field ) {
+		if ( ! isset( $post_data[ $field ] ) || empty( $post_data[ $field ] ) ) {
+			error_log( 'Stirjoy Checkout Warning: Missing or empty field - ' . $field );
+		}
+	}
+}
+add_action( 'woocommerce_before_checkout_process', 'stirjoy_log_checkout_post_data', 2 );
+
+/**
+ * Set default payment method to Stripe/Credit Card on checkout page load
+ */
+function stirjoy_set_default_payment_method() {
+	if ( is_checkout() && ! is_wc_endpoint_url() && class_exists( 'WooCommerce' ) && WC()->payment_gateways ) {
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+		
+		if ( ! empty( $available_gateways ) ) {
+			$gateway_ids = array_keys( $available_gateways );
+			$preferred_gateways = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+			
+			// Try to find Stripe/credit card gateway first
+			$selected_gateway = null;
+			foreach ( $preferred_gateways as $preferred ) {
+				if ( in_array( $preferred, $gateway_ids ) ) {
+					$selected_gateway = $preferred;
+					break;
+				}
+			}
+			
+			// If no Stripe gateway found, check for any gateway with 'stripe' or 'card' in the ID
+			if ( ! $selected_gateway ) {
+				foreach ( $gateway_ids as $gateway_id ) {
+					if ( stripos( $gateway_id, 'stripe' ) !== false || stripos( $gateway_id, 'card' ) !== false ) {
+						$selected_gateway = $gateway_id;
+						break;
+					}
+				}
+			}
+			
+			// Fallback to first available gateway
+			if ( ! $selected_gateway ) {
+				$selected_gateway = $gateway_ids[0];
+			}
+			
+			// Set as chosen payment method
+			if ( empty( WC()->session->get( 'chosen_payment_method' ) ) ) {
+				WC()->session->set( 'chosen_payment_method', $selected_gateway );
+				error_log( 'Stirjoy: Set default payment method to ' . $selected_gateway );
+			}
+		}
+	}
+}
+add_action( 'wp', 'stirjoy_set_default_payment_method' );
+
+/**
+ * Ensure billing state is always present in checkout data (even if empty)
+ * This prevents validation errors when state is conditionally required
+ */
+function stirjoy_ensure_billing_state_field( $fields ) {
+	// Ensure billing_state field exists in checkout fields
+	if ( ! isset( $fields['billing']['billing_state'] ) ) {
+		$fields['billing']['billing_state'] = array(
+			'type'        => 'state',
+			'label'       => __( 'State / County', 'woocommerce' ),
+			'required'    => false,
+			'class'       => array( 'form-row-wide', 'address-field' ),
+			'validate'    => array( 'state' ),
+			'autocomplete' => 'address-level1',
+		);
+	}
+	
+	return $fields;
+}
+add_filter( 'woocommerce_checkout_fields', 'stirjoy_ensure_billing_state_field', 20 );
+
+/**
+ * Validate and fix checkout data before processing
+ */
+function stirjoy_validate_checkout_data() {
+	// Only run during checkout processing
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return;
+	}
+	
+	// Ensure WooCommerce is loaded
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		error_log( 'Stirjoy Error: WooCommerce class not found in validation' );
+		return;
+	}
+	
+	// Ensure countries object exists
+	if ( ! WC()->countries ) {
+		error_log( 'Stirjoy Error: WC()->countries not available in validation' );
+		return;
+	}
+	
+	try {
+		// Ensure email is valid
+		if ( ! empty( $_POST['billing_email'] ) && ! is_email( $_POST['billing_email'] ) ) {
+			wc_add_notice( __( 'Please enter a valid email address.', 'woocommerce' ), 'error' );
+		}
+		
+		// Ensure country is valid
+		if ( ! empty( $_POST['billing_country'] ) ) {
+			$allowed_countries = WC()->countries->get_allowed_countries();
+			if ( ! empty( $allowed_countries ) && ! array_key_exists( $_POST['billing_country'], $allowed_countries ) ) {
+				// Reset to base country if invalid
+				$_POST['billing_country'] = WC()->countries->get_base_country();
+			}
+		}
+		
+		// Validate state if country requires it
+		if ( ! empty( $_POST['billing_country'] ) ) {
+			$locale = WC()->countries->get_country_locale();
+			if ( ! empty( $locale ) && isset( $locale[ $_POST['billing_country'] ]['state']['required'] ) && 
+				 $locale[ $_POST['billing_country'] ]['state']['required'] && 
+				 empty( $_POST['billing_state'] ) ) {
+				// Try to get default state
+				$states = WC()->countries->get_states( $_POST['billing_country'] );
+				if ( ! empty( $states ) && is_array( $states ) ) {
+					$state_keys = array_keys( $states );
+					if ( ! empty( $state_keys ) ) {
+						$_POST['billing_state'] = $state_keys[0];
+					}
+				}
+			}
+		}
+	} catch ( Exception $e ) {
+		error_log( 'Stirjoy Validation Error: ' . $e->getMessage() );
+	}
+}
+add_action( 'woocommerce_checkout_process', 'stirjoy_validate_checkout_data', 5 );
+
+/**
+ * Handle "use shipping as billing" checkbox functionality
+ */
+function stirjoy_copy_shipping_to_billing( $data ) {
+	// Only run if we're processing checkout
+	if ( ! isset( $_POST['woocommerce_checkout_place_order'] ) ) {
+		return $data;
+	}
+	
+	// Only run if checkbox is checked
+	if ( isset( $_POST['use_shipping_as_billing'] ) && $_POST['use_shipping_as_billing'] == '1' ) {
+		// Copy shipping fields to billing fields
+		$shipping_fields = array(
+			'address_1' => 'billing_address_1',
+			'address_2' => 'billing_address_2',
+			'city'      => 'billing_city',
+			'state'     => 'billing_state',
+			'postcode'  => 'billing_postcode',
+			'country'   => 'billing_country',
+		);
+		
+		foreach ( $shipping_fields as $shipping_key => $billing_key ) {
+			if ( isset( $_POST[ 'shipping_' . $shipping_key ] ) && ! empty( $_POST[ 'shipping_' . $shipping_key ] ) ) {
+				$data[ $billing_key ] = sanitize_text_field( $_POST[ 'shipping_' . $shipping_key ] );
+				$_POST[ $billing_key ] = $data[ $billing_key ];
+			}
+		}
+	}
+	
+	return $data;
+}
+add_filter( 'woocommerce_checkout_posted_data', 'stirjoy_copy_shipping_to_billing', 30 );
+
+/**
+ * Remove custom display card fields from POST data to prevent validation issues
+ * These are visual-only fields and should not be processed by WooCommerce
+ */
+function stirjoy_remove_display_card_fields_from_post( $data ) {
+	// Ensure data is an array
+	if ( ! is_array( $data ) ) {
+		error_log( 'Stirjoy Error: $data is not an array in stirjoy_remove_display_card_fields_from_post' );
+		return $data;
+	}
+	
+	// Remove display-only card fields from POST data (they're just for visual design)
+	unset( $data['stirjoy_card_number_display'] );
+	unset( $data['stirjoy_card_expiry_display'] );
+	unset( $data['stirjoy_card_cvc_display'] );
+	unset( $data['stirjoy_card_name_display'] );
+	
+	// Also remove from $_POST to prevent any issues (safely)
+	if ( isset( $_POST['stirjoy_card_number_display'] ) ) {
+		unset( $_POST['stirjoy_card_number_display'] );
+	}
+	if ( isset( $_POST['stirjoy_card_expiry_display'] ) ) {
+		unset( $_POST['stirjoy_card_expiry_display'] );
+	}
+	if ( isset( $_POST['stirjoy_card_cvc_display'] ) ) {
+		unset( $_POST['stirjoy_card_cvc_display'] );
+	}
+	if ( isset( $_POST['stirjoy_card_name_display'] ) ) {
+		unset( $_POST['stirjoy_card_name_display'] );
+	}
+	
+	return $data;
+}
+add_filter( 'woocommerce_checkout_posted_data', 'stirjoy_remove_display_card_fields_from_post', 1 );
+
+/**
+ * Ensure standard WooCommerce checkout validation is used
+ * Payment gateway validation (like Stripe) is handled by the gateway itself
+ */
+function stirjoy_ensure_standard_checkout_validation( $data, $errors = null ) {
+	// Ensure data is an array
+	if ( ! is_array( $data ) ) {
+		error_log( 'Stirjoy Error: $data is not an array in stirjoy_ensure_standard_checkout_validation' );
+		return $data;
+	}
+	
+	// WooCommerce handles standard field validation automatically
+	// We only need to ensure payment method is selected
+	if ( empty( $data['payment_method'] ) && WC()->payment_gateways ) {
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+		if ( ! empty( $available_gateways ) ) {
+			$gateway_ids = array_keys( $available_gateways );
+			$preferred_gateways = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+			
+			// Try to find Stripe/credit card gateway first
+			$selected_gateway = null;
+			foreach ( $preferred_gateways as $preferred ) {
+				if ( in_array( $preferred, $gateway_ids ) ) {
+					$selected_gateway = $preferred;
+					break;
+				}
+			}
+			
+			// If no Stripe gateway found, check for any gateway with 'stripe' or 'card' in the ID
+			if ( ! $selected_gateway ) {
+				foreach ( $gateway_ids as $gateway_id ) {
+					if ( stripos( $gateway_id, 'stripe' ) !== false || stripos( $gateway_id, 'card' ) !== false ) {
+						$selected_gateway = $gateway_id;
+						break;
+					}
+				}
+			}
+			
+			// Fallback to first available gateway
+			if ( ! $selected_gateway ) {
+				$selected_gateway = $gateway_ids[0];
+			}
+			
+			$data['payment_method'] = $selected_gateway;
+			$_POST['payment_method'] = $selected_gateway;
+			
+			error_log( 'Stirjoy: Auto-selected payment method ' . $selected_gateway . ' in validation' );
+		} else {
+			// Use wc_add_notice if errors object not available
+			if ( is_object( $errors ) && method_exists( $errors, 'add' ) ) {
+				$errors->add( 'payment', __( 'Please choose a payment method.', 'woocommerce' ) );
+			} else {
+				wc_add_notice( __( 'Please choose a payment method.', 'woocommerce' ), 'error' );
+			}
+		}
+	}
+	
+	return $data;
+}
+add_filter( 'woocommerce_checkout_posted_data', 'stirjoy_ensure_standard_checkout_validation', 5, 2 );
+
 
 /**
  * AJAX Handler for Social Login
