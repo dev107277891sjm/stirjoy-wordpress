@@ -98,7 +98,7 @@ $price_per_portion = $serving_count > 0 ? $price / $serving_count : $price;
 			<!-- Price and Serving Info: "2 people (6$/portion)" -->
 			<div class="meal-price-serving">
 				<span class="serving-info-wrapper"> 
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="person-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="person-icon">
 						<circle cx="7" cy="4.5" r="2.5"/>
 						<path d="M2 12.5c0-2.2 2.2-4 5-4s5 1.8 5 4"/>
 					</svg>
@@ -112,7 +112,7 @@ $price_per_portion = $serving_count > 0 ? $price / $serving_count : $price;
 				<!-- Preparation Time: "25 min" -->
 				<?php if ( $prep_time ) : ?>
 					<span class="meal-prep-time">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="clock-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="clock-icon">
 							<circle cx="7" cy="7" r="5.5"/>
 							<line x1="7" y1="7" x2="7" y2="4" stroke-width="1.2"/>
 							<line x1="7" y1="7" x2="9.5" y2="7" stroke-width="1.2"/>

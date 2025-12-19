@@ -2202,6 +2202,7 @@ footer p.card-icons {
 /* Ensure full width layout */
 .customize-your-box-page {
     width: 100%;
+    background-color: #ffffeb;
     margin: 0;
     padding: 0;
 }
@@ -2687,7 +2688,7 @@ footer p.card-icons {
 
 /* Product Info */
 .meal-info {
-    padding: 16px 0;
+    padding: 16px 0 0 0;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -2721,19 +2722,19 @@ footer p.card-icons {
 }
 
 .meal-price-serving .person-icon {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     color: #396A26;
     stroke: #396A26;
     flex-shrink: 0;
 }
 
 .meal-price-serving .serving-info {
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .meal-price-serving .price-per-portion {
-    font-weight: 400;
+    font-weight: 600;
 }
 
 /* Preparation Time: "25 min" */
@@ -2741,13 +2742,14 @@ footer p.card-icons {
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: 600;
     font-size: 14px;
     margin: 0;
 }
 
 .meal-prep-time .clock-icon {
-    width: 14px;
-    height: 14px;
+    width: 24px;
+    height: 24px;
     color: #396A26;
     stroke: #396A26;
     flex-shrink: 0;
@@ -2755,6 +2757,7 @@ footer p.card-icons {
 
 span.woocommerce-Price-amount.amount {
     color: #396A26 !important;
+    font-weight: 600;
 }
 
 /* Quantity Selector and View Details Row */
@@ -2832,12 +2835,6 @@ span.woocommerce-Price-amount.amount {
 .view-details-btn:hover {
     background: #f0fdf4;
     border-color: #2d5a27;
-}
-
-.view-details-btn .eye-icon {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
 }
 
 .meal-name a {
