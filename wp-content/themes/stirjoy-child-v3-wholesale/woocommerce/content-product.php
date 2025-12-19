@@ -1,11 +1,10 @@
 <?php
 /**
  * The template for displaying product content within loops
- *
- * This template can be overridden by copying it to yourtheme/woocommerce/content-product.php.
+ * Updated to match Figma design exactly
  *
  * @package WooCommerce\Templates
- * @version 3.6.0
+ * @version Custom
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -25,11 +24,13 @@ $product_tags = get_the_terms( $product_id, 'product_tag' );
 $average_rating = $product->get_average_rating();
 $short_description = $product->get_short_description();
 
-// Check if product is in cart
+// Check if product is in cart and get quantity
 $in_cart = false;
+$cart_quantity = 0;
 foreach ( WC()->cart->get_cart() as $cart_item ) {
 	if ( $cart_item['product_id'] == $product_id ) {
 		$in_cart = true;
+		$cart_quantity = isset( $cart_item['quantity'] ) ? intval( $cart_item['quantity'] ) : 1;
 		break;
 	}
 }
@@ -47,45 +48,42 @@ $product_cats = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' =
 $searchable_cats = is_array( $product_cats ) ? implode( ' ', $product_cats ) : '';
 $searchable_text = strtolower( $product->get_name() . ' ' . $short_description . ' ' . $searchable_tags . ' ' . $searchable_cats );
 
+// Check for "High in protein" tag
+$has_high_protein = false;
+if ( ! empty( $product_tags ) && ! is_wp_error( $product_tags ) ) {
+	foreach ( $product_tags as $tag ) {
+		if ( stripos( $tag->name, 'protein' ) !== false || $tag->slug === 'high-protein' ) {
+			$has_high_protein = true;
+			break;
+		}
+	}
+}
+
+// Calculate price per portion
+$price = $product->get_price();
+$serving_count = $serving_size ? intval( preg_replace( '/[^0-9]/', '', $serving_size ) ) : 2;
+$price_per_portion = $serving_count > 0 ? $price / $serving_count : $price;
+
 ?>
 <li <?php wc_product_class( 'meal-product-card', $product ); ?> data-product-id="<?php echo esc_attr( $product_id ); ?>" data-search-text="<?php echo esc_attr( $searchable_text ); ?>" data-in-cart="<?php echo $in_cart ? '1' : '0'; ?>">
 	
 	<div class="meal-card-inner">
 		
-		<!-- Product Image with Tags -->
+		<!-- Product Image with "High in protein" Label -->
 		<div class="meal-image-wrapper">
 			<?php
-			// Product Tags/Badges
-			if ( ! empty( $product_tags ) && ! is_wp_error( $product_tags ) ) {
-				echo '<div class="meal-tags">';
-				foreach ( $product_tags as $tag ) {
-					$tag_slug = $tag->slug;
-					$tag_class = 'meal-tag';
-					
-					// Add specific classes for styling
-					if ( in_array( $tag_slug, array( 'popular', 'quick', 'high-protein', 'seasonal', 'new' ) ) ) {
-						$tag_class .= ' tag-' . $tag_slug;
-					}
-					
-					echo '<span class="' . esc_attr( $tag_class ) . '">' . esc_html( $tag->name ) . '</span>';
-				}
-				echo '</div>';
+			// "High in protein" label (top right of image)
+			if ( $has_high_protein ) {
+				echo '<div class="meal-protein-label">High in protein</div>';
 			}
 			
 			// Product Image
-			echo '<a href="' . esc_url( $product->get_permalink() ) . '" class="meal-image-link">';
 			if ( $product->get_image_id() ) {
 				echo wp_get_attachment_image( $product->get_image_id(), 'medium', false, array( 'class' => 'meal-image' ) );
 			} else {
-				// Placeholder with leaf icon
-				echo '<div class="meal-image-placeholder">';
-				echo '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="leaf-icon">';
-				echo '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>';
-				echo '<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>';
-				echo '</svg>';
-				echo '</div>';
+				// Placeholder
+				echo '<div class="meal-image-placeholder"></div>';
 			}
-			echo '</a>';
 			?>
 		</div>
 
@@ -97,61 +95,40 @@ $searchable_text = strtolower( $product->get_name() . ' ' . $short_description .
 				<?php echo esc_html( $product->get_name() ); ?>
 			</h3>
 
-			<!-- Product Description -->
-			<?php if ( $short_description ) : ?>
-				<p class="meal-description"><?php echo wp_trim_words( $short_description, 6, '' ); ?></p>
+			<!-- Price and Serving Info: "2 people (6$/portion)" -->
+			<div class="meal-price-serving">
+				<?php if ( $serving_size ) : ?>
+					<span class="serving-info"><?php echo esc_html( $serving_size ); ?></span>
+				<?php else : ?>
+					<span class="serving-info">2 people</span>
+				<?php endif; ?>
+				<span class="price-per-portion">(<?php echo wc_price( $price_per_portion ); ?>/portion)</span>
+			</div>
+
+			<!-- Preparation Time: "25 min" -->
+			<?php if ( $prep_time ) : ?>
+				<div class="meal-prep-time">
+					<?php echo esc_html( $prep_time ); ?> min
+				</div>
 			<?php endif; ?>
 
-			<!-- Metadata Row -->
-			<div class="meal-meta-row">
-				<?php if ( $prep_time ) : ?>
-					<div class="meta-item prep-time">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="clock-icon">
-							<circle cx="12" cy="12" r="10"></circle>
-							<polyline points="12 6 12 12 16 14"></polyline>
-						</svg>
-						<span><?php echo esc_html( $prep_time ); ?> min</span>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( $serving_size ) : ?>
-					<div class="meta-item serving-size">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-							<circle cx="9" cy="7" r="4"></circle>
-							<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-						</svg>
-						<span><?php echo esc_html( $serving_size ); ?></span>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( $average_rating > 0 ) : ?>
-					<div class="meta-item rating">
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-							<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>
-						</svg>
-						<span><?php echo esc_html( number_format( $average_rating, 1 ) ); ?></span>
-					</div>
-				<?php endif; ?>
-			</div>
-
-			<!-- Price -->
-			<div class="meal-price">
-				<?php echo $product->get_price_html(); ?>
-			</div>
-
-			<!-- Action Buttons -->
-			<div class="meal-actions">
-				<button type="button" class="view-details-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
-					View Details
-				</button>
+			<!-- Quantity Selector and View Details Button -->
+			<div class="meal-actions-row">
+				<!-- Quantity Selector -->
+				<div class="meal-quantity-selector">
+					<button type="button" class="quantity-btn quantity-minus" data-product-id="<?php echo esc_attr( $product_id ); ?>" <?php echo ( $cart_quantity <= 1 ) ? 'disabled' : ''; ?>>-</button>
+					<span class="quantity-value"><?php echo esc_html( $cart_quantity > 0 ? $cart_quantity : 1 ); ?></span>
+					<button type="button" class="quantity-btn quantity-plus" data-product-id="<?php echo esc_attr( $product_id ); ?>">+</button>
+				</div>
 				
-				<?php if ( $in_cart ) : ?>
-					<button type="button" class="remove-from-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">- Remove</button>
-				<?php else : ?>
-					<button type="button" class="add-to-cart-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">+ Add</button>
-				<?php endif; ?>
+				<!-- View Details Button with Eye Icon -->
+				<button type="button" class="view-details-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+						<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+						<circle cx="12" cy="12" r="3"></circle>
+					</svg>
+					View details
+				</button>
 			</div>
 
 		</div><!-- .meal-info -->

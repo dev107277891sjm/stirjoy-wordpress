@@ -127,47 +127,16 @@ get_header( 'shop' );
 			</form>
 		</div>
 
-		<!-- Category Tabs -->
-		<div class="meal-category-tabs">
-			<button class="category-tab active" data-category="all">All</button>
-			<button class="category-tab" data-category="breakfast">Breakfast</button>
-			<button class="category-tab" data-category="mains">Mains</button>
-			<button class="category-tab" data-category="snacks">Snacks</button>
-			<button class="category-tab" data-category="desserts">Desserts</button>
-		</div>
-
 		<?php
 		if ( woocommerce_product_loop() ) {
-
-			// Get all product categories to organize products
-			$categories = array(
-				'mains' => array(
-					'title' => 'Mains',
-					'slug' => 'mains',
-					'products' => array()
-				),
-				'breakfast' => array(
-					'title' => 'Breakfast',
-					'slug' => 'breakfast',
-					'products' => array()
-				),
-				'snacks' => array(
-					'title' => 'Snacks',
-					'slug' => 'snacks-desserts',
-					'products' => array()
-				),
-				'desserts' => array(
-					'title' => 'Desserts',
-					'slug' => 'desserts',
-					'products' => array()
-				)
-			);
 
 			// Query all meal products (exclude subscriptions, coffee, etc.)
 			$args = array(
 				'post_type' => 'product',
 				'posts_per_page' => -1,
 				'post_status' => 'publish',
+				'orderby' => 'title',
+				'order' => 'ASC',
 				'tax_query' => array(
 					array(
 						'taxonomy' => 'product_cat',
@@ -180,43 +149,34 @@ get_header( 'shop' );
 
 			$meal_query = new WP_Query( $args );
 
-			// Organize products by category
+			// Collect all products
+			$all_products = array();
 			if ( $meal_query->have_posts() ) {
 				while ( $meal_query->have_posts() ) {
 					$meal_query->the_post();
 					global $product;
-					
-					// Get product categories
-					$product_cats = wp_get_post_terms( get_the_ID(), 'product_cat', array( 'fields' => 'slugs' ) );
-					
-					// Add to appropriate category
-					foreach ( $categories as $key => $cat_data ) {
-						if ( in_array( $cat_data['slug'], $product_cats ) ) {
-							$categories[$key]['products'][] = $product;
-							break; // Add to first matching category only
-						}
-					}
+					$all_products[] = $product;
 				}
 				wp_reset_postdata();
 			}
 
-			// Display products by category
-			foreach ( $categories as $key => $cat_data ) {
-				if ( ! empty( $cat_data['products'] ) ) {
-					?>
-					<div class="meal-category-section" data-category="<?php echo esc_attr( $key ); ?>">
-						<h2 class="category-heading"><?php echo esc_html( $cat_data['title'] ); ?></h2>
-						<ul class="products">
-							<?php
-							foreach ( $cat_data['products'] as $product ) {
-								$GLOBALS['product'] = $product;
-								wc_get_template_part( 'content', 'product' );
-							}
-							?>
-						</ul>
-					</div>
+			// Sort products alphabetically by name
+			usort( $all_products, function( $a, $b ) {
+				return strcasecmp( $a->get_name(), $b->get_name() );
+			} );
+
+			// Display all products in a single list (alphabetically sorted)
+			if ( ! empty( $all_products ) ) {
+				?>
+				<ul class="products">
 					<?php
-				}
+					foreach ( $all_products as $product ) {
+						$GLOBALS['product'] = $product;
+						wc_get_template_part( 'content', 'product' );
+					}
+					?>
+				</ul>
+				<?php
 			}
 
 		} else {

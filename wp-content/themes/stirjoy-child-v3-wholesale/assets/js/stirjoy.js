@@ -708,30 +708,9 @@
         });
         
         /**
-         * Category Tab Filtering
+         * Category Tab Filtering - REMOVED
+         * Products are now displayed alphabetically without category organization
          */
-        $('.category-tab').on('click', function(e) {
-            e.preventDefault();
-            
-            var $tab = $(this);
-            var category = $tab.data('category');
-            
-            // Update active tab
-            $('.category-tab').removeClass('active');
-            $tab.addClass('active');
-            
-            // Filter sections
-            if (category === 'all') {
-                $('.meal-category-section').show();
-            } else {
-                $('.meal-category-section').hide();
-                $('.meal-category-section[data-category="' + category + '"]').show();
-            }
-            
-            // Reset search
-            $('#meal-search').val('');
-            $('.meal-product-card').show();
-        });
         
         /**
          * Real-time Search Filtering
@@ -945,15 +924,26 @@
         });
         
         /**
-         * Update all shop page buttons based on cart state
+         * Update all shop page buttons and quantity selectors based on cart state
          */
-        function updateShopPageButtons(productIdsInCart) {
+        function updateShopPageButtons(productIdsInCart, cartContents) {
             // Convert array to object for faster lookup
             var inCartMap = {};
+            var quantityMap = {};
+            
             if (productIdsInCart && productIdsInCart.length > 0) {
                 productIdsInCart.forEach(function(id) {
                     inCartMap[id] = true;
                 });
+            }
+            
+            // Build quantity map from cart contents if provided
+            if (cartContents && typeof cartContents === 'object') {
+                for (var key in cartContents) {
+                    if (cartContents[key] && cartContents[key].product_id) {
+                        quantityMap[cartContents[key].product_id] = cartContents[key].quantity || 1;
+                    }
+                }
             }
             
             // Update all product cards on shop page
@@ -961,27 +951,158 @@
                 var $card = $(this);
                 var productId = parseInt($card.attr('data-product-id'));
                 var isInCart = inCartMap[productId] || false;
+                var quantity = quantityMap[productId] || (isInCart ? 1 : 0);
                 
                 // Update data attribute
                 $card.attr('data-in-cart', isInCart ? '1' : '0');
                 
-                // Find and update button
-                var $addBtn = $card.find('.add-to-cart-btn[data-product-id="' + productId + '"]');
-                var $removeBtn = $card.find('.remove-from-cart-btn[data-product-id="' + productId + '"]');
-                
-                if (isInCart) {
-                    // Product is in cart - show remove button
-                    if ($addBtn.length > 0) {
-                        $addBtn.replaceWith('<button type="button" class="remove-from-cart-btn" data-product-id="' + productId + '">- Remove</button>');
-                    }
-                } else {
-                    // Product is not in cart - show add button
-                    if ($removeBtn.length > 0) {
-                        $removeBtn.replaceWith('<button type="button" class="add-to-cart-btn" data-product-id="' + productId + '">+ Add</button>');
+                // Update quantity selector
+                var $quantitySelector = $card.find('.meal-quantity-selector');
+                if ($quantitySelector.length > 0) {
+                    var $quantityValue = $quantitySelector.find('.quantity-value');
+                    var $minusBtn = $quantitySelector.find('.quantity-minus');
+                    var $plusBtn = $quantitySelector.find('.quantity-plus');
+                    
+                    if (isInCart && quantity > 0) {
+                        $quantityValue.text(quantity);
+                        $minusBtn.prop('disabled', quantity <= 1);
+                    } else {
+                        $quantityValue.text(1);
+                        $minusBtn.prop('disabled', true);
                     }
                 }
             });
         }
+        
+        /**
+         * Handle quantity selector buttons (+ and -)
+         */
+        $(document).on('click', '.meal-quantity-selector .quantity-plus', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isCartOperationInProgress) {
+                return false;
+            }
+            
+            var $btn = $(this);
+            var productId = parseInt($btn.data('product-id'));
+            var $card = $('.meal-product-card[data-product-id="' + productId + '"]');
+            var $quantityValue = $btn.siblings('.quantity-value');
+            var currentQuantity = parseInt($quantityValue.text()) || 1;
+            var newQuantity = currentQuantity + 1;
+            
+            // Update UI immediately
+            $quantityValue.text(newQuantity);
+            $btn.siblings('.quantity-minus').prop('disabled', false);
+            
+            // Add to cart
+            isCartOperationInProgress = true;
+            $btn.prop('disabled', true);
+            
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_add_to_cart',
+                    product_id: productId,
+                    quantity: 1,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $card.attr('data-in-cart', '1');
+                        updateYourBoxHeader();
+                        if (response.data.cart_subtotal_numeric !== undefined) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        }
+                        updateFreeShippingAndGiftBar();
+                    } else {
+                        // Revert quantity
+                        $quantityValue.text(currentQuantity);
+                        alert(response.data.message || 'Error adding to cart');
+                    }
+                    isCartOperationInProgress = false;
+                    $btn.prop('disabled', false);
+                },
+                error: function() {
+                    // Revert quantity
+                    $quantityValue.text(currentQuantity);
+                    alert('An error occurred. Please try again.');
+                    isCartOperationInProgress = false;
+                    $btn.prop('disabled', false);
+                }
+            });
+        });
+        
+        $(document).on('click', '.meal-quantity-selector .quantity-minus', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isCartOperationInProgress) {
+                return false;
+            }
+            
+            var $btn = $(this);
+            if ($btn.prop('disabled')) {
+                return false;
+            }
+            
+            var productId = parseInt($btn.data('product-id'));
+            var $card = $('.meal-product-card[data-product-id="' + productId + '"]');
+            var $quantityValue = $btn.siblings('.quantity-value');
+            var currentQuantity = parseInt($quantityValue.text()) || 1;
+            var newQuantity = Math.max(1, currentQuantity - 1);
+            
+            // Update UI immediately
+            $quantityValue.text(newQuantity);
+            if (newQuantity <= 1) {
+                $btn.prop('disabled', true);
+            }
+            
+            // Remove one item from cart (if quantity was > 1, we're just reducing)
+            // If quantity becomes 1, we keep it in cart but disable minus button
+            isCartOperationInProgress = true;
+            $btn.prop('disabled', true);
+            
+            $.ajax({
+                url: stirjoyData.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'stirjoy_remove_from_cart',
+                    product_id: productId,
+                    nonce: stirjoyData.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Product is still in cart (quantity is now 1)
+                        $card.attr('data-in-cart', '1');
+                        updateYourBoxHeader();
+                        if (response.data.cart_subtotal_numeric !== undefined) {
+                            updateCartBarProgressBars(response.data.cart_subtotal_numeric);
+                        }
+                        updateFreeShippingAndGiftBar();
+                    } else {
+                        // Revert quantity
+                        $quantityValue.text(currentQuantity);
+                        if (currentQuantity > 1) {
+                            $btn.prop('disabled', false);
+                        }
+                        alert(response.data.message || 'Error removing from cart');
+                    }
+                    isCartOperationInProgress = false;
+                },
+                error: function() {
+                    // Revert quantity
+                    $quantityValue.text(currentQuantity);
+                    if (currentQuantity > 1) {
+                        $btn.prop('disabled', false);
+                    }
+                    alert('An error occurred. Please try again.');
+                    isCartOperationInProgress = false;
+                }
+            });
+        });
         
         /**
          * Update cart sidebar widget title with accurate count
@@ -1039,9 +1160,9 @@
                         // Update cart sidebar progress bars
                         updateFreeShippingAndGiftBar();
                         
-                        // Update all shop page buttons based on cart state
+                        // Update all shop page buttons and quantity selectors based on cart state
                         if (response.data.product_ids !== undefined) {
-                            updateShopPageButtons(response.data.product_ids);
+                            updateShopPageButtons(response.data.product_ids, response.data.cart_contents);
                         }
                         
                         // Trigger cart updated event for other scripts

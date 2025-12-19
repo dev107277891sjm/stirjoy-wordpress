@@ -778,11 +778,17 @@ function stirjoy_get_cart_info() {
     // Also get plain number for potential use
     $cart_total_plain = WC()->cart->get_subtotal();
     
-    // Get product IDs in cart
+    // Get product IDs in cart and cart contents with quantities
     $product_ids_in_cart = array();
+    $cart_contents = array();
     $cart_total_quantity = 0;
-    foreach ( WC()->cart->get_cart() as $cart_item ) {
+    foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
         $product_ids_in_cart[] = $cart_item['product_id'];
+        $cart_contents[] = array(
+            'product_id' => $cart_item['product_id'],
+            'quantity' => isset( $cart_item['quantity'] ) ? $cart_item['quantity'] : 1,
+            'cart_item_key' => $cart_item_key,
+        );
         $cart_total_quantity += isset( $cart_item['quantity'] ) ? $cart_item['quantity'] : 0;
     }
     
@@ -797,6 +803,7 @@ function stirjoy_get_cart_info() {
         'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
         'cart_hash' => WC()->cart->get_cart_hash(),
         'product_ids' => $product_ids_in_cart,
+        'cart_contents' => $cart_contents, // Include cart contents with quantities
         'logged_in' => is_user_logged_in()
     ) );
 }

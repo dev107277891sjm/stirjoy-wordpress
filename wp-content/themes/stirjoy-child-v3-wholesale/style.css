@@ -2463,11 +2463,14 @@ footer p.card-icons {
 }
 
 /* Category Sections */
+/* Category sections - hidden since products are now displayed alphabetically */
 .meal-category-section {
+    display: none !important;
     margin-bottom: 56px;
 }
 
 .category-heading {
+    display: none !important;
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 24px;
@@ -2543,21 +2546,21 @@ footer p.card-icons {
     content: none !important;
 }
 
-/* Product Card */
+/* Product Card - Figma Design */
 .meal-product-card {
-    border: 1px solid #e5e7eb;
+    border: 1px solid #2d5a27;
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
-    background: white;
+    background: #ffffeb;
     width: 100% !important;
     min-width: 0;
 }
 
 /* Green border and light green background when item is in cart */
 .meal-product-card[data-in-cart="1"] {
-    border: 2px solid #4CAF50 !important;
-    background: #f0fdf4 !important;
+    border: 1px solid #2d5a27 !important;
+    background: #ffffeb !important;
 }
 
 .meal-product-card:hover {
@@ -2575,11 +2578,26 @@ footer p.card-icons {
 /* Product Image Area */
 .meal-image-wrapper {
     position: relative;
-    background: linear-gradient(135deg, #f0fdf4 0%, #fef3e2 100%);
+    background: #ffffeb;
     overflow: hidden;
     aspect-ratio: 4/3;
     border-radius: 0;
     margin-bottom: 0;
+}
+
+/* "High in protein" Label - Top Right of Image */
+.meal-protein-label {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2d5a27;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 10;
+    text-transform: capitalize;
 }
 
 .meal-image-link {
@@ -2661,18 +2679,126 @@ footer p.card-icons {
 
 /* Product Info */
 .meal-info {
-    padding: 18px 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     flex: 1;
+    gap: 8px;
+    background: #ffffeb;
 }
 
 .meal-name {
     font-size: 16px;
     font-weight: 700;
-    margin: 0 0 8px 0;
+    margin: 0;
     line-height: 1.3;
     color: #1f2937;
+}
+
+/* Price and Serving Info: "2 people (6$/portion)" */
+.meal-price-serving {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 14px;
+    color: #1f2937;
+}
+
+.meal-price-serving .serving-info {
+    font-weight: 400;
+}
+
+.meal-price-serving .price-per-portion {
+    font-weight: 400;
+    color: #6b7280;
+}
+
+/* Preparation Time: "25 min" */
+.meal-prep-time {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Quantity Selector and View Details Row */
+.meal-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* Quantity Selector */
+.meal-quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #2d5a27;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.meal-quantity-selector .quantity-btn {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d5a27;
+    padding: 0;
+    transition: background 0.2s ease;
+}
+
+.meal-quantity-selector .quantity-btn:hover:not(:disabled) {
+    background: #f0fdf4;
+}
+
+.meal-quantity-selector .quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.meal-quantity-selector .quantity-value {
+    min-width: 32px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    padding: 0 8px;
+}
+
+/* View Details Button with Eye Icon */
+.view-details-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid #2d5a27;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2d5a27;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+    background: #f0fdf4;
+    border-color: #2d5a27;
+}
+
+.view-details-btn .eye-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
 }
 
 .meal-name a {
@@ -2685,112 +2811,15 @@ footer p.card-icons {
     color: #4CAF50;
 }
 
-.meal-description {
-    font-size: 14px;
-    color: #6b7280;
-    margin: 0 0 12px 0;
-    line-height: 1.5;
-    min-height: 40px;
-}
-
-/* Metadata Row */
+/* Hide old description and meta row styles - not used in new design */
+.meal-description,
 .meal-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 14px;
-    font-size: 13px;
-    color: #6b7280;
+    display: none !important;
 }
 
-.meal-meta-row .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.meal-meta-row .clock-icon {
-    color: #9ca3af;
-    width: 15px;
-    height: 15px;
-}
-
-.meal-meta-row .meta-item svg {
-    color: #9ca3af;
-    flex-shrink: 0;
-    width: 15px;
-    height: 15px;
-}
-
-.meal-meta-row .meta-item.rating svg {
-    color: #fbbf24;
-    fill: #fbbf24;
-}
-
-/* Price */
+/* Old price style - replaced by meal-price-serving */
 .meal-price {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 16px;
-}
-
-.meal-price .woocommerce-Price-amount {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-/* Action Buttons */
-.meal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: auto;
-}
-
-/* Override parent theme button styles */
-.meal-actions a,
-.meal-actions button {
-    flex: 1;
-    padding: 11px 14px !important;
-    border-radius: 6px !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    /* border: none !important; */
-    text-decoration: none !important;
-    text-align: center;
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    height: 42px !important;
-    min-height: 42px !important;
-    max-height: 42px !important;
-    line-height: 1.2 !important;
-}
-
-.view-details-btn {
-    background: white !important;
-    color: #6b7280 !important;
-    border: 1px solid #080808 !important;
-    box-sizing: border-box !important;
-}
-
-.view-details-btn:hover {
-    background: #f9fafb !important;
-    color: #374151 !important;
-    border-color: #9ca3af !important;
-    transform: none !important;
-}
-
-.add-to-cart-btn {
-    background: #2d5a27 !important;
-    color: white !important;
-    border: 1px solid #2d5a27 !important;
-    box-sizing: border-box !important;
+    display: none !important;
 }
 
 .add-to-cart-btn:hover {

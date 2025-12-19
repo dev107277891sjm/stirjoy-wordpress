@@ -2502,8 +2502,8 @@ class Subscriptions_For_Woocommerce_Public {
 			<div class="wps_sfw_subs_box-content">
 				<span class="wps_sfw_subs_box-close">&times;</span>
 
-				<h2>Our menu</h2>
-				<p>It’s simple: every month, we prepare a new menu of meal kits that you can customize to your liking online.</p>
+				<h2>Customize Your Box</h2>
+				<p>Your box is pre-filled with this month's selection. Swap meals to customize!</p>
 
 				<form id="wps_sfw_subs_box-form">
 
