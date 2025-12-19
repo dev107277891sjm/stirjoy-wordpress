@@ -97,20 +97,32 @@ $price_per_portion = $serving_count > 0 ? $price / $serving_count : $price;
 
 			<!-- Price and Serving Info: "2 people (6$/portion)" -->
 			<div class="meal-price-serving">
-				<?php if ( $serving_size ) : ?>
-					<span class="serving-info"><?php echo esc_html( $serving_size ); ?></span>
-				<?php else : ?>
-					<span class="serving-info">2 people</span>
+				<span class="serving-info-wrapper"> 
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="person-icon">
+						<circle cx="7" cy="4.5" r="2.5"/>
+						<path d="M2 12.5c0-2.2 2.2-4 5-4s5 1.8 5 4"/>
+					</svg>
+					<?php if ( $serving_size ) : ?>
+						<span class="serving-info"><?php echo esc_html( $serving_size ); ?></span>
+					<?php else : ?>
+						<span class="serving-info">2 people</span>
+					<?php endif; ?>
+					<span class="price-per-portion">(<?php echo wc_price( $price_per_portion ); ?>/portion)</span>
+				</span>
+				<!-- Preparation Time: "25 min" -->
+				<?php if ( $prep_time ) : ?>
+					<span class="meal-prep-time">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="clock-icon">
+							<circle cx="7" cy="7" r="5.5"/>
+							<line x1="7" y1="7" x2="7" y2="4" stroke-width="1.2"/>
+							<line x1="7" y1="7" x2="9.5" y2="7" stroke-width="1.2"/>
+						</svg>
+						<?php echo esc_html( $prep_time ); ?> min
+					</span>
 				<?php endif; ?>
-				<span class="price-per-portion">(<?php echo wc_price( $price_per_portion ); ?>/portion)</span>
 			</div>
 
-			<!-- Preparation Time: "25 min" -->
-			<?php if ( $prep_time ) : ?>
-				<div class="meal-prep-time">
-					<?php echo esc_html( $prep_time ); ?> min
-				</div>
-			<?php endif; ?>
+			
 
 			<!-- Quantity Selector and View Details Button -->
 			<div class="meal-actions-row">
@@ -123,10 +135,7 @@ $price_per_portion = $serving_count > 0 ? $price / $serving_count : $price;
 				
 				<!-- View Details Button with Eye Icon -->
 				<button type="button" class="view-details-btn" data-product-id="<?php echo esc_attr( $product_id ); ?>">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
-						<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-						<circle cx="12" cy="12" r="3"></circle>
-					</svg>
+				<img src="<?php echo esc_url(stirjoy_get_image_url('Frame 244.png')); ?>" alt="Bowl">
 					View details
 				</button>
 			</div>

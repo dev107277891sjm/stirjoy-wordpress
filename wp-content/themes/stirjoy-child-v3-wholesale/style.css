@@ -81,7 +81,7 @@ body {
 /* Product Image */
 .woocommerce ul.products li.product img {
     border-radius: 6px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 /* Product Meta */
@@ -2354,6 +2354,7 @@ footer p.card-icons {
 /* Main Container */
 .customize-box-container {
     max-width: 1400px;
+    background-color: #ffffeb;
     margin: 40px auto 0;
     padding: 0 20px 40px;
     width: 100%;
@@ -2477,6 +2478,9 @@ footer p.card-icons {
     color: #333;
 }
 
+.woocommerce ul.products::before{
+    content: none !important;
+}
 /* Product Grid - Nuclear option: override everything */
 .customize-your-box-page .products,
 .customize-your-box-page ul.products,
@@ -2489,12 +2493,12 @@ footer p.card-icons {
 .customize-your-box-page .meal-category-section ul.products {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 32px 20px !important;
+    gap: 70px 25px !important;
     list-style: none !important;
-    margin: 0 !important;
+    margin: 0 130px !important;
     padding: 0 !important;
     flex: none !important;
-    width: 100% !important;
+    /* width: 100% !important; */
 }
 
 /* Hide any star-rating divs from parent theme */
@@ -2548,7 +2552,9 @@ footer p.card-icons {
 
 /* Product Card - Figma Design */
 .meal-product-card {
-    border: 1px solid #2d5a27;
+    /* border: 1px solid #2d5a27; */
+    border: none !important;
+    padding: 0 !important;
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -2559,7 +2565,7 @@ footer p.card-icons {
 
 /* Green border and light green background when item is in cart */
 .meal-product-card[data-in-cart="1"] {
-    border: 1px solid #2d5a27 !important;
+    /* border: 1px solid #2d5a27 !important; */
     background: #ffffeb !important;
 }
 
@@ -2578,11 +2584,11 @@ footer p.card-icons {
 /* Product Image Area */
 .meal-image-wrapper {
     position: relative;
-    background: #ffffeb;
-    overflow: hidden;
-    aspect-ratio: 4/3;
     border-radius: 0;
     margin-bottom: 0;
+    background-color: #ffffeb;
+    width: fit-content;
+    height: fit-content;
 }
 
 /* "High in protein" Label - Top Right of Image */
@@ -2606,8 +2612,10 @@ footer p.card-icons {
 }
 
 .meal-image {
-    width: 100%;
-    height: 100%;
+    width: 366px;
+    height: 431px !important;
+    border-radius: 10px !important;
+    border: 2px solid #396A26 !important;
     object-fit: cover;
     padding: 0;
 }
@@ -2679,7 +2687,7 @@ footer p.card-icons {
 
 /* Product Info */
 .meal-info {
-    padding: 16px;
+    padding: 16px 0;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -2687,21 +2695,37 @@ footer p.card-icons {
     background: #ffffeb;
 }
 
-.meal-name {
-    font-size: 16px;
-    font-weight: 700;
-    margin: 0;
+.meal-name {    
+    font-size: 20px !important;
     line-height: 1.3;
-    color: #1f2937;
+    color: #396A26 !important;
+    font-style: italic;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
 }
 
 /* Price and Serving Info: "2 people (6$/portion)" */
 .meal-price-serving {
     display: flex;
-    align-items: baseline;
-    gap: 4px;
+    align-items: center;
+    justify-content: space-between;
     font-size: 14px;
-    color: #1f2937;
+    color: #396A26;
+    gap: 8px;
+}
+
+.meal-price-serving .serving-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.meal-price-serving .person-icon {
+    width: 14px;
+    height: 14px;
+    color: #396A26;
+    stroke: #396A26;
+    flex-shrink: 0;
 }
 
 .meal-price-serving .serving-info {
@@ -2710,21 +2734,34 @@ footer p.card-icons {
 
 .meal-price-serving .price-per-portion {
     font-weight: 400;
-    color: #6b7280;
 }
 
 /* Preparation Time: "25 min" */
 .meal-prep-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 14px;
-    color: #6b7280;
     margin: 0;
+}
+
+.meal-prep-time .clock-icon {
+    width: 14px;
+    height: 14px;
+    color: #396A26;
+    stroke: #396A26;
+    flex-shrink: 0;
+}
+
+span.woocommerce-Price-amount.amount {
+    color: #396A26 !important;
 }
 
 /* Quantity Selector and View Details Row */
 .meal-actions-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 40px;
     margin-top: 8px;
 }
 
@@ -2733,9 +2770,11 @@ footer p.card-icons {
     display: flex;
     align-items: center;
     border: 1px solid #2d5a27;
-    border-radius: 4px;
+    border-radius: 25px;
     overflow: hidden;
-    background: #ffffff;
+    padding: 8px;
+    gap: 12px;
+    background: #ffffeb;
 }
 
 .meal-quantity-selector .quantity-btn {
@@ -2777,14 +2816,14 @@ footer p.card-icons {
     flex: 1;
     display: flex;
     align-items: center;
+    vertical-align: middle;
     justify-content: center;
     gap: 6px;
     background: transparent;
-    border: 1px solid #2d5a27;
-    border-radius: 4px;
+    border: none;
     padding: 8px 12px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
     color: #2d5a27;
     cursor: pointer;
     transition: all 0.2s ease;
