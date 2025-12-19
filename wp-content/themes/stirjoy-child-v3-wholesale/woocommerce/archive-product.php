@@ -293,6 +293,56 @@ get_header( 'shop' );
 	</div>
 
 </div><!-- .customize-your-box-page -->
+<!-- FAQs Section -->
+<section class="stirjoy-faqs" id="faqs">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="section-title-white">FAQs</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="faq-wrapper">
+                <div class="faq-illustration">
+                    <img src="<?php echo esc_url(stirjoy_get_image_url('77f8e297e41413ad7d4480ebc4973808e9612955.png')); ?>" alt="FAQ">
+                </div>
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <div class="faq-question">Are dehydrated meals nutritious?</div>
+                        <div class="faq-answer">Usually not right? Well that's why we launched Stirjoy. We work with chefs and nutritionists to make sure all our meals contain loads of plant-based protein, vegetables, and grains while remaining conscious of sodium and sugar. Dehydration is simply the removal of water, and so most of the nutritional value of ingredients is preserved.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Why are Stirjoy meal kits so much cheaper than traditional meal kits?</div>
+                        <div class="faq-answer">Our dehydrated format reduces shipping costs and extends shelf life, allowing us to offer better prices without compromising on quality or nutrition.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">How does the Stirjoy subscription work?</div>
+                        <div class="faq-answer">Choose your meals monthly, and we'll deliver them to your door. You can customize, skip, or cancel anytime with full flexibility.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I reschedule or skip a month?</div>
+                        <div class="faq-answer">Absolutely! You have full control over your subscription and can skip or reschedule deliveries anytime through your account dashboard.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Media Section -->
+<section class="stirjoy-social">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2 class="section-title-social">Looks good!</h2>
+            <div class="social-posts-wrapper">
+                <div class="social-posts" id="social-posts-container">
+                    <img class="social-media-image" src="<?php echo esc_url(stirjoy_get_image_url('3cc37f4fecfa9aebb97332df4da1fa5c620bcb24.png')); ?>" alt="Social Media">
+                </div>
+            </div>
+            <p class="social-follow">Follow along @stirjoy.ca</p>
+        </div>
+    </div>
+</section>
 
 <?php
 get_footer( 'shop' );

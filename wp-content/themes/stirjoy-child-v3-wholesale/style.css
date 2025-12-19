@@ -2687,6 +2687,11 @@ footer p.card-icons {
 }
 
 /* Product Info */
+.woocommerce ul.products li.product h3 {
+    font-size: 24px !important;
+    text-align: left !important;
+}
+
 .meal-info {
     padding: 16px 0 0 0;
     display: flex;
@@ -5755,6 +5760,12 @@ body.woocommerce-account #customer_login .u-columns {
 
 .stirjoy-social-btn.loading span {
     opacity: 0.5;
+}
+
+.social-media-image{
+    width: auto !important;
+    height: 426px !important;
+    margin-top: 54px !important;
 }
 
 @keyframes stirjoy-spin {
