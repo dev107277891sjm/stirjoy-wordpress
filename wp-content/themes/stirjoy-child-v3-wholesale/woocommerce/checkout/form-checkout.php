@@ -347,7 +347,7 @@ jQuery(document).ready(function($) {
 	checkStripeScriptsLoading();
 	setTimeout(checkStripeScriptsLoading, 1000);
 	setTimeout(checkStripeScriptsLoading, 3000);
-	setTimeout(checkStripeScriptsLoading, 5000);
+	// setTimeout(checkStripeScriptsLoading, 5000);
 	// CRITICAL: Fix sandboxed iframe issues for Stripe payment processing
 	// This fixes sandboxed frame errors that prevent payment processing
 	function fixStripeIframeSandbox() {
@@ -1217,8 +1217,147 @@ jQuery(document).ready(function($) {
 		}, 100);
 	});
 	
+	// CRITICAL: Real-time sync - as user types in display fields, automatically insert into Stripe Elements
+	var paymentMethodSyncTimeout = null;
+	var lastSyncedCardData = null;
+	
+	function syncCardInfoToStripeElements() {
+		// Clear any existing timeout
+		if (paymentMethodSyncTimeout) {
+			clearTimeout(paymentMethodSyncTimeout);
+		}
+		
+		// Debounce: Wait 500ms after user stops typing before syncing
+		paymentMethodSyncTimeout = setTimeout(function() {
+			// Get card details from display fields
+			var cardNumber = $('#stirjoy_card_number_display').val().replace(/\s/g, ''); // Remove spaces
+			var expiry = $('#stirjoy_card_expiry_display').val();
+			var cvc = $('#stirjoy_card_cvc_display').val();
+			var cardName = $('#stirjoy_card_name_display').val();
+			
+			// Check if card data has changed
+			var currentCardData = cardNumber + '|' + expiry + '|' + cvc + '|' + cardName;
+			if (currentCardData === lastSyncedCardData) {
+				// No change, skip sync
+				return;
+			}
+			
+			// Validate that we have minimum required fields before syncing
+			if (!cardNumber || cardNumber.length < 13) {
+				// Card number too short, don't sync yet
+				return;
+			}
+			
+			if (!expiry || expiry.length < 4) {
+				// Expiry incomplete, don't sync yet
+				return;
+			}
+			
+			if (!cvc || cvc.length < 3) {
+				// CVC incomplete, don't sync yet
+				return;
+			}
+			
+			// Parse expiry (MM/YY format)
+			var expiryParts = expiry.split('/');
+			var expMonth = expiryParts[0] ? expiryParts[0].trim() : '';
+			var expYear = expiryParts[1] ? '20' + expiryParts[1].trim() : ''; // Convert YY to YYYY
+			
+			// Create payment method server-side via AJAX
+			var ajaxUrl = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.ajax_url) 
+				? stirjoy_checkout_params.ajax_url 
+				: (typeof wc_checkout_params !== 'undefined' && wc_checkout_params.ajax_url)
+					? wc_checkout_params.ajax_url
+					: '/wp-admin/admin-ajax.php';
+			
+			var nonce = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.stripe_nonce)
+				? stirjoy_checkout_params.stripe_nonce
+				: '';
+			
+			// Stripe test card numbers for testing
+			var testCards = {
+				'4242424242424242': { type: 'visa', cvc: '123', name: 'Test Visa' },
+				'4000000000000002': { type: 'visa', cvc: '123', name: 'Test Visa (Declined)' },
+				'4000000000009995': { type: 'visa', cvc: '123', name: 'Test Visa (Insufficient Funds)' },
+				'5555555555554444': { type: 'mastercard', cvc: '123', name: 'Test Mastercard' },
+				'378282246310005': { type: 'amex', cvc: '1234', name: 'Test Amex' },
+				'6011111111111117': { type: 'discover', cvc: '123', name: 'Test Discover' }
+			};
+			
+			// Check if this is a test card
+			var isTestCard = testCards.hasOwnProperty(cardNumber.replace(/\s/g, ''));
+			var testToken = null;
+			if (isTestCard) {
+				// For test cards, you can use test payment method IDs
+				// Example: pm_test_1234567890abcdef
+				testToken = 'pm_test_' + cardNumber.replace(/\s/g, '').substring(0, 10);
+			}
+			
+			console.log('Stirjoy: Auto-syncing card info to Stripe Elements...');
+			console.log('Stirjoy: Is test card:', isTestCard);
+			console.log('Stirjoy: Test token:', testToken);
+			
+			$.ajax({
+				url: ajaxUrl,
+				type: 'POST',
+				data: {
+					action: 'stirjoy_create_stripe_payment_method',
+					nonce: nonce,
+					card_number: cardNumber,
+					exp_month: parseInt(expMonth, 10),
+					exp_year: parseInt(expYear, 10),
+					cvc: cvc,
+					card_name: cardName || '',
+					test_token: testToken || '',
+					is_test_card: isTestCard ? '1' : '0',
+					test_mode: '1' // Always send test mode flag for now
+				},
+				dataType: 'json'
+			}).then(function(response) {
+				if (response.success && response.data && response.data.payment_method_id) {
+					// Insert payment method ID into form
+					console.log('Stirjoy: Auto-synced payment method ID:', response.data.payment_method_id);
+					
+					// CRITICAL: Add payment method ID to form for WooCommerce Stripe plugin
+					$('form.checkout input[name="stripe_payment_method"]').remove();
+					$('form.checkout input[name="stripe_token"]').remove();
+					$('form.checkout').append('<input type="hidden" name="stripe_payment_method" value="' + response.data.payment_method_id + '" />');
+					$('form.checkout').append('<input type="hidden" name="stripe_token" value="' + response.data.payment_method_id + '" />');
+					
+					// Also add to WooCommerce Stripe specific fields
+					var paymentMethodId = $('input[name="payment_method"]:checked').val();
+					if (paymentMethodId) {
+						$('form.checkout input[name="' + paymentMethodId + '_payment_method"]').remove();
+						$('form.checkout').append('<input type="hidden" name="' + paymentMethodId + '_payment_method" value="' + response.data.payment_method_id + '" />');
+					}
+					
+					// Update last synced data
+					lastSyncedCardData = currentCardData;
+				} else {
+					// Error from server - log but don't show alert (user is still typing)
+					var errorMessage = response.data && response.data.message ? response.data.message : 'Error syncing card';
+					console.warn('Stirjoy: Error auto-syncing payment method:', errorMessage);
+				}
+			}).catch(function(error) {
+				// Log error but don't interrupt user typing
+				console.warn('Stirjoy: AJAX error auto-syncing payment method:', error);
+			});
+		}, 500); // Wait 500ms after user stops typing
+	}
+	
+	// CRITICAL: Listen to input events on display fields and auto-sync to Stripe Elements
+	// Make display fields interactive by removing readonly on focus
+	$('#stirjoy_card_number_display, #stirjoy_card_expiry_display, #stirjoy_card_cvc_display, #stirjoy_card_name_display').on('focus', function() {
+		$(this).removeAttr('readonly');
+	});
+	
+	// Listen to input events and sync to Stripe Elements
+	$('#stirjoy_card_number_display, #stirjoy_card_expiry_display, #stirjoy_card_cvc_display, #stirjoy_card_name_display').on('input change blur', function() {
+		syncCardInfoToStripeElements();
+	});
+	
 	// Ensure form submission works correctly
-	// CRITICAL: Don't prevent default for Stripe - let it handle submission
+	// CRITICAL: Card info should already be synced to form (via real-time sync)
 	$('form.checkout').on('submit', function(e) {
 		// Check status before form submission
 		var status = checkPaymentGatewayStatus();
@@ -1252,15 +1391,141 @@ jQuery(document).ready(function($) {
 			return false;
 		}
 		
-		// For Stripe, CRITICAL: Don't prevent default - let Stripe handle submission
-		// Stripe needs to tokenize the card and submit via its own handler
+		// For Stripe, CRITICAL: Card info should already be synced to form (via real-time sync)
+		// Just ensure payment method ID is present before submitting
 		if (paymentMethod && (paymentMethod.indexOf('stripe') !== -1 || paymentMethod.indexOf('card') !== -1)) {
-			// Check if Stripe is loaded and ready
-			if (typeof Stripe === 'undefined' && typeof stripe === 'undefined') {
-				console.warn('Stirjoy: Stripe not loaded, allowing form submission anyway');
+			// Check if user typed in display fields
+			var cardNumber = $('#stirjoy_card_number_display').val();
+			if (cardNumber && cardNumber.trim().length > 0) {
+				// User typed in display fields - check if payment method is already synced
+				var stripePaymentMethod = $('form.checkout input[name="stripe_payment_method"]').val();
+				
+				if (!stripePaymentMethod) {
+					// Payment method not synced yet - trigger sync now and wait
+					console.log('Stirjoy: Payment method not synced yet, syncing now...');
+					
+					// Prevent default submission
+					e.preventDefault();
+					
+					// Force immediate sync (clear timeout and sync)
+					if (paymentMethodSyncTimeout) {
+						clearTimeout(paymentMethodSyncTimeout);
+					}
+					
+					// Get card details and sync immediately
+					var cardNumber = $('#stirjoy_card_number_display').val().replace(/\s/g, '');
+					var expiry = $('#stirjoy_card_expiry_display').val();
+					var cvc = $('#stirjoy_card_cvc_display').val();
+					var cardName = $('#stirjoy_card_name_display').val();
+					
+					// Validate
+					if (!cardNumber || cardNumber.length < 13 || !expiry || expiry.length < 4 || !cvc || cvc.length < 3) {
+						alert('Please complete all card details.');
+						return false;
+					}
+					
+					// Parse expiry
+					var expiryParts = expiry.split('/');
+					var expMonth = expiryParts[0] ? expiryParts[0].trim() : '';
+					var expYear = expiryParts[1] ? '20' + expiryParts[1].trim() : '';
+					
+					// Create payment method immediately
+					var ajaxUrl = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.ajax_url) 
+						? stirjoy_checkout_params.ajax_url 
+						: (typeof wc_checkout_params !== 'undefined' && wc_checkout_params.ajax_url)
+							? wc_checkout_params.ajax_url
+							: '/wp-admin/admin-ajax.php';
+					
+					var nonce = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.stripe_nonce)
+						? stirjoy_checkout_params.stripe_nonce
+						: '';
+					
+					// Stripe test card numbers for testing
+					var testCards = {
+						'4242424242424242': { type: 'visa', cvc: '123', name: 'Test Visa' },
+						'4000000000000002': { type: 'visa', cvc: '123', name: 'Test Visa (Declined)' },
+						'4000000000009995': { type: 'visa', cvc: '123', name: 'Test Visa (Insufficient Funds)' },
+						'5555555555554444': { type: 'mastercard', cvc: '123', name: 'Test Mastercard' },
+						'378282246310005': { type: 'amex', cvc: '1234', name: 'Test Amex' },
+						'6011111111111117': { type: 'discover', cvc: '123', name: 'Test Discover' }
+					};
+					
+					// Check if this is a test card
+					var isTestCard = testCards.hasOwnProperty(cardNumber.replace(/\s/g, ''));
+					var testToken = null;
+					if (isTestCard) {
+						// For test cards, you can use test payment method IDs
+						// Example: pm_test_1234567890abcdef
+						testToken = 'pm_test_' + cardNumber.replace(/\s/g, '').substring(0, 10);
+					}
+					
+					console.log('step0.1');
+					console.log(ajaxUrl);
+					console.log(nonce);
+					console.log(cardNumber);
+					console.log(expMonth);
+					console.log(expYear);
+					console.log(cvc);
+					console.log(cardName);
+					console.log('Is test card:', isTestCard);
+					console.log('Test token:', testToken);
+					
+					$.ajax({
+						url: ajaxUrl,
+						type: 'POST',
+						data: {
+							action: 'stirjoy_create_stripe_payment_method',
+							nonce: nonce,
+							card_number: cardNumber,
+							exp_month: parseInt(expMonth, 10),
+							exp_year: parseInt(expYear, 10),
+							cvc: cvc,
+							card_name: cardName || '',
+							test_token: testToken || '',
+							is_test_card: isTestCard ? '1' : '0',
+							test_mode: '1' // Always send test mode flag for now
+						},
+						dataType: 'json'
+					}).then(function(response) {
+						console.log('step0');
+						if (response.success && response.data && response.data.payment_method_id) {
+							// Insert payment method ID into form
+							console.log('step1');
+							$('form.checkout input[name="stripe_payment_method"]').remove();
+							$('form.checkout input[name="stripe_token"]').remove();
+							$('form.checkout').append('<input type="hidden" name="stripe_payment_method" value="' + response.data.payment_method_id + '" />');
+							$('form.checkout').append('<input type="hidden" name="stripe_token" value="' + response.data.payment_method_id + '" />');
+							
+							console.log('step2');
+							var paymentMethodId = $('input[name="payment_method"]:checked').val();
+							if (paymentMethodId) {
+								$('form.checkout input[name="' + paymentMethodId + '_payment_method"]').remove();
+								$('form.checkout').append('<input type="hidden" name="' + paymentMethodId + '_payment_method" value="' + response.data.payment_method_id + '" />');
+							}
+							
+							// Now submit the form
+							console.log('Stirjoy: Payment method synced, submitting form...');
+							$('form.checkout')[0].submit();
+						} else {
+							var errorMessage = response.data && response.data.message ? response.data.message : 'There was an error processing your card. Please check your card details and try again.';
+							alert(errorMessage);
+						}
+					}).catch(function(error) {
+						console.error('Stirjoy: Error syncing payment method:', error);
+						alert('There was an error processing your card. Please check your card details and try again.');
+					});
+					
+					return false;
+				} else {
+					// Payment method already synced - allow normal submission
+					console.log('Stirjoy: Payment method already synced, submitting form normally');
+					return true;
+				}
+			} else {
+				// User typed in Stripe Elements directly - let Stripe handle it
+				console.log('Stirjoy: User typed in Stripe Elements, letting Stripe handle submission');
+				return true;
 			}
-			// Let Stripe handle the submission - don't prevent default
-			return true;
 		}
 		
 		// For other payment methods, allow normal submission

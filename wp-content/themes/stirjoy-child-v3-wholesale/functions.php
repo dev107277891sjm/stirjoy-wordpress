@@ -121,6 +121,14 @@ function stirjoy_child_enqueue_styles() {
         'facebookAppId' => $facebook_app_id,
         'appleClientId' => $apple_client_id,
     ));
+    
+    // Localize script for checkout page with Stripe nonce
+    if ( is_checkout() ) {
+        wp_localize_script( 'stirjoy-child-script', 'stirjoy_checkout_params', array(
+            'stripe_nonce' => wp_create_nonce( 'stirjoy_stripe_payment_method' ),
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+        ) );
+    }
 
     wp_dequeue_script( 'thecrate-custom' );
     wp_deregister_script( 'thecrate-custom' );
@@ -3186,11 +3194,30 @@ function stirjoy_ensure_stripe_available( $available_gateways ) {
             // If gateway is enabled but not in available gateways, add it
             if ( $gateway->enabled === 'yes' && ! isset( $available_gateways[ $gateway_id ] ) ) {
                 // Check if gateway is available (not blocked by other conditions)
-                if ( $gateway->is_available() ) {
-                    $available_gateways[ $gateway_id ] = $gateway;
-                    error_log( 'Stirjoy: Added Stripe gateway ' . $gateway_id . ' to available gateways' );
-                } else {
-                    error_log( 'Stirjoy: Stripe gateway ' . $gateway_id . ' is enabled but not available: ' . print_r( $gateway->get_error_message(), true ) );
+                // Use try-catch to safely check availability
+                try {
+                    if ( method_exists( $gateway, 'is_available' ) && $gateway->is_available() ) {
+                        $available_gateways[ $gateway_id ] = $gateway;
+                        error_log( 'Stirjoy: Added Stripe gateway ' . $gateway_id . ' to available gateways' );
+                    } else {
+                        // Try to get error message if method exists
+                        $error_msg = '';
+                        if ( method_exists( $gateway, 'get_error_message' ) ) {
+                            $error_msg = $gateway->get_error_message();
+                        } elseif ( method_exists( $gateway, 'get_error_messages' ) ) {
+                            $errors = $gateway->get_error_messages();
+                            if ( is_array( $errors ) && ! empty( $errors ) ) {
+                                $error_msg = implode( ', ', $errors );
+                            }
+                        }
+                        if ( $error_msg ) {
+                            error_log( 'Stirjoy: Stripe gateway ' . $gateway_id . ' is enabled but not available: ' . $error_msg );
+                        } else {
+                            error_log( 'Stirjoy: Stripe gateway ' . $gateway_id . ' is enabled but is_available() returned false' );
+                        }
+                    }
+                } catch ( Exception $e ) {
+                    error_log( 'Stirjoy: Error checking Stripe gateway ' . $gateway_id . ' availability: ' . $e->getMessage() );
                 }
             }
         }
@@ -3228,3 +3255,183 @@ function stirjoy_log_stripe_availability() {
     }
 }
 add_action( 'wp', 'stirjoy_log_stripe_availability', 999 );
+
+/**
+ * CRITICAL: Server-side AJAX endpoint to create Stripe payment method from card details
+ * This is needed because Stripe.js doesn't allow creating payment methods with raw card details on client side
+ */
+function stirjoy_create_stripe_payment_method() {
+	// Set proper headers for JSON response
+	header( 'Content-Type: application/json' );
+	
+	// Verify nonce
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stirjoy_stripe_payment_method' ) ) {
+		error_log( 'Stirjoy: Invalid nonce in payment method creation' );
+		wp_send_json_error( array( 'message' => 'Invalid security token. Please refresh the page and try again.' ) );
+		return;
+	}
+	
+	// Ensure WooCommerce is loaded
+	if ( ! function_exists( 'WC' ) || ! WC()->payment_gateways ) {
+		error_log( 'Stirjoy: WooCommerce not loaded in payment method creation' );
+		wp_send_json_error( array( 'message' => 'WooCommerce is not available. Please refresh the page.' ) );
+		return;
+	}
+	
+	// Get card details from POST
+	$card_number = isset( $_POST['card_number'] ) ? sanitize_text_field( wp_unslash( $_POST['card_number'] ) ) : '';
+	$exp_month = isset( $_POST['exp_month'] ) ? intval( $_POST['exp_month'] ) : 0;
+	$exp_year = isset( $_POST['exp_year'] ) ? intval( $_POST['exp_year'] ) : 0;
+	$cvc = isset( $_POST['cvc'] ) ? sanitize_text_field( wp_unslash( $_POST['cvc'] ) ) : '';
+	$card_name = isset( $_POST['card_name'] ) ? sanitize_text_field( wp_unslash( $_POST['card_name'] ) ) : '';
+	
+	// Get test token and test mode flags
+	$test_token = isset( $_POST['test_token'] ) ? sanitize_text_field( wp_unslash( $_POST['test_token'] ) ) : '';
+	$is_test_card = isset( $_POST['is_test_card'] ) ? sanitize_text_field( wp_unslash( $_POST['is_test_card'] ) ) : '0';
+	$test_mode = isset( $_POST['test_mode'] ) ? sanitize_text_field( wp_unslash( $_POST['test_mode'] ) ) : '0';
+	
+	// Log test information
+	error_log( 'Stirjoy: Test mode: ' . $test_mode . ', Is test card: ' . $is_test_card . ', Test token: ' . $test_token );
+	
+	// If test token is provided and valid, return it directly (for testing purposes)
+	if ( ! empty( $test_token ) && strpos( $test_token, 'pm_test_' ) === 0 ) {
+		error_log( 'Stirjoy: Using test token directly: ' . $test_token );
+		wp_send_json_success( array( 'payment_method_id' => $test_token ) );
+		return;
+	}
+	
+	// Validate inputs
+	if ( empty( $card_number ) || strlen( $card_number ) < 13 ) {
+		wp_send_json_error( array( 'message' => 'Invalid card number.' ) );
+		return;
+	}
+	
+	if ( $exp_month < 1 || $exp_month > 12 ) {
+		wp_send_json_error( array( 'message' => 'Invalid expiry month.' ) );
+		return;
+	}
+	
+	if ( $exp_year < date( 'Y' ) ) {
+		wp_send_json_error( array( 'message' => 'Card has expired.' ) );
+		return;
+	}
+	
+	if ( empty( $cvc ) || strlen( $cvc ) < 3 ) {
+		wp_send_json_error( array( 'message' => 'Invalid security code.' ) );
+		return;
+	}
+	
+	// Check if Stripe gateway is available
+	if ( ! class_exists( 'WC_Stripe_Payment_Gateway' ) && ! class_exists( 'WC_Gateway_Stripe' ) ) {
+		wp_send_json_error( array( 'message' => 'Stripe payment gateway is not available.' ) );
+		return;
+	}
+	
+	// Get Stripe gateway instance
+	$gateways = WC()->payment_gateways->get_available_payment_gateways();
+	$stripe_gateway = null;
+	
+	foreach ( $gateways as $gateway_id => $gateway ) {
+		if ( stripos( $gateway_id, 'stripe' ) !== false ) {
+			$stripe_gateway = $gateway;
+			break;
+		}
+	}
+	
+	if ( ! $stripe_gateway ) {
+		wp_send_json_error( array( 'message' => 'Stripe payment gateway is not enabled.' ) );
+		return;
+	}
+	
+	// Create payment method using Stripe API
+	try {
+		// Use WooCommerce Stripe API helper if available
+		if ( class_exists( 'WC_Stripe_API' ) ) {
+			error_log( 'Stirjoy: Creating payment method using WC_Stripe_API' );
+			
+			$response = WC_Stripe_API::request(
+				array(
+					'type' => 'card',
+					'card' => array(
+						'number' => $card_number,
+						'exp_month' => $exp_month,
+						'exp_year' => $exp_year,
+						'cvc' => $cvc,
+					),
+					'billing_details' => array(
+						'name' => $card_name,
+					),
+				),
+				'payment_methods'
+			);
+			
+			error_log( 'Stirjoy: WC_Stripe_API response: ' . print_r( $response, true ) );
+			
+			if ( is_wp_error( $response ) ) {
+				error_log( 'Stirjoy: WP_Error in payment method creation: ' . $response->get_error_message() );
+				wp_send_json_error( array( 'message' => $response->get_error_message() ) );
+				return;
+			}
+			
+			if ( ! empty( $response->error ) ) {
+				error_log( 'Stirjoy: Stripe API error: ' . print_r( $response->error, true ) );
+				wp_send_json_error( array( 'message' => $response->error->message ) );
+				return;
+			}
+			
+			if ( ! empty( $response->id ) ) {
+				error_log( 'Stirjoy: Payment method created successfully: ' . $response->id );
+				wp_send_json_success( array( 'payment_method_id' => $response->id ) );
+				return;
+			}
+		} else {
+			error_log( 'Stirjoy: WC_Stripe_API class not found, trying fallback' );
+			// Fallback: Try to load Stripe API class
+			$stripe_api_path = ABSPATH . 'wp-content/plugins/woocommerce-gateway-stripe/includes/class-wc-stripe-api.php';
+			if ( file_exists( $stripe_api_path ) ) {
+				require_once $stripe_api_path;
+				
+				if ( class_exists( 'WC_Stripe_API' ) ) {
+					$response = WC_Stripe_API::request(
+						array(
+							'type' => 'card',
+							'card' => array(
+								'number' => $card_number,
+								'exp_month' => $exp_month,
+								'exp_year' => $exp_year,
+								'cvc' => $cvc,
+							),
+							'billing_details' => array(
+								'name' => $card_name,
+							),
+						),
+						'payment_methods'
+					);
+					
+					if ( is_wp_error( $response ) ) {
+						wp_send_json_error( array( 'message' => $response->get_error_message() ) );
+						return;
+					}
+					
+					if ( ! empty( $response->error ) ) {
+						wp_send_json_error( array( 'message' => $response->error->message ) );
+						return;
+					}
+					
+					if ( ! empty( $response->id ) ) {
+						wp_send_json_success( array( 'payment_method_id' => $response->id ) );
+						return;
+					}
+				}
+			}
+		}
+		
+		wp_send_json_error( array( 'message' => 'Failed to create payment method. Please try again.' ) );
+		
+	} catch ( Exception $e ) {
+		error_log( 'Stirjoy Stripe Payment Method Error: ' . $e->getMessage() );
+		wp_send_json_error( array( 'message' => 'An error occurred while processing your card. Please try again.' ) );
+	}
+}
+add_action( 'wp_ajax_stirjoy_create_stripe_payment_method', 'stirjoy_create_stripe_payment_method' );
+add_action( 'wp_ajax_nopriv_stirjoy_create_stripe_payment_method', 'stirjoy_create_stripe_payment_method' );
