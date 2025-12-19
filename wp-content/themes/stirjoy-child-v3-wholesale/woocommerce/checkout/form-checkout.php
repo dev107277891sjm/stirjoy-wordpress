@@ -219,21 +219,21 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 								</div>
 							</div>
 
-							<!-- Credit Card Fields - Visual Only (Payment Gateway Handles Actual Processing) -->
+							<!-- Credit Card Fields - Regular Input Fields (No Stripe Elements) -->
 							<div class="stirjoy-card-fields">
-								<!-- Note: These are visual fields only. Actual card processing is handled by payment gateway (Stripe) -->
-								<!-- The payment gateway section below contains the real payment fields -->
+								<!-- These are regular input fields matching Figma design -->
+								<!-- Payment method will be created server-side on form submission -->
 								<p class="form-row form-row-wide">
-									<input type="text" class="input-text stirjoy-card-input" name="stirjoy_card_number_display" id="stirjoy_card_number_display" placeholder="<?php esc_attr_e( 'Card number', 'woocommerce' ); ?>" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
+									<input type="text" class="input-text stirjoy-card-input" name="number" id="card_number" placeholder="<?php esc_attr_e( 'Card number', 'woocommerce' ); ?>" autocomplete="cc-number" />
 								</p>
 								
 								<div class="stirjoy-card-row">
 									<p class="form-row form-row-first">
-										<input type="text" class="input-text stirjoy-card-input" name="stirjoy_card_expiry_display" id="stirjoy_card_expiry_display" placeholder="<?php esc_attr_e( 'Expiration date (MM/YY)', 'woocommerce' ); ?>" maxlength="5" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
+										<input type="text" class="input-text stirjoy-card-input" name="expiry" id="card_expiry" placeholder="<?php esc_attr_e( 'Expiration date (MM/YY)', 'woocommerce' ); ?>" maxlength="5" autocomplete="cc-exp" />
 									</p>
 									
 									<p class="form-row form-row-last stirjoy-cvc-wrapper">
-										<input type="text" class="input-text stirjoy-card-input" name="stirjoy_card_cvc_display" id="stirjoy_card_cvc_display" placeholder="<?php esc_attr_e( 'Security code', 'woocommerce' ); ?>" maxlength="4" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" />
+										<input type="text" class="input-text stirjoy-card-input" name="cvc" id="card_cvc" placeholder="<?php esc_attr_e( 'Security code', 'woocommerce' ); ?>" maxlength="4" autocomplete="cc-csc" />
 										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="stirjoy-lock-icon">
 											<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
 											<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -242,7 +242,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 								</div>
 								
 								<p class="form-row form-row-wide">
-									<input type="text" class="input-text stirjoy-card-input" name="stirjoy_card_name_display" id="stirjoy_card_name_display" placeholder="<?php esc_attr_e( 'Name on card', 'woocommerce' ); ?>" autocomplete="cc-name" readonly onfocus="this.removeAttribute('readonly');" />
+									<input type="text" class="input-text stirjoy-card-input" name="card_name" id="card_name" placeholder="<?php esc_attr_e( 'Name on card', 'woocommerce' ); ?>" autocomplete="cc-name" />
 								</p>
 								
 								<?php
@@ -266,7 +266,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 						<!-- Payment Gateway Section (Hidden but Required for Processing) -->
 						<?php if ( WC()->cart->needs_payment() ) : ?>
 							<?php do_action( 'woocommerce_checkout_before_payment' ); ?>
-							<div id="payment" class="woocommerce-checkout-payment" style="position: absolute; left: -9999px; width: 400px; height: auto; overflow: visible; opacity: 0; visibility: visible; pointer-events: auto;">
+							<div id="payment" class="woocommerce-checkout-payment stirjoy-hidden-payment">
 								<?php do_action( 'woocommerce_checkout_payment' ); ?>
 							</div>
 							<?php do_action( 'woocommerce_checkout_after_payment' ); ?>
@@ -300,970 +300,502 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	</div>
 </div>
 
+<?php 
+// Get payment error details from session if available
+$payment_error_details = WC()->session->get( 'stirjoy_payment_error_details' );
+if ( $payment_error_details ) {
+	// Clear error from session after retrieving
+	WC()->session->__unset( 'stirjoy_payment_error_details' );
+}
+?>
+
 <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
 
 <script>
-jQuery(document).ready(function($) {
-	// CRITICAL: Check if Stripe scripts are loading properly
-	function checkStripeScriptsLoading() {
-		var stripeScripts = [
-			'script[src*="js.stripe.com"]',
-			'script[src*="stripe.com/v3"]',
-			'script[src*="stripecdn.com"]'
-		];
-		
-		var scriptsFound = false;
-		stripeScripts.forEach(function(selector) {
-			if ($(selector).length > 0) {
-				scriptsFound = true;
-				console.log('Stirjoy: Found Stripe script:', selector);
-			}
-		});
-		
-		if (!scriptsFound) {
-			console.warn('Stirjoy Warning: No Stripe scripts found on page. Stripe may be blocked.');
-		}
-		
-		// Check if Stripe object is available
-		if (typeof Stripe === 'undefined' && typeof stripe === 'undefined' && typeof wc_stripe_form === 'undefined') {
-			console.warn('Stirjoy Warning: Stripe object not found. Stripe scripts may not be loaded.');
-			
-			// Try to detect if scripts are blocked
-			setTimeout(function() {
-				if (typeof Stripe === 'undefined' && typeof stripe === 'undefined') {
-					console.error('Stirjoy Error: Stripe still not loaded after delay. Possible causes:');
-					console.error('1. CSP headers blocking Stripe scripts');
-					console.error('2. Network/firewall blocking Stripe domains');
-					console.error('3. Stripe plugin not active or misconfigured');
-					console.error('4. JavaScript errors preventing Stripe initialization');
-				}
-			}, 3000);
-		} else {
-			console.log('Stirjoy: Stripe object found:', typeof Stripe !== 'undefined' ? 'Stripe' : (typeof stripe !== 'undefined' ? 'stripe' : 'wc_stripe_form'));
-		}
-	}
+(function($) {
+	'use strict';
 	
-	// Check immediately and after delays
-	checkStripeScriptsLoading();
-	setTimeout(checkStripeScriptsLoading, 1000);
-	setTimeout(checkStripeScriptsLoading, 3000);
-	// setTimeout(checkStripeScriptsLoading, 5000);
-	// CRITICAL: Fix sandboxed iframe issues for Stripe payment processing
-	// This fixes sandboxed frame errors that prevent payment processing
-	function fixStripeIframeSandbox() {
-		// Fix ALL iframes in the payment section and Stripe/Google Pay related iframes
-		$('iframe, #payment iframe, iframe[src*="stripe"], iframe[src*="js.stripe"], iframe[src*="hooks.stripe"], iframe[src*="pay.google"], iframe[src*="google.com"], iframe[src*="stripecdn.com"], iframe[src*="b.stripecdn.com"], iframe[src*="generate_gpay"]').each(function() {
-			var $iframe = $(this);
-			var sandbox = $iframe.attr('sandbox');
-			var src = $iframe.attr('src') || '';
-			
-			// CRITICAL: For payment-related iframes (especially Google Pay), be very aggressive
-			// Google Pay iframes MUST have allow-scripts or be removed entirely
-			if (src.indexOf('pay.google') !== -1 || src.indexOf('generate_gpay') !== -1 || src.indexOf('stripe') !== -1 || src.indexOf('google.com') !== -1 || src.indexOf('stripecdn.com') !== -1) {
-				// For Google Pay and payment iframes, CRITICAL: Remove sandbox if it's blocking
-				if (sandbox) {
-					// Check if sandbox has all required permissions
-					var hasAllPermissions = sandbox.indexOf('allow-scripts') !== -1 && 
-					                        sandbox.indexOf('allow-same-origin') !== -1 &&
-					                        sandbox.indexOf('allow-forms') !== -1;
-					
-					if (!hasAllPermissions) {
-						// Try to fix it by adding all required permissions
-						var newSandbox = sandbox;
-						if (sandbox.indexOf('allow-scripts') === -1) {
-							newSandbox += ' allow-scripts';
-						}
-						if (sandbox.indexOf('allow-same-origin') === -1) {
-							newSandbox += ' allow-same-origin';
-						}
-						if (sandbox.indexOf('allow-forms') === -1) {
-							newSandbox += ' allow-forms';
-						}
-						if (sandbox.indexOf('allow-popups') === -1) {
-							newSandbox += ' allow-popups';
-						}
-						if (sandbox.indexOf('allow-top-navigation-by-user-activation') === -1) {
-							newSandbox += ' allow-top-navigation-by-user-activation';
-						}
-						
-						$iframe.attr('sandbox', newSandbox.trim());
-						console.log('Stirjoy: Fixed sandbox on payment iframe:', src.substring(0, 80));
-						
-						// CRITICAL: For Google Pay iframes, remove sandbox entirely if it's blocking
-						// Google Pay iframes MUST be able to execute scripts
-						if (src.indexOf('pay.google') !== -1 || src.indexOf('generate_gpay') !== -1) {
-							// Remove sandbox entirely for Google Pay - it's required for functionality
-							$iframe.removeAttr('sandbox');
-							console.log('Stirjoy: Removed sandbox from Google Pay iframe (required for functionality)');
-							
-							// Also monitor to prevent sandbox from being re-added
-							var checkInterval = setInterval(function() {
-								if (!$iframe.length || !$iframe.parent().length) {
-									clearInterval(checkInterval);
-									return;
-								}
-								var currentSandbox = $iframe.attr('sandbox');
-								if (currentSandbox) {
-									$iframe.removeAttr('sandbox');
-									console.log('Stirjoy: Prevented sandbox from being re-added to Google Pay iframe');
-								}
-							}, 200);
-							
-							// Stop monitoring after 10 seconds
-							setTimeout(function() {
-								clearInterval(checkInterval);
-							}, 10000);
-						}
-					}
-				} else {
-					// No sandbox is good - ensure it stays that way
-					// Monitor to prevent sandbox from being added
-				}
-			} else {
-				// For other iframes, just add missing permissions
-				if (sandbox) {
-					var newSandbox = sandbox;
-					var needsUpdate = false;
-					
-					if (sandbox.indexOf('allow-scripts') === -1) {
-						newSandbox += ' allow-scripts';
-						needsUpdate = true;
-					}
-					if (sandbox.indexOf('allow-same-origin') === -1) {
-						newSandbox += ' allow-same-origin';
-						needsUpdate = true;
-					}
-					if (sandbox.indexOf('allow-forms') === -1) {
-						newSandbox += ' allow-forms';
-						needsUpdate = true;
-					}
-					
-					if (needsUpdate) {
-						$iframe.attr('sandbox', newSandbox.trim());
-					}
-				}
-			}
-		});
-	}
+	// ============================================================================
+	// PAYMENT ERROR DETAILS FROM SERVER
+	// Display any payment errors that occurred during previous submission
+	// ============================================================================
+	<?php if ( $payment_error_details ) : ?>
+	var stirjoyPaymentErrorDetails = <?php echo json_encode( $payment_error_details ); ?>;
+	console.error('=== STIRJOY PAYMENT ERROR FROM SERVER ===');
+	console.error('Order ID:', stirjoyPaymentErrorDetails.order_id || 'N/A');
+	console.error('Error Message:', stirjoyPaymentErrorDetails.error_message || 'N/A');
+	console.error('Order Status:', stirjoyPaymentErrorDetails.order_status || 'N/A');
+	console.error('Payment Method:', stirjoyPaymentErrorDetails.payment_method || 'N/A');
+	console.error('Full Error Details:', stirjoyPaymentErrorDetails);
+	console.error('=========================================');
 	
-	// CRITICAL: Use MutationObserver to catch dynamically created iframes immediately
-	// This is essential for Google Pay iframes that are created after page load
-	if (window.MutationObserver) {
-		var iframeObserver = new MutationObserver(function(mutations) {
-			var foundNewIframe = false;
-			mutations.forEach(function(mutation) {
-				if (mutation.addedNodes) {
-					mutation.addedNodes.forEach(function(node) {
-						if (node.nodeType === 1) { // Element node
-							// Check if it's an iframe or contains iframes
-							if (node.tagName === 'IFRAME') {
-								foundNewIframe = true;
-								// Fix immediately
-								setTimeout(function() {
-									fixStripeIframeSandbox();
-								}, 10);
-							} else if (node.querySelectorAll) {
-								var iframes = node.querySelectorAll('iframe');
-								if (iframes.length > 0) {
-									foundNewIframe = true;
-									// Fix immediately
-									setTimeout(function() {
-										fixStripeIframeSandbox();
-									}, 10);
-								}
-							}
-						}
-					});
-				}
-			});
-		});
-		
-		// Observe the entire document for new iframes
-		iframeObserver.observe(document.body || document.documentElement, {
-			childList: true,
-			subtree: true
-		});
-		
-		// Also observe the payment section specifically
-		if ($('#payment').length) {
-			iframeObserver.observe(document.getElementById('payment'), {
-				childList: true,
-				subtree: true
-			});
-		}
-	}
-	
-	// Monitor and fix iframe sandbox issues continuously (very frequent for payment iframes)
-	setInterval(fixStripeIframeSandbox, 300);
-	
-	// Also fix immediately on page load and after payment method changes
+	// Display error alert with details
 	$(document).ready(function() {
-		fixStripeIframeSandbox();
-		// Fix again after a short delay to catch late-loading iframes
-		setTimeout(fixStripeIframeSandbox, 100);
-		setTimeout(fixStripeIframeSandbox, 500);
-		setTimeout(fixStripeIframeSandbox, 1000);
+		var errorMsg = 'Payment failed: ' + (stirjoyPaymentErrorDetails.error_message || 'Unknown error');
+		if (stirjoyPaymentErrorDetails.order_id) {
+			errorMsg += '\n\nOrder ID: ' + stirjoyPaymentErrorDetails.order_id;
+		}
+		if (stirjoyPaymentErrorDetails.order_status) {
+			errorMsg += '\nOrder Status: ' + stirjoyPaymentErrorDetails.order_status;
+		}
+		if (stirjoyPaymentErrorDetails.payment_method) {
+			errorMsg += '\nPayment Method: ' + stirjoyPaymentErrorDetails.payment_method;
+		}
+		alert(errorMsg);
 	});
+	<?php else : ?>
+	var stirjoyPaymentErrorDetails = null;
+	<?php endif; ?>
 	
-	$(document.body).on('updated_checkout', function() {
-		fixStripeIframeSandbox();
-		// Fix again after checkout updates
-		setTimeout(fixStripeIframeSandbox, 100);
-		setTimeout(fixStripeIframeSandbox, 500);
-	});
+	// ============================================================================
+	// CHECKOUT WITHOUT STRIPE ELEMENTS - SIMPLIFIED VERSION
+	// Uses regular input fields matching Figma design
+	// Creates payment method server-side on form submission
+	// ============================================================================
 	
-	// CRITICAL: Force HTTPS for all images to prevent mixed content warnings
-	function forceHttpsImages() {
-		if (window.location.protocol === 'https:') {
-			$('img[src^="http://"]').each(function() {
-				var $img = $(this);
-				var src = $img.attr('src');
-				if (src && src.indexOf('http://') === 0) {
-					$img.attr('src', src.replace('http://', 'https://'));
-				}
+	var StirjoyCheckout = {
+		state: {
+			formSubmitting: false
+		},
+		
+		init: function() {
+			this.hidePaymentErrorsOnLoad();
+			this.hideStripeElementsSection();
+			this.setStripeAsDefaultPaymentMethod();
+			this.initFormSubmission();
+			this.initExpressCheckoutRemoval();
+		},
+		
+		// Hide payment errors on page load
+		hidePaymentErrorsOnLoad: function() {
+			function hidePaymentErrors() {
+				$('.woocommerce-error, .woocommerce-NoticeGroup-checkout .woocommerce-error, .wc-block-components-notice-banner.is-error').each(function() {
+					var $error = $(this);
+					var errorText = $error.text() || $error.html() || '';
+					if (errorText.toLowerCase().indexOf('payment') !== -1 || 
+					    errorText.toLowerCase().indexOf('processing') !== -1 ||
+					    errorText.toLowerCase().indexOf('problem processing') !== -1 ||
+					    errorText.toLowerCase().indexOf('error processing') !== -1) {
+						$error.css({
+							'display': 'none',
+							'visibility': 'hidden',
+							'opacity': '0',
+							'height': '0',
+							'margin': '0',
+							'padding': '0',
+							'overflow': 'hidden'
+						});
+					}
+				});
+			}
+			
+			hidePaymentErrors();
+			setTimeout(hidePaymentErrors, 10);
+			setTimeout(hidePaymentErrors, 100);
+			setTimeout(hidePaymentErrors, 500);
+			
+			// Show errors after form submission
+			$(document.body).on('checkout_error', function() {
+				$('.woocommerce-error, .woocommerce-NoticeGroup-checkout .woocommerce-error, .wc-block-components-notice-banner.is-error').addClass('stirjoy-show-payment-error').css({
+					'display': '',
+					'visibility': '',
+					'opacity': '',
+					'height': '',
+					'margin': '',
+					'padding': '',
+					'overflow': ''
+				});
 			});
-		}
-	}
-	
-	// Fix images on page load and after checkout updates
-	forceHttpsImages();
-	$(document.body).on('updated_checkout', forceHttpsImages);
-	setInterval(forceHttpsImages, 2000);
-	
-	// Function to remove Stripe Express Checkout elements and WooCommerce Payments Express Checkout
-	function removeStripeExpressElements() {
-		// Remove Stripe Express Checkout elements
-		$('#wc-stripe-express-checkout-element, #wc-stripe-express-checkout-button-separator, #wc-stripe-express-checkout__order-attribution-inputs').remove();
-		
-		// CRITICAL: Remove WooCommerce Payments Express Checkout wrapper
-		$('.wcpay-express-checkout-wrapper, #wcpay-express-checkout-wrapper, wcpay-express-checkout-wrapper').remove();
-		$('[class*="wcpay-express"], [id*="wcpay-express"], [class*="express-checkout-wrapper"]').remove();
-		$('#wcpay-express-checkout-button-separator, #wcpay-express-checkout__order-attribution-inputs').remove();
-	}
-	
-	// Remove immediately on page load
-	removeStripeExpressElements();
-	
-	// Watch for dynamically added elements using MutationObserver
-	if (window.MutationObserver) {
-		var observer = new MutationObserver(function(mutations) {
-			removeStripeExpressElements();
-		});
-		
-		// Observe the document body for changes
-		if (document.body) {
-			observer.observe(document.body, {
-				childList: true,
-				subtree: true
+			
+			$('form.checkout').on('submit', function() {
+				$('.woocommerce-error, .woocommerce-NoticeGroup-checkout .woocommerce-error, .wc-block-components-notice-banner.is-error').addClass('stirjoy-show-payment-error');
 			});
-		}
-	}
-	
-	// Also check after short delays to catch elements added after page load
-	setTimeout(removeStripeExpressElements, 100);
-	setTimeout(removeStripeExpressElements, 500);
-	setTimeout(removeStripeExpressElements, 1000);
-	
-	// CRITICAL: Make Stripe Elements functional by positioning them over display fields
-	// Since Stripe Elements are iframes, we position the container divs over display fields
-	function positionStripeElementsOverDisplayFields() {
-		// Wait for Stripe Elements to be mounted
-		var stripeCardElement = $('#stripe-card-element');
-		var stripeExpElement = $('#stripe-exp-element');
-		var stripeCvcElement = $('#stripe-cvc-element');
+		},
 		
-		if (!stripeCardElement.length) {
-			return false;
-		}
+		// Hide Stripe Elements section completely
+		hideStripeElementsSection: function() {
+			$('#payment').css({
+				'display': 'none !important',
+				'visibility': 'hidden !important',
+				'opacity': '0 !important',
+				'height': '0 !important',
+				'overflow': 'hidden !important',
+				'position': 'absolute !important',
+				'left': '-9999px !important',
+				'pointer-events': 'none !important'
+			});
+			
+			// Also hide Stripe Elements containers
+			$('#stripe-card-element, #stripe-exp-element, #stripe-cvc-element, .wc-stripe-elements-field, #wc-stripe-cc-form').css({
+				'display': 'none !important',
+				'visibility': 'hidden !important'
+			});
+		},
 		
-		// Ensure payment section is accessible
-		ensurePaymentSectionAccessible();
-		
-		// Check if Stripe is using inline form (single card element)
-		var isInlineForm = !stripeExpElement.length || stripeExpElement.length === 0;
-		
-		if (isInlineForm) {
-			// Inline form: position the single card element container over all display fields
-			var $cardContainer = $('.stirjoy-card-container');
-			if ($cardContainer.length && stripeCardElement.length) {
-				var containerOffset = $cardContainer.offset();
-				var containerWidth = $cardContainer.outerWidth();
-				var containerHeight = $cardContainer.outerHeight();
-				
-				// Get the parent container of Stripe card element
-				var $stripeContainer = stripeCardElement.closest('.wc-stripe-elements-field, #wc-stripe-cc-form, fieldset');
-				if (!$stripeContainer.length) {
-					$stripeContainer = stripeCardElement.parent();
+		// Set Stripe as default payment method
+		setStripeAsDefaultPaymentMethod: function() {
+			var self = this;
+			
+			function setStripeDefault() {
+				if (!$('#payment').length || !$('#payment input[name="payment_method"]').length) {
+					return false;
 				}
 				
-				// Position Stripe container over the display container
-				$stripeContainer.css({
-					'position': 'fixed',
-					'top': containerOffset.top + 'px',
-					'left': containerOffset.left + 'px',
-					'width': containerWidth + 'px',
-					'height': containerHeight + 'px',
-					'opacity': '0.01', // Almost invisible but still functional
-					'z-index': '1000',
-					'pointer-events': 'auto',
-					'background': 'transparent',
-					'border': 'none',
-					'padding': '0',
-					'margin': '0'
-				});
+				// Priority: stripe, stripe_cc, stripe_credit_card, woocommerce_payments
+				var preferredIds = ['stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments'];
+				var $selectedMethod = null;
 				
-				// Make Stripe card element fill the container
-				stripeCardElement.css({
-					'width': '100%',
-					'height': '100%',
-					'min-height': containerHeight + 'px'
-				});
+				for (var i = 0; i < preferredIds.length; i++) {
+					$selectedMethod = $('#payment input[name="payment_method"][value="' + preferredIds[i] + '"]');
+					if ($selectedMethod.length) break;
+				}
 				
-				// Make display fields show placeholder but not interfere
-				$('.stirjoy-card-input').css({
-					'pointer-events': 'none',
-					'color': 'transparent',
-					'caret-color': 'transparent'
-				});
-				
-				// Listen to Stripe changes and update display fields for visual feedback
-				if (typeof stripe_card !== 'undefined' && stripe_card) {
-					stripe_card.on('change', function(event) {
-						if (event.complete && event.last4) {
-							$('#stirjoy_card_number_display').val('**** **** **** ' + event.last4).css('color', '#333');
-						} else if (event.empty) {
-							$('#stirjoy_card_number_display').val('').css('color', 'transparent');
+				// Fallback: any gateway with 'stripe' or 'card' in value
+				if (!$selectedMethod || !$selectedMethod.length) {
+					$('#payment input[name="payment_method"]').each(function() {
+						var value = $(this).val().toLowerCase();
+						if (value.indexOf('stripe') !== -1 || value.indexOf('card') !== -1) {
+							$selectedMethod = $(this);
+							return false;
 						}
 					});
 				}
 				
-				console.log('Stirjoy: Positioned Stripe inline card element over display fields');
-				return true;
-			}
-		} else {
-			// Separate form: position each element over corresponding display field
-			var positioned = false;
-			
-			// Card number
-			if (stripeCardElement.length) {
-				var $cardNumberDisplay = $('#stirjoy_card_number_display');
-				if ($cardNumberDisplay.length) {
-					var cardNumberOffset = $cardNumberDisplay.offset();
-					var cardNumberWidth = $cardNumberDisplay.outerWidth();
-					var cardNumberHeight = $cardNumberDisplay.outerHeight();
-					
-					var $stripeCardContainer = stripeCardElement.closest('.wc-stripe-elements-field, .stripe-card-group');
-					if (!$stripeCardContainer.length) {
-						$stripeCardContainer = stripeCardElement.parent();
-					}
-					
-					$stripeCardContainer.css({
-						'position': 'fixed',
-						'top': cardNumberOffset.top + 'px',
-						'left': cardNumberOffset.left + 'px',
-						'width': cardNumberWidth + 'px',
-						'height': cardNumberHeight + 'px',
-						'opacity': '0.01',
-						'z-index': '1000',
-						'pointer-events': 'auto',
-						'background': 'transparent'
-					});
-					
-					$cardNumberDisplay.css({
-						'pointer-events': 'none',
-						'color': 'transparent',
-						'caret-color': 'transparent'
-					});
-					
-					if (typeof stripe_card !== 'undefined' && stripe_card) {
-						stripe_card.on('change', function(event) {
-							if (event.complete && event.last4) {
-								$cardNumberDisplay.val('**** **** **** ' + event.last4).css('color', '#333');
-							} else if (event.empty) {
-								$cardNumberDisplay.val('').css('color', 'transparent');
-							}
-						});
-					}
-					positioned = true;
+				// Final fallback: first available
+				if (!$selectedMethod || !$selectedMethod.length) {
+					$selectedMethod = $('#payment input[name="payment_method"]').first();
 				}
+				
+				if ($selectedMethod && $selectedMethod.length) {
+					$selectedMethod.prop('checked', true).trigger('change');
+					var paymentMethod = $selectedMethod.val();
+					
+					$('form.checkout input[type="hidden"][name="payment_method"]').remove();
+					$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
+					
+					return true;
+				}
+				
+				return false;
 			}
 			
-			// Expiry
-			if (stripeExpElement.length) {
-				var $expiryDisplay = $('#stirjoy_card_expiry_display');
-				if ($expiryDisplay.length) {
-					var expiryOffset = $expiryDisplay.offset();
-					var expiryWidth = $expiryDisplay.outerWidth();
-					var expiryHeight = $expiryDisplay.outerHeight();
-					
-					var $stripeExpContainer = stripeExpElement.closest('.wc-stripe-elements-field');
-					if (!$stripeExpContainer.length) {
-						$stripeExpContainer = stripeExpElement.parent();
-					}
-					
-					$stripeExpContainer.css({
-						'position': 'fixed',
-						'top': expiryOffset.top + 'px',
-						'left': expiryOffset.left + 'px',
-						'width': expiryWidth + 'px',
-						'height': expiryHeight + 'px',
-						'opacity': '0.01',
-						'z-index': '1000',
-						'pointer-events': 'auto',
-						'background': 'transparent'
-					});
-					
-					$expiryDisplay.css({
-						'pointer-events': 'none',
-						'color': 'transparent',
-						'caret-color': 'transparent'
-					});
-					
-					if (typeof stripe_exp !== 'undefined' && stripe_exp) {
-						stripe_exp.on('change', function(event) {
-							if (event.complete) {
-								$expiryDisplay.val(event.value || '').css('color', '#333');
-							} else if (event.empty) {
-								$expiryDisplay.val('').css('color', 'transparent');
-							}
-						});
-					}
-					positioned = true;
-				}
+			// Try multiple times
+			setTimeout(setStripeDefault, 100);
+			setTimeout(setStripeDefault, 500);
+			setTimeout(setStripeDefault, 1000);
+			setTimeout(setStripeDefault, 2000);
+		},
+		
+		// Remove express checkout elements
+		initExpressCheckoutRemoval: function() {
+			function removeExpress() {
+				$('#wc-stripe-express-checkout-element, #wc-stripe-express-checkout-button-separator, #wc-stripe-express-checkout__order-attribution-inputs').remove();
+				$('.wcpay-express-checkout-wrapper, #wcpay-express-checkout-wrapper, [class*="wcpay-express"], [id*="wcpay-express"], [class*="express-checkout-wrapper"]').remove();
+				$('#wcpay-express-checkout-button-separator, #wcpay-express-checkout__order-attribution-inputs').remove();
 			}
 			
-			// CVC
-			if (stripeCvcElement.length) {
-				var $cvcDisplay = $('#stirjoy_card_cvc_display');
-				if ($cvcDisplay.length) {
-					var cvcOffset = $cvcDisplay.offset();
-					var cvcWidth = $cvcDisplay.outerWidth();
-					var cvcHeight = $cvcDisplay.outerHeight();
-					
-					var $stripeCvcContainer = stripeCvcElement.closest('.wc-stripe-elements-field');
-					if (!$stripeCvcContainer.length) {
-						$stripeCvcContainer = stripeCvcElement.parent();
-					}
-					
-					$stripeCvcContainer.css({
-						'position': 'fixed',
-						'top': cvcOffset.top + 'px',
-						'left': cvcOffset.left + 'px',
-						'width': cvcWidth + 'px',
-						'height': cvcHeight + 'px',
-						'opacity': '0.01',
-						'z-index': '1000',
-						'pointer-events': 'auto',
-						'background': 'transparent'
-					});
-					
-					$cvcDisplay.css({
-						'pointer-events': 'none',
-						'color': 'transparent',
-						'caret-color': 'transparent'
-					});
-					
-					if (typeof stripe_cvc !== 'undefined' && stripe_cvc) {
-						stripe_cvc.on('change', function(event) {
-							if (event.complete) {
-								$cvcDisplay.val('***').css('color', '#333');
-							} else if (event.empty) {
-								$cvcDisplay.val('').css('color', 'transparent');
-							}
-						});
-					}
-					positioned = true;
-				}
-			}
+			removeExpress();
+			setTimeout(removeExpress, 100);
+			setTimeout(removeExpress, 500);
+			setTimeout(removeExpress, 1000);
+		},
+		
+		// Handle form submission
+		initFormSubmission: function() {
+			var self = this;
 			
-			if (positioned) {
-				console.log('Stirjoy: Positioned Stripe elements over display fields');
-			}
-			return positioned;
-		}
-	}
-	
-	// CRITICAL: Continuously try to position Stripe Elements (for SiteGround compatibility)
-	function tryPositionStripeElements(retries) {
-		retries = retries || 30; // Try for 15 seconds
-		
-		if (positionStripeElementsOverDisplayFields()) {
-			// Success, also update on window resize and scroll
-			$(window).on('resize scroll', function() {
-				setTimeout(positionStripeElementsOverDisplayFields, 100);
-			});
-		} else if (retries > 0) {
-			setTimeout(function() {
-				tryPositionStripeElements(retries - 1);
-			}, 500);
-		}
-	}
-	
-	// Start trying to position immediately and after delays
-	tryPositionStripeElements();
-	setTimeout(tryPositionStripeElements, 1000);
-	setTimeout(tryPositionStripeElements, 2000);
-	setTimeout(tryPositionStripeElements, 3000);
-	setTimeout(tryPositionStripeElements, 5000);
-	
-	// Also try after checkout updates and payment method changes
-	$(document.body).on('updated_checkout', function() {
-		setTimeout(function() {
-			tryPositionStripeElements();
-		}, 500);
-	});
-	
-	// Also try when payment method is selected
-	$(document.body).on('change', '#payment input[name="payment_method"]', function() {
-		setTimeout(function() {
-			tryPositionStripeElements();
-		}, 1000);
-	});
-	
-	// Ensure payment method is selected before form submission
-	$('form.checkout').on('checkout_place_order', function() {
-		// Check if payment method is selected
-		var paymentMethod = $('input[name="payment_method"]:checked').val();
-		
-		if (!paymentMethod) {
-			// Auto-select first available payment method from hidden payment section
-			var firstPaymentMethod = $('#payment input[name="payment_method"]').first();
-			if (firstPaymentMethod.length) {
-				firstPaymentMethod.prop('checked', true).trigger('change');
-				paymentMethod = firstPaymentMethod.val();
-			}
-		}
-		
-		// Ensure payment method input exists in form
-		if (paymentMethod) {
-			// Remove any existing hidden payment method input
-			$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-			// Add payment method to form
-			$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
-		}
-	});
-	
-	// Also ensure payment method is set on button click
-	$('#place_order').on('click', function(e) {
-		var paymentMethod = $('input[name="payment_method"]:checked').val();
-		
-		if (!paymentMethod) {
-			// Try to get from hidden payment section
-			var hiddenPaymentMethod = $('#payment input[name="payment_method"]:checked').val();
-			if (hiddenPaymentMethod) {
-				paymentMethod = hiddenPaymentMethod;
-			} else {
-				// Auto-select first available
-				var firstPaymentMethod = $('#payment input[name="payment_method"]').first();
-				if (firstPaymentMethod.length) {
-					firstPaymentMethod.prop('checked', true).trigger('change');
-					paymentMethod = firstPaymentMethod.val();
-				}
-			}
-		}
-		
-		// Ensure payment method is in form
-		if (paymentMethod) {
-			// Remove any existing hidden payment method input
-			$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-			// Add payment method to form
-			$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
-		}
-		
-		// Ensure payment gateway fields are initialized
-		// CRITICAL: Fix sandboxed iframe issues for Stripe
-		if ($('#payment').length) {
-			// Temporarily make payment section visible for initialization
-			var $paymentSection = $('#payment');
-			$paymentSection.css({
-				'position': 'absolute',
-				'left': '-9999px',
-				'visibility': 'visible',
-				'height': 'auto',
-				'overflow': 'visible',
-				'pointer-events': 'auto'
+			$('form.checkout').on('submit', function(e) {
+				return self.handleFormSubmit(e);
 			});
 			
-			// CRITICAL: Remove or fix sandbox attributes on iframes that block Stripe
-			$('#payment iframe, iframe[src*="stripe"]').each(function() {
-				var $iframe = $(this);
-				var sandbox = $iframe.attr('sandbox');
-				if (sandbox) {
-					// Add allow-scripts if missing
-					if (sandbox.indexOf('allow-scripts') === -1) {
-						$iframe.attr('sandbox', sandbox + ' allow-scripts allow-same-origin allow-forms');
-					}
+			$('#place_order').on('click', function() {
+				self.ensurePaymentMethodInForm();
+			});
+		},
+		
+		// Validate all required fields before submission
+		validateRequiredFields: function() {
+			var missingFields = [];
+			
+			// Check billing email
+			var billingEmail = $('#billing_email').val();
+			if (!billingEmail || billingEmail.trim() === '') {
+				missingFields.push('- Email address');
+			}
+			
+			// Check billing first name
+			var billingFirstName = $('#billing_first_name').val();
+			if (!billingFirstName || billingFirstName.trim() === '') {
+				missingFields.push('- First name');
+			}
+			
+			// Check billing last name
+			var billingLastName = $('#billing_last_name').val();
+			if (!billingLastName || billingLastName.trim() === '') {
+				missingFields.push('- Last name');
+			}
+			
+			// Check billing address
+			var billingAddress1 = $('#billing_address_1').val();
+			if (!billingAddress1 || billingAddress1.trim() === '') {
+				missingFields.push('- Street address');
+			}
+			
+			// Check billing city
+			var billingCity = $('#billing_city').val();
+			if (!billingCity || billingCity.trim() === '') {
+				missingFields.push('- City');
+			}
+			
+			// Check billing postcode
+			var billingPostcode = $('#billing_postcode').val();
+			if (!billingPostcode || billingPostcode.trim() === '') {
+				missingFields.push('- Postal code');
+			}
+			
+			// Check billing phone (if required)
+			var billingPhone = $('#billing_phone').val();
+			var phoneField = $('#billing_phone');
+			if (phoneField.length && phoneField.closest('.form-row').hasClass('validate-required') && (!billingPhone || billingPhone.trim() === '')) {
+				missingFields.push('- Phone number');
+			}
+			
+			// Check billing address_2 (if required)
+			var billingAddress2 = $('#billing_address_2').val();
+			var address2Field = $('#billing_address_2');
+			if (address2Field.length && address2Field.closest('.form-row').hasClass('validate-required') && (!billingAddress2 || billingAddress2.trim() === '')) {
+				missingFields.push('- Address line 2');
+			}
+			
+			// Check terms and conditions (if required)
+			var termsField = $('input[name="terms-field"]');
+			if (termsField.length && termsField.val() === '1') {
+				var termsChecked = $('input[name="terms"]:checked').length > 0;
+				if (!termsChecked) {
+					missingFields.push('- Terms and conditions');
+				}
+			}
+			
+			// Check shipping fields if shipping to different address
+			var shipToDifferentAddress = $('input[name="ship_to_different_address"]:checked').length > 0;
+			if (shipToDifferentAddress) {
+				var shippingAddress1 = $('#shipping_address_1').val();
+				if (!shippingAddress1 || shippingAddress1.trim() === '') {
+					missingFields.push('- Shipping street address');
+				}
+				
+				var shippingCity = $('#shipping_city').val();
+				if (!shippingCity || shippingCity.trim() === '') {
+					missingFields.push('- Shipping city');
+				}
+				
+				var shippingPostcode = $('#shipping_postcode').val();
+				if (!shippingPostcode || shippingPostcode.trim() === '') {
+					missingFields.push('- Shipping postal code');
+				}
+			}
+			
+			// Check account creation fields if creating account
+			var createAccount = $('input[name="createaccount"]:checked').length > 0;
+			if (createAccount) {
+				var accountUsername = $('#account_username').val();
+				if ($('#account_username').length && (!accountUsername || accountUsername.trim() === '')) {
+					missingFields.push('- Account username');
+				}
+				
+				var accountPassword = $('#account_password').val();
+				if ($('#account_password').length && (!accountPassword || accountPassword.trim() === '')) {
+					missingFields.push('- Account password');
+				}
+			}
+			
+			return missingFields;
+		},
+		
+		ensurePaymentMethodInForm: function() {
+			var paymentMethod = $('input[name="payment_method"]:checked').val();
+			
+			if (!paymentMethod) {
+				var hiddenPaymentMethod = $('#payment input[name="payment_method"]:checked').val();
+				if (hiddenPaymentMethod) {
+					paymentMethod = hiddenPaymentMethod;
 				} else {
-					// If no sandbox, ensure it's not added
-					$iframe.removeAttr('sandbox');
+					var firstPaymentMethod = $('#payment input[name="payment_method"]').first();
+					if (firstPaymentMethod.length) {
+						firstPaymentMethod.prop('checked', true).trigger('change');
+						paymentMethod = firstPaymentMethod.val();
+					}
 				}
-			});
+			}
 			
-			// Trigger payment gateway initialization events
 			if (paymentMethod) {
-				$('#payment input[name="payment_method"][value="' + paymentMethod + '"]').trigger('change');
-			} else {
-				$('#payment input[name="payment_method"]').first().trigger('change');
+				$('form.checkout input[type="hidden"][name="payment_method"]').remove();
+				$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
+			}
+		},
+		
+		handleFormSubmit: function(e) {
+			var self = this;
+			
+			if (this.state.formSubmitting) {
+				e.preventDefault();
+				return false;
 			}
 			
-			// Restore after a short delay
-			setTimeout(function() {
-				$paymentSection.css({
-					'position': 'absolute',
-					'left': '-9999px',
-					'visibility': 'visible', // Keep visible for Stripe to work
-					'height': 'auto',
-					'overflow': 'visible',
-					'pointer-events': 'auto'
-				});
-			}, 100);
-		}
-		
-		// CRITICAL: Don't prevent default - let payment gateway handle submission
-		// Stripe needs to tokenize the card before form submission
-		return true;
-	});
-	
-	// Function to check payment gateway initialization status
-	function checkPaymentGatewayStatus(verbose) {
-		verbose = verbose || false; // Only log if explicitly requested
-		
-		var status = {
-			paymentSectionExists: $('#payment').length > 0,
-			paymentMethodsExist: $('#payment input[name="payment_method"]').length > 0,
-			paymentMethodSelected: $('#payment input[name="payment_method"]:checked').length > 0,
-			paymentMethodInForm: $('form.checkout input[name="payment_method"]').length > 0,
-			stripeLoaded: typeof Stripe !== 'undefined',
-			stripeElementsLoaded: typeof stripe !== 'undefined' || typeof wc_stripe_form !== 'undefined',
-			stripeCardElementExists: $('#stripe-card-element').length > 0 || $('#stripe-payment-data').length > 0
-		};
-		
-		// Log status only if verbose or if there are errors
-		if (verbose || !status.paymentSectionExists || (!status.paymentMethodsExist && $('#payment').length > 0)) {
-			console.log('Stirjoy Payment Gateway Status:', status);
-		}
-		
-		// Check for critical issues (always log errors)
-		if (!status.paymentSectionExists) {
-			console.error('Stirjoy Error: Payment section (#payment) not found');
-		}
-		if (!status.paymentMethodsExist && $('#payment').length > 0) {
-			// Only log if payment section exists but methods don't (they might be loading)
-			if (verbose) {
-				console.warn('Stirjoy: Payment methods not loaded yet (may still be loading)');
+			// Validate required fields before proceeding
+			var missingFields = this.validateRequiredFields();
+			if (missingFields.length > 0) {
+				alert('Please fill in all required fields:\n\n' + missingFields.join('\n'));
+				e.preventDefault();
+				return false;
 			}
-		}
-		if (!status.paymentMethodSelected && status.paymentMethodsExist) {
-			if (verbose) {
-				console.warn('Stirjoy Warning: No payment method selected');
+			
+			this.ensurePaymentMethodInForm();
+			
+			var paymentMethod = $('input[name="payment_method"]:checked').val();
+			if (!paymentMethod) {
+				alert('Please select a payment method.');
+				e.preventDefault();
+				return false;
 			}
-		}
-		if (!status.paymentMethodInForm && status.paymentMethodSelected) {
-			if (verbose) {
-				console.warn('Stirjoy Warning: Payment method not in form');
-			}
-		}
-		
-		return status;
-	}
-	
-	// Function to set Stripe/credit card as default payment method
-	function setDefaultPaymentMethod() {
-		if (!$('#payment').length || !$('#payment input[name="payment_method"]').length) {
-			console.warn('Stirjoy: Payment section not ready yet');
-			return false;
-		}
-		
-		// Priority: stripe, stripe_cc, stripe_credit_card, woocommerce_payments, then any with 'stripe' or 'card'
-		var preferredIds = ['stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments'];
-		//var preferredIds = ['card'];
-		var $selectedMethod = null;
-		
-		// Try preferred gateways first
-		for (var i = 0; i < preferredIds.length; i++) {
-			$selectedMethod = $('#payment input[name="payment_method"][value="' + preferredIds[i] + '"]');
-			if ($selectedMethod.length) {
-				break;
-			}
-		}
-		
-		// If not found, look for any gateway with 'stripe' or 'card' in the value
-		if (!$selectedMethod || !$selectedMethod.length) {
-			$('#payment input[name="payment_method"]').each(function() {
-				var value = $(this).val().toLowerCase();
-				if (value.indexOf('stripe') !== -1 || value.indexOf('card') !== -1) {
-				//if (value.indexOf('card') !== -1) {
-					$selectedMethod = $(this);
-					return false; // break
+			
+			// For Stripe, create payment method from card fields
+			if (paymentMethod && (paymentMethod.indexOf('stripe') !== -1 || paymentMethod.indexOf('card') !== -1)) {
+				var cardNumber = $('#card_number').val().replace(/\s/g, '');
+				var expiry = $('#card_expiry').val();
+				var cvc = $('#card_cvc').val();
+				var cardName = $('#card_name').val();
+				
+				// Validate card number
+				if (!cardNumber || cardNumber.length < 13 || cardNumber.length > 19) {
+					alert('Please enter a valid card number.');
+					e.preventDefault();
+					return false;
 				}
-			});
-		}
-		
-		// Fallback to first available
-		if (!$selectedMethod || !$selectedMethod.length) {
-			$selectedMethod = $('#payment input[name="payment_method"]').first();
-		}
-		
-		if ($selectedMethod && $selectedMethod.length) {
-			$selectedMethod.prop('checked', true).trigger('change');
-			var paymentMethod = $selectedMethod.val();
-			
-			// Add to form if not present
-			$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-			$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
-			
-			console.log('Stirjoy: Set default payment method to ' + paymentMethod);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	// Function to ensure payment section is accessible for initialization
-	// CRITICAL: Payment section must be accessible (even if off-screen) for payment methods to initialize
-	// This is especially important on SiteGround where CSS display:none can prevent initialization
-	function ensurePaymentSectionAccessible() {
-		var $paymentSection = $('#payment');
-		if ($paymentSection.length) {
-			// Check if payment section is hidden by CSS
-			var computedDisplay = window.getComputedStyle($paymentSection[0]).display;
-			var isHidden = computedDisplay === 'none' || 
-			              $paymentSection.is(':hidden') ||
-			              $paymentSection.css('visibility') === 'hidden';
-			
-			if (isHidden) {
-				// Make it accessible but off-screen for initialization
-				$paymentSection.css({
-					'position': 'absolute',
-					'left': '-9999px',
-					'visibility': 'visible',
-					'height': 'auto',
-					'overflow': 'visible',
-					'pointer-events': 'auto',
-					'display': 'block' // Override display: none !important
-				});
-				console.log('Stirjoy: Made payment section accessible for initialization');
-			}
-		}
-	}
-	
-	// Function to wait for payment methods to load and then initialize
-	function waitForPaymentMethodsAndInitialize(retries) {
-		retries = retries || 20; // Increased retries for SiteGround (10 seconds)
-		
-		// CRITICAL: Ensure payment section is accessible before checking
-		ensurePaymentSectionAccessible();
-		
-		var status = checkPaymentGatewayStatus(false); // Don't log on every retry
-		
-		if (!status.paymentMethodsExist && retries > 0) {
-			// Payment methods not loaded yet, wait and retry
-			// Use shorter interval for faster detection on SiteGround
-			setTimeout(function() {
-				waitForPaymentMethodsAndInitialize(retries - 1);
-			}, 500);
-			return;
-		}
-		
-		if (status.paymentMethodsExist) {
-			// Payment methods are loaded, set default
-			console.log('Stirjoy: Payment methods loaded, setting default...');
-			
-			// CRITICAL: Ensure payment section is accessible before setting default
-			ensurePaymentSectionAccessible();
-			
-			var setSuccess = setDefaultPaymentMethod();
-			
-			if (!setSuccess) {
-				// If setting failed, retry after a short delay
-				setTimeout(function() {
-					ensurePaymentSectionAccessible();
-					setDefaultPaymentMethod();
-				}, 200);
-			}
-			
-			// Check Stripe loading after a delay
-			setTimeout(function() {
-				var finalStatus = checkPaymentGatewayStatus(true); // Log final status
-				if (finalStatus.paymentMethodSelected) {
-					var selectedMethod = $('#payment input[name="payment_method"]:checked').val();
-					console.log('Stirjoy: Selected payment method:', selectedMethod);
+				
+				// Validate expiry format (MM/YY)
+				if (!expiry || expiry.length < 4 || !/^\d{2}\/\d{2}$/.test(expiry)) {
+					alert('Please enter a valid expiry date in MM/YY format.');
+					e.preventDefault();
+					return false;
+				}
+				
+				// Validate CVC
+				if (!cvc || cvc.length < 3 || cvc.length > 4) {
+					alert('Please enter a valid security code.');
+					e.preventDefault();
+					return false;
+				}
+				
+				console.log('expiry', expiry);
+				console.log('cvc', cvc);
+				console.log('cardNumber', cardNumber);
+				console.log('cardName', cardName);
+				console.log('paymentMethod', paymentMethod);
+
+				// Validate expiry date is not in the past
+				var expiryParts = expiry.split('/');
+				var expMonth = parseInt(expiryParts[0], 10);
+				var expYear = parseInt('20' + expiryParts[1], 10);
+				var currentDate = new Date();
+				var currentYear = currentDate.getFullYear();
+				var currentMonth = currentDate.getMonth() + 1;
+				
+				if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+					alert('The card expiry date is in the past. Please enter a valid expiry date.');
+					e.preventDefault();
+					return false;
+				}
+				
+				// Check if payment method already exists (check both UPE and legacy field names)
+				var stripePaymentMethod = $('form.checkout input[name="wc-stripe-payment-method"]').val() || 
+				                          $('form.checkout input[name="stripe_token"]').val() ||
+				                          $('form.checkout input[name="stripe_payment_method"]').val();
+
+				console.log('stripePaymentMethod', stripePaymentMethod);
+										  
+				if (!stripePaymentMethod || stripePaymentMethod.trim() === '') {
+					// Need to create payment method before submitting
+					e.preventDefault();
+					this.state.formSubmitting = true;
 					
-					if (selectedMethod && (selectedMethod.indexOf('stripe') !== -1 || selectedMethod.indexOf('card') !== -1)) {
-						// Wait for Stripe to load
-						setTimeout(function() {
-							var stripeStatus = checkPaymentGatewayStatus(true);
-							if (stripeStatus.stripeLoaded || stripeStatus.stripeElementsLoaded) {
-								console.log('Stirjoy: Stripe loaded successfully');
-							} else {
-								console.warn('Stirjoy: Stripe not loaded after 2 seconds, retrying...');
-								// Retry Stripe initialization
-								ensurePaymentSectionAccessible();
-								$('#payment input[name="payment_method"]:checked').trigger('change');
+					var expiryParts = expiry.split('/');
+					var expMonth = expiryParts[0] ? expiryParts[0].trim() : '';
+					var expYear = expiryParts[1] ? '20' + expiryParts[1].trim() : '';
+					
+					this.createPaymentMethod(cardNumber, parseInt(expMonth, 10), parseInt(expYear, 10), cvc, cardName, function(success, paymentMethodIdOrError) {
+						self.state.formSubmitting = false;
+						
+						// Get button reference for state management
+						var $submitButton = $('#place_order');
+						var originalButtonText = $submitButton.data('value') || 'PAY AND SUBSCRIBE';
+						
+						if (success && paymentMethodIdOrError) {
+							// Add payment method to form
+							var added = self.addPaymentMethodToForm(paymentMethodIdOrError);
+							if (!added) {
+								$submitButton.prop('disabled', false).text(originalButtonText);
+								alert('Failed to prepare payment. Please try again.');
+								return;
 							}
-						}, 2000);
-					}
-				}
-			}, 500);
-		} else {
-			if (retries === 0) {
-				console.error('Stirjoy Error: Payment methods not found after maximum retries');
-				// Last attempt: try to force initialization
-				ensurePaymentSectionAccessible();
-				setTimeout(function() {
-					setDefaultPaymentMethod();
-				}, 500);
-			}
-		}
-	}
-	
-	// CRITICAL: Initialize payment method selection immediately and with multiple attempts
-	// This ensures it works on SiteGround where timing may be different due to caching
-	ensurePaymentSectionAccessible();
-	
-	// Function to force set default payment method (more aggressive for SiteGround)
-	function forceSetDefaultPaymentMethod() {
-		ensurePaymentSectionAccessible();
-		
-		if (!$('#payment').length || !$('#payment input[name="payment_method"]').length) {
-			return false;
-		}
-		
-		// Check if a payment method is already selected
-		var $selected = $('#payment input[name="payment_method"]:checked');
-		if ($selected.length) {
-			var selectedValue = $selected.val().toLowerCase();
-			// If it's already a card/stripe method, we're good
-			if (selectedValue.indexOf('stripe') !== -1 || selectedValue.indexOf('card') !== -1) {
-			//if (selectedValue.indexOf('card') !== -1) {
-				console.log('Stirjoy: Credit card already selected:', selectedValue);
-				return true;
-			}
-		}
-		
-		// Force set default
-		var success = setDefaultPaymentMethod();
-		if (success) {
-			console.log('Stirjoy: Force set default payment method (SiteGround compatibility)');
-		}
-		return success;
-	}
-	
-	// Try immediately (for fast loading)
-	setTimeout(function() {
-		forceSetDefaultPaymentMethod();
-	}, 100);
-	
-	// Also try after a delay (for slower loading on SiteGround)
-	setTimeout(function() {
-		forceSetDefaultPaymentMethod();
-		waitForPaymentMethodsAndInitialize();
-	}, 1000);
-	
-	// And try again after longer delay (SiteGround cache might delay things)
-	setTimeout(function() {
-		forceSetDefaultPaymentMethod();
-		waitForPaymentMethodsAndInitialize();
-	}, 3000);
-	
-	// CRITICAL: Additional attempt after 5 seconds for SiteGround
-	setTimeout(function() {
-		forceSetDefaultPaymentMethod();
-	}, 5000);
-	
-	// CRITICAL: Monitor continuously for first 10 seconds (SiteGround specific)
-	var sitegroundMonitorInterval = setInterval(function() {
-		var $selected = $('#payment input[name="payment_method"]:checked');
-		if ($selected.length) {
-			var selectedValue = $selected.val().toLowerCase();
-			if (selectedValue.indexOf('stripe') !== -1 || selectedValue.indexOf('card') !== -1) {
-				// Credit card is selected, stop monitoring
-				clearInterval(sitegroundMonitorInterval);
-				console.log('Stirjoy: Credit card confirmed selected, stopping monitor');
-			} else {
-				// Not credit card, try to set it
-				forceSetDefaultPaymentMethod();
-			}
-		} else {
-			// Nothing selected, try to set it
-			forceSetDefaultPaymentMethod();
-		}
-	}, 500);
-	
-	// Stop monitoring after 10 seconds
-	setTimeout(function() {
-		clearInterval(sitegroundMonitorInterval);
-	}, 10000);
-	
-	// Also initialize after checkout updates
-	$(document.body).on('updated_checkout', function() {
-		setTimeout(function() {
-			ensurePaymentSectionAccessible();
-			// CRITICAL: Use force function to ensure credit card is selected
-			forceSetDefaultPaymentMethod();
-			
-			var status = checkPaymentGatewayStatus(false);
-			if (status.paymentMethodsExist) {
-				if (status.paymentMethodSelected) {
-					var selectedMethod = $('#payment input[name="payment_method"]:checked').val();
-					// Only trigger change if it's not already a credit card method
-					if (selectedMethod && (selectedMethod.indexOf('stripe') === -1 && selectedMethod.indexOf('card') === -1)) {
-						// Try to switch to credit card
-						forceSetDefaultPaymentMethod();
-					}
-					$('#payment input[name="payment_method"]:checked').trigger('change');
+							
+							// Verify payment method is in form before submitting
+							var verifyPaymentMethod = $('form.checkout input[name="wc-stripe-payment-method"]').val() || 
+							                           $('form.checkout input[name="stripe_token"]').val();
+							if (!verifyPaymentMethod || verifyPaymentMethod.trim() === '') {
+								$submitButton.prop('disabled', false).text(originalButtonText);
+								console.error('Stirjoy: Payment method not found in form after adding');
+								alert('Failed to prepare payment. Please try again.');
+								return;
+							}
+							
+							// Ensure payment method is still selected
+							self.ensurePaymentMethodInForm();
+							
+							// Validate required fields one more time before final submission
+							var finalMissingFields = self.validateRequiredFields();
+							if (finalMissingFields.length > 0) {
+								$submitButton.prop('disabled', false).text(originalButtonText);
+								alert('Please fill in all required fields:\n\n' + finalMissingFields.join('\n'));
+								return;
+							}
+							
+							// Log all form data for debugging
+							self.logFormData();
+							
+							// Small delay to ensure fields are added before submission
+							setTimeout(function() {
+								console.log('Stirjoy: Submitting checkout form with payment method:', verifyPaymentMethod);
+								// Re-disable button to prevent double submission
+								$submitButton.prop('disabled', true).text('Processing...');
+								
+								// Submit form - WooCommerce will handle redirect to order-received page on success
+								alert('here');
+								$('form.checkout')[0].submit();
+							}, 100);
+						} else {
+							// Restore button state on error
+							$submitButton.prop('disabled', false).text(originalButtonText);
+							
+							var errorMessage = typeof paymentMethodIdOrError === 'string' 
+								? paymentMethodIdOrError 
+								: 'There was an error processing your card. Please check your card details and try again.';
+							alert(errorMessage);
+						}
+					});
+					
+					return false;
+				}else{
+					alert('stripePaymentMethod found');
 				}
 			}
-		}, 100);
-	});
-	
-	// CRITICAL: Real-time sync - as user types in display fields, automatically insert into Stripe Elements
-	var paymentMethodSyncTimeout = null;
-	var lastSyncedCardData = null;
-	
-	function syncCardInfoToStripeElements() {
-		// Clear any existing timeout
-		if (paymentMethodSyncTimeout) {
-			clearTimeout(paymentMethodSyncTimeout);
-		}
+			
+			return true;
+		},
 		
-		// Debounce: Wait 500ms after user stops typing before syncing
-		paymentMethodSyncTimeout = setTimeout(function() {
-			// Get card details from display fields
-			var cardNumber = $('#stirjoy_card_number_display').val().replace(/\s/g, ''); // Remove spaces
-			var expiry = $('#stirjoy_card_expiry_display').val();
-			var cvc = $('#stirjoy_card_cvc_display').val();
-			var cardName = $('#stirjoy_card_name_display').val();
+		createPaymentMethod: function(cardNumber, expMonth, expYear, cvc, cardName, callback) {
+			var self = this;
 			
-			// Check if card data has changed
-			var currentCardData = cardNumber + '|' + expiry + '|' + cvc + '|' + cardName;
-			if (currentCardData === lastSyncedCardData) {
-				// No change, skip sync
-				return;
-			}
-			
-			// Validate that we have minimum required fields before syncing
-			if (!cardNumber || cardNumber.length < 13) {
-				// Card number too short, don't sync yet
-				return;
-			}
-			
-			if (!expiry || expiry.length < 4) {
-				// Expiry incomplete, don't sync yet
-				return;
-			}
-			
-			if (!cvc || cvc.length < 3) {
-				// CVC incomplete, don't sync yet
-				return;
-			}
-			
-			// Parse expiry (MM/YY format)
-			var expiryParts = expiry.split('/');
-			var expMonth = expiryParts[0] ? expiryParts[0].trim() : '';
-			var expYear = expiryParts[1] ? '20' + expiryParts[1].trim() : ''; // Convert YY to YYYY
-			
-			// Create payment method server-side via AJAX
 			var ajaxUrl = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.ajax_url) 
 				? stirjoy_checkout_params.ajax_url 
 				: (typeof wc_checkout_params !== 'undefined' && wc_checkout_params.ajax_url)
@@ -1274,28 +806,29 @@ jQuery(document).ready(function($) {
 				? stirjoy_checkout_params.stripe_nonce
 				: '';
 			
-			// Stripe test card numbers for testing
-			var testCards = {
-				'4242424242424242': { type: 'visa', cvc: '123', name: 'Test Visa' },
-				'4000000000000002': { type: 'visa', cvc: '123', name: 'Test Visa (Declined)' },
-				'4000000000009995': { type: 'visa', cvc: '123', name: 'Test Visa (Insufficient Funds)' },
-				'5555555555554444': { type: 'mastercard', cvc: '123', name: 'Test Mastercard' },
-				'378282246310005': { type: 'amex', cvc: '1234', name: 'Test Amex' },
-				'6011111111111117': { type: 'discover', cvc: '123', name: 'Test Discover' }
-			};
-			
-			// Check if this is a test card
-			var isTestCard = testCards.hasOwnProperty(cardNumber.replace(/\s/g, ''));
-			var testToken = null;
-			if (isTestCard) {
-				// For test cards, you can use test payment method IDs
-				// Example: pm_test_1234567890abcdef
-				testToken = 'pm_test_' + cardNumber.replace(/\s/g, '').substring(0, 10);
+			if (!nonce) {
+				console.error('Stirjoy: Missing nonce for payment method creation');
+				callback(false, 'Security token is missing. Please refresh the page and try again.');
+				return;
 			}
 			
-			console.log('Stirjoy: Auto-syncing card info to Stripe Elements...');
-			console.log('Stirjoy: Is test card:', isTestCard);
-			console.log('Stirjoy: Test token:', testToken);
+			// Test cards
+			var testCards = {
+				'4242424242424242': true,
+				'4000000000000002': true,
+				'4000000000009995': true,
+				'5555555555554444': true,
+				'378282246310005': true,
+				'6011111111111117': true
+			};
+			
+			var isTestCard = testCards.hasOwnProperty(cardNumber.replace(/\s/g, ''));
+			var testToken = isTestCard ? 'pm_test_' + cardNumber.replace(/\s/g, '').substring(0, 10) : null;
+			
+			// Show loading state
+			var $submitButton = $('#place_order');
+			var originalButtonText = $submitButton.text();
+			$submitButton.prop('disabled', true).text('Processing...');
 			
 			$.ajax({
 				url: ajaxUrl,
@@ -1304,244 +837,219 @@ jQuery(document).ready(function($) {
 					action: 'stirjoy_create_stripe_payment_method',
 					nonce: nonce,
 					card_number: cardNumber,
-					exp_month: parseInt(expMonth, 10),
-					exp_year: parseInt(expYear, 10),
+					exp_month: expMonth,
+					exp_year: expYear,
 					cvc: cvc,
 					card_name: cardName || '',
 					test_token: testToken || '',
 					is_test_card: isTestCard ? '1' : '0',
-					test_mode: '1' // Always send test mode flag for now
+					test_mode: '1'
 				},
-				dataType: 'json'
+				dataType: 'json',
+				timeout: 30000 // 30 second timeout
 			}).then(function(response) {
-				if (response.success && response.data && response.data.payment_method_id) {
-					// Insert payment method ID into form
-					console.log('Stirjoy: Auto-synced payment method ID:', response.data.payment_method_id);
+				if (response && response.success && response.data && response.data.payment_method_id) {
+					console.log('Stirjoy: Payment method created successfully:', response.data.payment_method_id);
+					// Keep button disabled - will be enabled after form submission or error
+					alert('Payment method created successfully:', response.data.payment_method_id);
+					callback(true, response.data.payment_method_id);
+				} else {
+					// Restore button state on error
+					$submitButton.prop('disabled', false).text(originalButtonText);
 					
-					// CRITICAL: Add payment method ID to form for WooCommerce Stripe plugin
-					$('form.checkout input[name="stripe_payment_method"]').remove();
-					$('form.checkout input[name="stripe_token"]').remove();
-					$('form.checkout').append('<input type="hidden" name="stripe_payment_method" value="' + response.data.payment_method_id + '" />');
-					$('form.checkout').append('<input type="hidden" name="stripe_token" value="' + response.data.payment_method_id + '" />');
+					var errorMessage = 'Error processing your card. Please check your card details and try again.';
+					var errorDetails = null;
 					
-					// Also add to WooCommerce Stripe specific fields
-					var paymentMethodId = $('input[name="payment_method"]:checked').val();
-					if (paymentMethodId) {
-						$('form.checkout input[name="' + paymentMethodId + '_payment_method"]').remove();
-						$('form.checkout').append('<input type="hidden" name="' + paymentMethodId + '_payment_method" value="' + response.data.payment_method_id + '" />');
+					if (response && response.data) {
+						if (response.data.message) {
+							errorMessage = response.data.message;
+						}
+						
+						// Log detailed error information
+						if (response.data.error_details) {
+							errorDetails = response.data.error_details;
+							console.error('=== STIRJOY PAYMENT METHOD CREATION FAILED ===');
+							console.error('Error Type:', errorDetails.type || 'unknown');
+							console.error('Error Code:', errorDetails.code || 'unknown');
+							console.error('Error Message:', errorDetails.message || errorMessage);
+							console.error('Decline Code:', errorDetails.decline_code || 'N/A');
+							console.error('Parameter:', errorDetails.param || 'N/A');
+							console.error('Full Error Details:', errorDetails);
+							console.error('Full Response:', response);
+							console.error('===========================================');
+							
+							// Build detailed error message for user
+							if (errorDetails.decline_code) {
+								errorMessage += '\n\nDecline Code: ' + errorDetails.decline_code;
+							}
+							if (errorDetails.code && errorDetails.code !== 'unknown') {
+								errorMessage += '\nError Code: ' + errorDetails.code;
+							}
+						} else {
+							console.error('Stirjoy: Payment method creation failed:', response);
+						}
 					}
 					
-					// Update last synced data
-					lastSyncedCardData = currentCardData;
-				} else {
-					// Error from server - log but don't show alert (user is still typing)
-					var errorMessage = response.data && response.data.message ? response.data.message : 'Error syncing card';
-					console.warn('Stirjoy: Error auto-syncing payment method:', errorMessage);
+					callback(false, errorMessage);
 				}
 			}).catch(function(error) {
-				// Log error but don't interrupt user typing
-				console.warn('Stirjoy: AJAX error auto-syncing payment method:', error);
-			});
-		}, 500); // Wait 500ms after user stops typing
-	}
-	
-	// CRITICAL: Listen to input events on display fields and auto-sync to Stripe Elements
-	// Make display fields interactive by removing readonly on focus
-	$('#stirjoy_card_number_display, #stirjoy_card_expiry_display, #stirjoy_card_cvc_display, #stirjoy_card_name_display').on('focus', function() {
-		$(this).removeAttr('readonly');
-	});
-	
-	// Listen to input events and sync to Stripe Elements
-	$('#stirjoy_card_number_display, #stirjoy_card_expiry_display, #stirjoy_card_cvc_display, #stirjoy_card_name_display').on('input change blur', function() {
-		syncCardInfoToStripeElements();
-	});
-	
-	// Ensure form submission works correctly
-	// CRITICAL: Card info should already be synced to form (via real-time sync)
-	$('form.checkout').on('submit', function(e) {
-		// Check status before form submission
-		var status = checkPaymentGatewayStatus();
-		
-		// Ensure payment method is set before submission
-		var paymentMethod = $('input[name="payment_method"]:checked').val();
-		
-		if (!paymentMethod) {
-			// Try to get from hidden payment section
-			var hiddenPaymentMethod = $('#payment input[name="payment_method"]:checked').val();
-			if (hiddenPaymentMethod) {
-				paymentMethod = hiddenPaymentMethod;
-			} else {
-				// Auto-select first available
-				var firstPaymentMethod = $('#payment input[name="payment_method"]').first();
-				if (firstPaymentMethod.length) {
-					firstPaymentMethod.prop('checked', true).trigger('change');
-					paymentMethod = firstPaymentMethod.val();
-				}
-			}
-		}
-		
-		// Ensure payment method is in form
-		if (paymentMethod) {
-			$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-			$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
-		} else {
-			console.error('Stirjoy Error: No payment method available');
-			alert('Please select a payment method.');
-			e.preventDefault();
-			return false;
-		}
-		
-		// For Stripe, CRITICAL: Card info should already be synced to form (via real-time sync)
-		// Just ensure payment method ID is present before submitting
-		if (paymentMethod && (paymentMethod.indexOf('stripe') !== -1 || paymentMethod.indexOf('card') !== -1)) {
-			// Check if user typed in display fields
-			var cardNumber = $('#stirjoy_card_number_display').val();
-			if (cardNumber && cardNumber.trim().length > 0) {
-				// User typed in display fields - check if payment method is already synced
-				var stripePaymentMethod = $('form.checkout input[name="stripe_payment_method"]').val();
+				// Restore button state on error
+				$submitButton.prop('disabled', false).text(originalButtonText);
 				
-				if (!stripePaymentMethod) {
-					// Payment method not synced yet - trigger sync now and wait
-					console.log('Stirjoy: Payment method not synced yet, syncing now...');
-					
-					// Prevent default submission
-					e.preventDefault();
-					
-					// Force immediate sync (clear timeout and sync)
-					if (paymentMethodSyncTimeout) {
-						clearTimeout(paymentMethodSyncTimeout);
-					}
-					
-					// Get card details and sync immediately
-					var cardNumber = $('#stirjoy_card_number_display').val().replace(/\s/g, '');
-					var expiry = $('#stirjoy_card_expiry_display').val();
-					var cvc = $('#stirjoy_card_cvc_display').val();
-					var cardName = $('#stirjoy_card_name_display').val();
-					
-					// Validate
-					if (!cardNumber || cardNumber.length < 13 || !expiry || expiry.length < 4 || !cvc || cvc.length < 3) {
-						alert('Please complete all card details.');
-						return false;
-					}
-					
-					// Parse expiry
-					var expiryParts = expiry.split('/');
-					var expMonth = expiryParts[0] ? expiryParts[0].trim() : '';
-					var expYear = expiryParts[1] ? '20' + expiryParts[1].trim() : '';
-					
-					// Create payment method immediately
-					var ajaxUrl = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.ajax_url) 
-						? stirjoy_checkout_params.ajax_url 
-						: (typeof wc_checkout_params !== 'undefined' && wc_checkout_params.ajax_url)
-							? wc_checkout_params.ajax_url
-							: '/wp-admin/admin-ajax.php';
-					
-					var nonce = (typeof stirjoy_checkout_params !== 'undefined' && stirjoy_checkout_params.stripe_nonce)
-						? stirjoy_checkout_params.stripe_nonce
-						: '';
-					
-					// Stripe test card numbers for testing
-					var testCards = {
-						'4242424242424242': { type: 'visa', cvc: '123', name: 'Test Visa' },
-						'4000000000000002': { type: 'visa', cvc: '123', name: 'Test Visa (Declined)' },
-						'4000000000009995': { type: 'visa', cvc: '123', name: 'Test Visa (Insufficient Funds)' },
-						'5555555555554444': { type: 'mastercard', cvc: '123', name: 'Test Mastercard' },
-						'378282246310005': { type: 'amex', cvc: '1234', name: 'Test Amex' },
-						'6011111111111117': { type: 'discover', cvc: '123', name: 'Test Discover' }
-					};
-					
-					// Check if this is a test card
-					var isTestCard = testCards.hasOwnProperty(cardNumber.replace(/\s/g, ''));
-					var testToken = null;
-					if (isTestCard) {
-						// For test cards, you can use test payment method IDs
-						// Example: pm_test_1234567890abcdef
-						testToken = 'pm_test_' + cardNumber.replace(/\s/g, '').substring(0, 10);
-					}
-					
-					console.log('step0.1');
-					console.log(ajaxUrl);
-					console.log(nonce);
-					console.log(cardNumber);
-					console.log(expMonth);
-					console.log(expYear);
-					console.log(cvc);
-					console.log(cardName);
-					console.log('Is test card:', isTestCard);
-					console.log('Test token:', testToken);
-					
-					$.ajax({
-						url: ajaxUrl,
-						type: 'POST',
-						data: {
-							action: 'stirjoy_create_stripe_payment_method',
-							nonce: nonce,
-							card_number: cardNumber,
-							exp_month: parseInt(expMonth, 10),
-							exp_year: parseInt(expYear, 10),
-							cvc: cvc,
-							card_name: cardName || '',
-							test_token: testToken || '',
-							is_test_card: isTestCard ? '1' : '0',
-							test_mode: '1' // Always send test mode flag for now
-						},
-						dataType: 'json'
-					}).then(function(response) {
-						console.log('step0');
-						if (response.success && response.data && response.data.payment_method_id) {
-							// Insert payment method ID into form
-							console.log('step1');
-							$('form.checkout input[name="stripe_payment_method"]').remove();
-							$('form.checkout input[name="stripe_token"]').remove();
-							$('form.checkout').append('<input type="hidden" name="stripe_payment_method" value="' + response.data.payment_method_id + '" />');
-							$('form.checkout').append('<input type="hidden" name="stripe_token" value="' + response.data.payment_method_id + '" />');
-							
-							console.log('step2');
-							var paymentMethodId = $('input[name="payment_method"]:checked').val();
-							if (paymentMethodId) {
-								$('form.checkout input[name="' + paymentMethodId + '_payment_method"]').remove();
-								$('form.checkout').append('<input type="hidden" name="' + paymentMethodId + '_payment_method" value="' + response.data.payment_method_id + '" />');
-							}
-							
-							// Now submit the form
-							console.log('Stirjoy: Payment method synced, submitting form...');
-							$('form.checkout')[0].submit();
-						} else {
-							var errorMessage = response.data && response.data.message ? response.data.message : 'There was an error processing your card. Please check your card details and try again.';
-							alert(errorMessage);
-						}
-					}).catch(function(error) {
-						console.error('Stirjoy: Error syncing payment method:', error);
-						alert('There was an error processing your card. Please check your card details and try again.');
-					});
-					
-					return false;
-				} else {
-					// Payment method already synced - allow normal submission
-					console.log('Stirjoy: Payment method already synced, submitting form normally');
-					return true;
+				// Comprehensive AJAX error logging
+				console.error('=== STIRJOY AJAX ERROR CREATING PAYMENT METHOD ===');
+				console.error('Error Status:', error.status || 'N/A');
+				console.error('Error Status Text:', error.statusText || 'N/A');
+				console.error('Error Response:', error.responseJSON || error.responseText || 'N/A');
+				console.error('Full Error Object:', error);
+				console.error('===================================================');
+				
+				var errorMessage = 'Network error. Please check your connection and try again.';
+				if (error.statusText === 'timeout') {
+					errorMessage = 'Request timed out. Please try again.';
+				} else if (error.status === 0) {
+					errorMessage = 'Unable to connect to server. Please check your internet connection.';
+				} else if (error.status >= 500) {
+					errorMessage = 'Server error (HTTP ' + error.status + '). Please try again in a few moments.';
+				} else if (error.status >= 400) {
+					errorMessage = 'Request error (HTTP ' + error.status + '). Please check your card details and try again.';
 				}
+				
+				// Try to extract error message from response
+				if (error.responseJSON && error.responseJSON.data && error.responseJSON.data.message) {
+					errorMessage = error.responseJSON.data.message;
+				}
+				
+				callback(false, errorMessage);
+			});
+		},
+		
+		addPaymentMethodToForm: function(paymentMethodId) {
+			if (!paymentMethodId || paymentMethodId.trim() === '') {
+				console.error('Stirjoy: Invalid payment method ID');
+				return false;
+			}
+			
+			// Remove any existing payment method fields
+			$('form.checkout input[name="stripe_payment_method"]').remove();
+			$('form.checkout input[name="stripe_token"]').remove();
+			$('form.checkout input[name="wc-stripe-payment-method"]').remove();
+			$('form.checkout input[name="wc-stripe-payment-method-upe"]').remove();
+			$('form.checkout input[name="wc_stripe_selected_upe_payment_type"]').remove();
+			
+			// Get the selected payment gateway
+			var paymentMethodGateway = $('input[name="payment_method"]:checked').val();
+			
+			// Add payment method fields for both UPE and legacy gateways
+			// UPE gateway expects: wc-stripe-payment-method
+			$('form.checkout').append('<input type="hidden" name="wc-stripe-payment-method" id="wc-stripe-payment-method" value="' + paymentMethodId + '" />');
+			
+			// Legacy gateway expects: stripe_token
+			$('form.checkout').append('<input type="hidden" name="stripe_token" id="stripe_token" value="' + paymentMethodId + '" />');
+			
+			// Also add UPE payment type field (card)
+			$('form.checkout').append('<input type="hidden" name="wc_stripe_selected_upe_payment_type" value="card" />');
+			
+			// Also add gateway-specific field if needed
+			if (paymentMethodGateway) {
+				// Remove any existing gateway-specific payment method field
+				$('form.checkout input[name="' + paymentMethodGateway + '_payment_method"]').remove();
+				
+				// Add gateway-specific field (e.g., stripe_payment_method, stripe_cc_payment_method)
+				if (paymentMethodGateway.indexOf('stripe') !== -1) {
+					$('form.checkout').append('<input type="hidden" name="' + paymentMethodGateway + '_payment_method" value="' + paymentMethodId + '" />');
+				}
+			}
+			
+			// Verify fields were added
+			var addedUpeField = $('form.checkout input[name="wc-stripe-payment-method"]').length > 0;
+			var addedLegacyField = $('form.checkout input[name="stripe_token"]').length > 0;
+			
+			if (!addedUpeField || !addedLegacyField) {
+				console.error('Stirjoy: Failed to add payment method fields to form');
+				return false;
+			}
+			
+			// Log for debugging
+			console.log('Stirjoy: Added payment method to form:', paymentMethodId, 'Gateway:', paymentMethodGateway);
+			return true;
+		},
+		
+		// Log all form data for debugging
+		logFormData: function() {
+			var formData = {};
+			
+			// Collect all form fields
+			$('form.checkout').find('input, select, textarea').each(function() {
+				var $field = $(this);
+				var name = $field.attr('name');
+				var type = $field.attr('type');
+				
+				if (!name) return;
+				
+				if (type === 'checkbox' || type === 'radio') {
+					if ($field.is(':checked')) {
+						formData[name] = $field.val();
+					}
+				} else if (type === 'hidden') {
+					formData[name] = $field.val();
+				} else {
+					formData[name] = $field.val();
+				}
+			});
+			
+			// Log required fields status
+			console.log('Stirjoy: Form submission data:', formData);
+			
+			// Check for missing critical fields
+			var criticalFields = [
+				'billing_email',
+				'billing_first_name',
+				'billing_last_name',
+				'billing_address_1',
+				'billing_city',
+				'billing_postcode',
+				'payment_method'
+			];
+			
+			var missingCritical = [];
+			criticalFields.forEach(function(fieldName) {
+				if (!formData[fieldName] || formData[fieldName].toString().trim() === '') {
+					missingCritical.push(fieldName);
+				}
+			});
+			
+			if (missingCritical.length > 0) {
+				console.warn('Stirjoy: Missing critical fields:', missingCritical);
 			} else {
-				// User typed in Stripe Elements directly - let Stripe handle it
-				console.log('Stirjoy: User typed in Stripe Elements, letting Stripe handle submission');
-				return true;
+				console.log('Stirjoy: All critical fields present');
+			}
+			
+			// Check payment method fields
+			var paymentFields = [
+				'wc-stripe-payment-method',
+				'stripe_token',
+				'stripe_payment_method'
+			];
+			
+			var hasPaymentMethod = false;
+			paymentFields.forEach(function(fieldName) {
+				if (formData[fieldName] && formData[fieldName].toString().trim() !== '') {
+					hasPaymentMethod = true;
+					console.log('Stirjoy: Payment method found in field:', fieldName, formData[fieldName]);
+				}
+			});
+			
+			if (!hasPaymentMethod) {
+				console.warn('Stirjoy: No payment method ID found in form!');
 			}
 		}
-		
-		// For other payment methods, allow normal submission
-		return true;
+	};
+	
+	// Initialize when DOM is ready
+	$(document).ready(function() {
+		StirjoyCheckout.init();
 	});
 	
-	// Handle WooCommerce checkout update events (duplicate handler removed - using the one above)
-	
-	// Handle "use shipping as billing" checkbox
-	$('#use_shipping_as_billing').on('change', function() {
-		if ($(this).is(':checked')) {
-			// Copy shipping fields to billing fields when checked
-			// This is handled by WooCommerce, but we ensure it works
-			$(document.body).trigger('update_checkout');
-		}
-	});
-});
+})(jQuery);
 </script>
-

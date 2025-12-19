@@ -1933,16 +1933,35 @@ add_action( 'template_redirect', 'stirjoy_siteground_cart_fixes', 1 );
 /**
  * Add CSP meta tag for Stripe iframes (fallback if headers don't work)
  * This fixes sandboxed frame errors on checkout page that prevent payment processing
+ * NOTE: Meta CSP tags must be in <head> section, so we use wp_head hook with early priority
  */
 function stirjoy_add_csp_meta_tag() {
-    if ( is_checkout() ) {
-        // CRITICAL: Explicitly allow Stripe domains
-        $stripe_domains = 'https://js.stripe.com https://hooks.stripe.com https://m.stripe.com https://r.stripe.com https://q.stripe.com https://b.stripecdn.com https://stripecdn.com https://*.stripe.com https://*.stripecdn.com';
-        ?>
-        <meta http-equiv="Content-Security-Policy" content="frame-src 'self' <?php echo esc_attr( $stripe_domains ); ?> https: http:; script-src 'self' 'unsafe-inline' 'unsafe-eval' <?php echo esc_attr( $stripe_domains ); ?> https: http: blob:; script-src-elem 'self' 'unsafe-inline' <?php echo esc_attr( $stripe_domains ); ?> https: http: blob:; worker-src 'self' blob: <?php echo esc_attr( $stripe_domains ); ?> https: http:; connect-src 'self' <?php echo esc_attr( $stripe_domains ); ?> https: http: ws: wss:; manifest-src 'self' https://www.google.com https://pay.google.com; img-src 'self' data: https: http:; style-src 'self' 'unsafe-inline' https: http:; style-src-elem 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:;">
-        <?php
+    // Only add on checkout page and ensure we're in the head section
+    if ( ! is_checkout() ) {
+        return;
     }
+    
+    // Double-check we're in wp_head context (not in body)
+    if ( ! doing_action( 'wp_head' ) ) {
+        return;
+    }
+    
+    // CRITICAL: Explicitly allow Stripe domains
+    $stripe_domains = 'https://js.stripe.com https://hooks.stripe.com https://m.stripe.com https://r.stripe.com https://q.stripe.com https://b.stripecdn.com https://stripecdn.com https://*.stripe.com https://*.stripecdn.com';
+    
+    // Build CSP content
+    $csp_content = sprintf(
+        "frame-src 'self' %s https: http:; script-src 'self' 'unsafe-inline' 'unsafe-eval' %s https: http: blob:; script-src-elem 'self' 'unsafe-inline' %s https: http: blob:; worker-src 'self' blob: %s https: http:; connect-src 'self' %s https: http: ws: wss:; manifest-src 'self' https://www.google.com https://pay.google.com; img-src 'self' data: https: http:; style-src 'self' 'unsafe-inline' https: http:; style-src-elem 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:;",
+        esc_attr( $stripe_domains ),
+        esc_attr( $stripe_domains ),
+        esc_attr( $stripe_domains ),
+        esc_attr( $stripe_domains ),
+        esc_attr( $stripe_domains )
+    );
+    
+    echo '<meta http-equiv="Content-Security-Policy" content="' . esc_attr( $csp_content ) . '">' . "\n";
 }
+// Use early priority to ensure it's added before other head content
 add_action( 'wp_head', 'stirjoy_add_csp_meta_tag', 1 );
 
 /**
@@ -2421,11 +2440,61 @@ add_action( 'woocommerce_before_checkout_process', 'stirjoy_ensure_required_chec
 function stirjoy_handle_payment_gateway_errors( $result, $order_id ) {
 	if ( isset( $result['result'] ) && 'failure' === $result['result'] ) {
 		$error_message = isset( $result['errorMessage'] ) ? $result['errorMessage'] : 'Unknown payment error';
-		error_log( 'Stirjoy Payment Error: ' . $error_message . ' (Order ID: ' . $order_id . ')' );
+		
+		// Comprehensive error logging
+		$error_details = array(
+			'order_id' => $order_id,
+			'error_message' => $error_message,
+			'result' => $result,
+			'timestamp' => current_time( 'mysql' ),
+			'user_id' => get_current_user_id(),
+			'ip_address' => WC_Geolocation::get_ip_address(),
+		);
 		
 		// Log gateway-specific errors
 		if ( isset( $result['messages'] ) ) {
-			error_log( 'Stirjoy Payment Error Messages: ' . print_r( $result['messages'], true ) );
+			$error_details['messages'] = $result['messages'];
+		}
+		
+		// Log all error data
+		error_log( '=== STIRJOY PAYMENT FAILURE DETAILS ===' );
+		error_log( 'Order ID: ' . $order_id );
+		error_log( 'Error Message: ' . $error_message );
+		error_log( 'Full Result: ' . print_r( $result, true ) );
+		error_log( 'Error Details: ' . print_r( $error_details, true ) );
+		error_log( '========================================' );
+		
+		// Store error in session for display on checkout page
+		WC()->session->set( 'stirjoy_payment_error_details', $error_details );
+		
+		// Get order for additional context
+		$order = wc_get_order( $order_id );
+		if ( $order ) {
+			$error_details['order_status'] = $order->get_status();
+			$error_details['payment_method'] = $order->get_payment_method();
+			$error_details['order_total'] = $order->get_total();
+			
+			// Add order notes
+			$order_notes = $order->get_customer_order_notes();
+			if ( ! empty( $order_notes ) ) {
+				$error_details['order_notes'] = $order_notes;
+			}
+			
+			error_log( 'Order Details: Status=' . $order->get_status() . ', Payment Method=' . $order->get_payment_method() . ', Total=' . $order->get_total() );
+		}
+	} elseif ( isset( $result['result'] ) && 'success' === $result['result'] ) {
+		// Clear any previous error details
+		WC()->session->__unset( 'stirjoy_payment_error_details' );
+		
+		// Ensure redirect URL is set for successful payments
+		if ( ! isset( $result['redirect'] ) || empty( $result['redirect'] ) ) {
+			$order = wc_get_order( $order_id );
+			if ( $order ) {
+				$result['redirect'] = $order->get_checkout_order_received_url();
+				error_log( 'Stirjoy Payment Success: Redirect URL set to order-received page (Order ID: ' . $order_id . ')' );
+			}
+		} else {
+			error_log( 'Stirjoy Payment Success: Redirecting to ' . $result['redirect'] . ' (Order ID: ' . $order_id . ')' );
 		}
 	}
 	return $result;
@@ -2453,6 +2522,97 @@ function stirjoy_catch_payment_failures( $order_id ) {
 }
 add_action( 'woocommerce_payment_complete', 'stirjoy_catch_payment_failures', 10, 1 );
 add_action( 'woocommerce_order_status_failed', 'stirjoy_catch_payment_failures', 10, 1 );
+
+/**
+ * Catch payment processing errors during checkout
+ * This hook fires when payment processing fails
+ */
+function stirjoy_catch_payment_processing_errors_detailed( $order_id, $posted_data, $order ) {
+	if ( ! $order ) {
+		return;
+	}
+	
+	// Check if order has failed status or is pending payment
+	if ( $order->has_status( array( 'failed', 'pending', 'on-hold' ) ) ) {
+		// Extract error message from WooCommerce notices
+		$error_message = '';
+		$notices = wc_get_notices( 'error' );
+		if ( ! empty( $notices ) ) {
+			// Get the most recent error notice
+			$last_notice = end( $notices );
+			if ( isset( $last_notice['notice'] ) ) {
+				$error_message = strip_tags( $last_notice['notice'] );
+			}
+		}
+		
+		// If no notice found, try to get from order notes
+		if ( empty( $error_message ) ) {
+			$order_notes = $order->get_customer_order_notes();
+			if ( ! empty( $order_notes ) ) {
+				// Get the most recent order note
+				$last_note = reset( $order_notes );
+				if ( isset( $last_note->comment_content ) ) {
+					$error_message = strip_tags( $last_note->comment_content );
+				}
+			}
+		}
+		
+		// If still no message, use a default based on order status
+		if ( empty( $error_message ) ) {
+			if ( $order->has_status( 'failed' ) ) {
+				$error_message = 'Payment processing failed. Please try again or use a different payment method.';
+			} elseif ( $order->has_status( 'pending' ) ) {
+				$error_message = 'Payment is pending. Please check your payment method and try again.';
+			} else {
+				$error_message = 'Payment could not be processed. Please try again.';
+			}
+		}
+		
+		$error_details = array(
+			'order_id' => $order_id,
+			'error_message' => $error_message,
+			'order_status' => $order->get_status(),
+			'payment_method' => $order->get_payment_method(),
+			'order_total' => $order->get_total(),
+			'timestamp' => current_time( 'mysql' ),
+			'user_id' => $order->get_user_id(),
+			'customer_email' => $order->get_billing_email(),
+		);
+		
+		// Get order notes for additional context
+		$order_notes = $order->get_customer_order_notes();
+		if ( ! empty( $order_notes ) ) {
+			$error_details['order_notes'] = array();
+			foreach ( $order_notes as $note ) {
+				$error_details['order_notes'][] = array(
+					'comment_date' => $note->comment_date,
+					'comment_content' => $note->comment_content,
+				);
+			}
+		}
+		
+		// Get payment transaction ID if available
+		$transaction_id = $order->get_transaction_id();
+		if ( $transaction_id ) {
+			$error_details['transaction_id'] = $transaction_id;
+		}
+		
+		// Log comprehensive error details
+		error_log( '=== STIRJOY PAYMENT PROCESSING ERROR ===' );
+		error_log( 'Order ID: ' . $order_id );
+		error_log( 'Error Message: ' . $error_message );
+		error_log( 'Order Status: ' . $order->get_status() );
+		error_log( 'Payment Method: ' . $order->get_payment_method() );
+		error_log( 'Order Total: ' . $order->get_total() );
+		error_log( 'Transaction ID: ' . ( $transaction_id ? $transaction_id : 'N/A' ) );
+		error_log( 'Full Error Details: ' . print_r( $error_details, true ) );
+		error_log( '=========================================' );
+		
+		// Store error in session for display
+		WC()->session->set( 'stirjoy_payment_error_details', $error_details );
+	}
+}
+add_action( 'woocommerce_checkout_order_processed', 'stirjoy_catch_payment_processing_errors_detailed', 999, 3 );
 
 /**
  * Catch all PHP errors during checkout processing
@@ -3311,9 +3471,20 @@ function stirjoy_create_stripe_payment_method() {
 		return;
 	}
 	
-	if ( $exp_year < date( 'Y' ) ) {
+	// Validate expiry year (handle both YY and YYYY formats)
+	$current_year = (int) date( 'Y' );
+	if ( $exp_year < $current_year ) {
 		wp_send_json_error( array( 'message' => 'Card has expired.' ) );
 		return;
+	}
+	
+	// Check if expiry is in current month/year (card expires at end of month)
+	if ( $exp_year === $current_year ) {
+		$current_month = (int) date( 'n' );
+		if ( $exp_month < $current_month ) {
+			wp_send_json_error( array( 'message' => 'Card has expired.' ) );
+			return;
+		}
 	}
 	
 	if ( empty( $cvc ) || strlen( $cvc ) < 3 ) {
@@ -3374,14 +3545,48 @@ function stirjoy_create_stripe_payment_method() {
 			}
 			
 			if ( ! empty( $response->error ) ) {
-				error_log( 'Stirjoy: Stripe API error: ' . print_r( $response->error, true ) );
-				wp_send_json_error( array( 'message' => $response->error->message ) );
+				// Comprehensive Stripe error logging
+				$stripe_error = $response->error;
+				$error_details = array(
+					'type' => isset( $stripe_error->type ) ? $stripe_error->type : 'unknown',
+					'code' => isset( $stripe_error->code ) ? $stripe_error->code : 'unknown',
+					'message' => isset( $stripe_error->message ) ? $stripe_error->message : 'Unknown Stripe error',
+					'decline_code' => isset( $stripe_error->decline_code ) ? $stripe_error->decline_code : null,
+					'param' => isset( $stripe_error->param ) ? $stripe_error->param : null,
+					'full_error' => $stripe_error,
+				);
+				
+				error_log( '=== STIRJOY STRIPE API ERROR ===' );
+				error_log( 'Error Type: ' . $error_details['type'] );
+				error_log( 'Error Code: ' . $error_details['code'] );
+				error_log( 'Error Message: ' . $error_details['message'] );
+				error_log( 'Decline Code: ' . ( $error_details['decline_code'] ? $error_details['decline_code'] : 'N/A' ) );
+				error_log( 'Parameter: ' . ( $error_details['param'] ? $error_details['param'] : 'N/A' ) );
+				error_log( 'Full Error Object: ' . print_r( $stripe_error, true ) );
+				error_log( '===============================' );
+				
+				// Build detailed error message
+				$error_message = $error_details['message'];
+				if ( $error_details['decline_code'] ) {
+					$error_message .= ' (Decline Code: ' . $error_details['decline_code'] . ')';
+				}
+				
+				wp_send_json_error( array( 
+					'message' => $error_message,
+					'error_details' => $error_details,
+					'error_code' => $error_details['code'],
+					'decline_code' => $error_details['decline_code'],
+				) );
 				return;
 			}
 			
 			if ( ! empty( $response->id ) ) {
 				error_log( 'Stirjoy: Payment method created successfully: ' . $response->id );
 				wp_send_json_success( array( 'payment_method_id' => $response->id ) );
+				return;
+			} else {
+				error_log( 'Stirjoy: Payment method creation response missing ID: ' . print_r( $response, true ) );
+				wp_send_json_error( array( 'message' => 'Invalid response from payment processor. Please try again.' ) );
 				return;
 			}
 		} else {
@@ -3414,23 +3619,83 @@ function stirjoy_create_stripe_payment_method() {
 					}
 					
 					if ( ! empty( $response->error ) ) {
-						wp_send_json_error( array( 'message' => $response->error->message ) );
+						// Comprehensive Stripe error logging (fallback)
+						$stripe_error = $response->error;
+						$error_details = array(
+							'type' => isset( $stripe_error->type ) ? $stripe_error->type : 'unknown',
+							'code' => isset( $stripe_error->code ) ? $stripe_error->code : 'unknown',
+							'message' => isset( $stripe_error->message ) ? $stripe_error->message : 'Unknown Stripe error',
+							'decline_code' => isset( $stripe_error->decline_code ) ? $stripe_error->decline_code : null,
+							'param' => isset( $stripe_error->param ) ? $stripe_error->param : null,
+						);
+						
+						error_log( '=== STIRJOY STRIPE API ERROR (FALLBACK) ===' );
+						error_log( 'Error Type: ' . $error_details['type'] );
+						error_log( 'Error Code: ' . $error_details['code'] );
+						error_log( 'Error Message: ' . $error_details['message'] );
+						error_log( 'Full Error: ' . print_r( $stripe_error, true ) );
+						error_log( '===========================================' );
+						
+						$error_message = $error_details['message'];
+						if ( $error_details['decline_code'] ) {
+							$error_message .= ' (Decline Code: ' . $error_details['decline_code'] . ')';
+						}
+						
+						wp_send_json_error( array( 
+							'message' => $error_message,
+							'error_details' => $error_details,
+						) );
 						return;
 					}
 					
 					if ( ! empty( $response->id ) ) {
+						error_log( 'Stirjoy: Payment method created successfully (fallback): ' . $response->id );
 						wp_send_json_success( array( 'payment_method_id' => $response->id ) );
 						return;
+					} else {
+						error_log( 'Stirjoy: Payment method creation response missing ID (fallback): ' . print_r( $response, true ) );
+						wp_send_json_error( array( 'message' => 'Invalid response from payment processor. Please try again.' ) );
+						return;
 					}
+				} else {
+					error_log( 'Stirjoy: WC_Stripe_API class still not found after fallback attempt' );
+					wp_send_json_error( array( 'message' => 'Stripe payment gateway is not properly configured. Please contact support.' ) );
+					return;
 				}
+			} else {
+				error_log( 'Stirjoy: Stripe API file not found at: ' . $stripe_api_path );
+				wp_send_json_error( array( 'message' => 'Stripe payment gateway files not found. Please contact support.' ) );
+				return;
 			}
 		}
 		
-		wp_send_json_error( array( 'message' => 'Failed to create payment method. Please try again.' ) );
+		// If we reach here, something went wrong
+		error_log( 'Stirjoy: Failed to create payment method - no valid response from Stripe API' );
+		wp_send_json_error( array( 'message' => 'Failed to create payment method. Please try again or contact support if the problem persists.' ) );
 		
 	} catch ( Exception $e ) {
-		error_log( 'Stirjoy Stripe Payment Method Error: ' . $e->getMessage() );
-		wp_send_json_error( array( 'message' => 'An error occurred while processing your card. Please try again.' ) );
+		// Comprehensive exception logging
+		$exception_details = array(
+			'message' => $e->getMessage(),
+			'code' => $e->getCode(),
+			'file' => $e->getFile(),
+			'line' => $e->getLine(),
+			'trace' => $e->getTraceAsString(),
+		);
+		
+		error_log( '=== STIRJOY PAYMENT METHOD EXCEPTION ===' );
+		error_log( 'Exception Message: ' . $e->getMessage() );
+		error_log( 'Exception Code: ' . $e->getCode() );
+		error_log( 'File: ' . $e->getFile() . ':' . $e->getLine() );
+		error_log( 'Stack Trace: ' . $e->getTraceAsString() );
+		error_log( 'Full Exception: ' . print_r( $exception_details, true ) );
+		error_log( '========================================' );
+		
+		wp_send_json_error( array( 
+			'message' => 'An error occurred while processing your card. Please try again.',
+			'error_details' => $exception_details,
+			'error_type' => 'exception',
+		) );
 	}
 }
 add_action( 'wp_ajax_stirjoy_create_stripe_payment_method', 'stirjoy_create_stripe_payment_method' );

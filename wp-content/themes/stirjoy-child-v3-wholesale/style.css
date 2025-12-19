@@ -6802,6 +6802,17 @@ body.woocommerce-checkout .site-content {
     padding-top: 0;
 }
 
+.stirjoy-hidden-payment {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 .stirjoy-checkout-form #payment .wc_payment_methods {
     list-style: none;
     padding: 0;
