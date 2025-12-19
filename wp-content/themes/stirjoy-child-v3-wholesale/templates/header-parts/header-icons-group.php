@@ -55,7 +55,16 @@
     ?>
     <a class="cart-contents-custom" href="<?php echo esc_url(wc_get_cart_url()); ?>" title="<?php esc_attr_e( 'View your shopping cart', 'thecrate'); ?>">
       <img src="<?php echo esc_url(stirjoy_get_image_url($cart_icon)); ?>" alt="Cart">
-      <span>(<?php echo WC()->cart->get_cart_contents_count(); ?>)</span>
+      <span>(<?php 
+        // Use accurate cart count function
+        if ( function_exists( 'stirjoy_get_accurate_cart_count' ) ) {
+          echo stirjoy_get_accurate_cart_count();
+        } else {
+          // Fallback to WooCommerce function
+          WC()->cart->calculate_totals();
+          echo WC()->cart->get_cart_contents_count();
+        }
+      ?>)</span>
     </a>
 
 

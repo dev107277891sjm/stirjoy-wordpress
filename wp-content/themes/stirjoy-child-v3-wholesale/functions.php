@@ -13,11 +13,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper function to get image URL from images folder
  * Available globally across all template files
+ * CRITICAL: Forces HTTPS to prevent mixed content warnings
  */
 function stirjoy_get_image_url($filename) {
     $image_path = get_stylesheet_directory_uri() . '/images/home page/' . $filename;
+    // Force HTTPS if site is using HTTPS
+    if ( is_ssl() ) {
+        $image_path = str_replace( 'http://', 'https://', $image_path );
+    }
     return $image_path;
 }
+
+/**
+ * Force all image URLs to use HTTPS to prevent mixed content warnings
+ * This fixes HTTP images being loaded on HTTPS pages
+ */
+function stirjoy_force_https_images( $url ) {
+    // Only force HTTPS if site is using HTTPS
+    if ( is_ssl() && strpos( $url, 'http://' ) === 0 ) {
+        $url = str_replace( 'http://', 'https://', $url );
+    }
+    return $url;
+}
+add_filter( 'wp_get_attachment_url', 'stirjoy_force_https_images', 10, 1 );
+add_filter( 'wp_get_attachment_image_src', function( $image ) {
+    if ( is_ssl() && is_array( $image ) && isset( $image[0] ) ) {
+        $image[0] = str_replace( 'http://', 'https://', $image[0] );
+    }
+    return $image;
+}, 10, 1 );
+add_filter( 'the_content', function( $content ) {
+    if ( is_ssl() ) {
+        $host = parse_url( home_url(), PHP_URL_HOST );
+        $content = str_replace( 'http://' . $host, 'https://' . $host, $content );
+    }
+    return $content;
+}, 999 );
+add_filter( 'option_siteurl', function( $value ) {
+    if ( is_ssl() && strpos( $value, 'http://' ) === 0 ) {
+        $value = str_replace( 'http://', 'https://', $value );
+    }
+    return $value;
+}, 10, 1 );
+add_filter( 'option_home', function( $value ) {
+    if ( is_ssl() && strpos( $value, 'http://' ) === 0 ) {
+        $value = str_replace( 'http://', 'https://', $value );
+    }
+    return $value;
+}, 10, 1 );
 
 /**
  * Enqueue parent and child theme styles
@@ -636,7 +679,7 @@ function stirjoy_add_to_cart() {
         wp_send_json_success( array(
             'message' => 'Product added to cart',
             'cart_item_key' => $cart_item_key,
-            'cart_count' => WC()->cart->get_cart_contents_count(),
+            'cart_count' => stirjoy_get_accurate_cart_count(),
             'cart_total' => WC()->cart->get_cart_subtotal()
         ) );
     } else {
@@ -674,7 +717,7 @@ function stirjoy_remove_from_cart() {
     if ( $removed ) {
         wp_send_json_success( array(
             'message' => 'Product removed from cart',
-            'cart_count' => WC()->cart->get_cart_contents_count(),
+            'cart_count' => stirjoy_get_accurate_cart_count(),
             'cart_total' => WC()->cart->get_cart_subtotal(),
             'cart_subtotal_numeric' => WC()->cart->get_subtotal()
         ) );
@@ -686,11 +729,40 @@ add_action( 'wp_ajax_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart' );
 add_action( 'wp_ajax_nopriv_stirjoy_remove_from_cart', 'stirjoy_remove_from_cart' );
 
 /**
+ * Get accurate cart count (number of unique products in cart)
+ * Forces recalculation to ensure accuracy, especially after cart merge
+ */
+function stirjoy_get_accurate_cart_count() {
+    if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart ) {
+        return 0;
+    }
+    
+    // Force cart recalculation to ensure all items are registered
+    WC()->cart->calculate_totals();
+    
+    // Get cart and count unique products
+    $cart = WC()->cart->get_cart();
+    $cart_count = 0;
+    
+    foreach ( $cart as $cart_item ) {
+        // Only count if quantity > 0 and product exists
+        if ( isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ) {
+            $cart_count++;
+        }
+    }
+    
+    return $cart_count;
+}
+
+/**
  * AJAX: Get cart info for header update
  * Works for both logged-in and non-logged-in users
  */
 function stirjoy_get_cart_info() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    // Force cart recalculation to ensure accuracy
+    WC()->cart->calculate_totals();
     
     // Get cart total as HTML (works for both logged-in and guest users)
     $cart_subtotal_html = WC()->cart->get_cart_subtotal();
@@ -700,12 +772,18 @@ function stirjoy_get_cart_info() {
     
     // Get product IDs in cart
     $product_ids_in_cart = array();
+    $cart_total_quantity = 0;
     foreach ( WC()->cart->get_cart() as $cart_item ) {
         $product_ids_in_cart[] = $cart_item['product_id'];
+        $cart_total_quantity += isset( $cart_item['quantity'] ) ? $cart_item['quantity'] : 0;
     }
     
+    // Use accurate cart count function
+    $cart_count = stirjoy_get_accurate_cart_count();
+    
     wp_send_json_success( array(
-        'count' => WC()->cart->get_cart_contents_count(),
+        'count' => $cart_count, // Number of unique products
+        'total_quantity' => $cart_total_quantity, // Total quantity of all items
         'total_html' => $cart_subtotal_html,
         'total_plain' => wc_price( $cart_total_plain ),
         'cart_subtotal_numeric' => WC()->cart->get_subtotal(),
@@ -977,12 +1055,233 @@ function stirjoy_redirect_after_registration( $redirect ) {
 add_filter( 'woocommerce_registration_redirect', 'stirjoy_redirect_after_registration', 20, 1 );
 
 /**
- * Mark user as just registered for fallback redirect
+ * CRITICAL: Save guest cart BEFORE registration (for SiteGround compatibility)
+ * This captures the guest cart before any session changes during registration
  */
-function stirjoy_mark_user_registered( $customer_id ) {
-    update_user_meta( $customer_id, '_stirjoy_just_registered', time() );
+function stirjoy_save_guest_cart_before_registration() {
+    if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart || ! WC()->session ) {
+        return;
+    }
+    
+    // Only run on registration page/form submission
+    if ( ! isset( $_POST['register'] ) && ! isset( $_POST['woocommerce-register-nonce'] ) ) {
+        return;
+    }
+    
+    // Get guest cart before registration
+    $guest_cart = WC()->cart->get_cart();
+    
+    if ( ! empty( $guest_cart ) ) {
+        // Save to a temporary location that will be retrieved after user creation
+        // Use a unique key based on session ID or IP
+        $session_id = WC()->session->get_customer_id();
+        $temp_key = 'stirjoy_guest_cart_before_registration_' . md5( $session_id . ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '' ) );
+        
+        $cart_data = array(
+            'cart' => $guest_cart,
+            'totals' => WC()->cart->get_totals(),
+            'coupons' => WC()->cart->get_applied_coupons(),
+            'timestamp' => time(),
+            'session_id' => $session_id,
+        );
+        
+        // Save to transient (expires in 1 hour)
+        set_transient( $temp_key, $cart_data, 3600 );
+        
+        // Also save to a global option for SiteGround reliability
+        $global_key = 'stirjoy_pending_registration_cart_' . md5( $session_id . time() );
+        update_option( $global_key, $cart_data, false );
+        
+        // Store the key in session so we can retrieve it after registration
+        WC()->session->set( 'stirjoy_pending_cart_key', $temp_key );
+        WC()->session->set( 'stirjoy_pending_cart_global_key', $global_key );
+        WC()->session->save_data();
+        
+        error_log( 'Stirjoy SiteGround: Saved guest cart before registration. Items: ' . count( $guest_cart ) . ', Key: ' . $temp_key );
+    }
 }
-add_action( 'woocommerce_created_customer', 'stirjoy_mark_user_registered', 5, 1 );
+// Hook into registration form submission with HIGH priority
+add_action( 'woocommerce_register_form', 'stirjoy_save_guest_cart_before_registration', 1 );
+add_action( 'template_redirect', 'stirjoy_save_guest_cart_before_registration', 1 );
+
+/**
+ * CRITICAL: Also save guest cart during registration processing
+ * This catches the cart even if form hook doesn't fire (SiteGround timing issues)
+ * NOTE: woocommerce_process_registration_errors is a FILTER, not an ACTION
+ */
+function stirjoy_save_guest_cart_during_registration( $errors, $username = '', $password = '', $email = '' ) {
+    // This is a filter, so we must return the errors object
+    if ( ! is_wp_error( $errors ) ) {
+        $errors = new WP_Error();
+    }
+    
+    if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart || ! WC()->session ) {
+        return $errors; // Return errors object even if WooCommerce not available
+    }
+    
+    // Check if this is a registration POST request
+    if ( ! isset( $_POST['woocommerce-register-nonce'] ) && ! isset( $_POST['register'] ) ) {
+        return $errors;
+    }
+    
+    // Get guest cart
+    $guest_cart = WC()->cart->get_cart();
+    
+    if ( ! empty( $guest_cart ) ) {
+        $session_id = WC()->session->get_customer_id();
+        $temp_key = 'stirjoy_guest_cart_before_registration_' . md5( $session_id . ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '' ) );
+        
+        $cart_data = array(
+            'cart' => $guest_cart,
+            'totals' => WC()->cart->get_totals(),
+            'coupons' => WC()->cart->get_applied_coupons(),
+            'timestamp' => time(),
+            'session_id' => $session_id,
+        );
+        
+        // Save to multiple locations for SiteGround reliability
+        set_transient( $temp_key, $cart_data, 3600 );
+        $global_key = 'stirjoy_pending_registration_cart_' . md5( $session_id . time() );
+        update_option( $global_key, $cart_data, false );
+        
+        if ( WC()->session ) {
+            WC()->session->set( 'stirjoy_pending_cart_key', $temp_key );
+            WC()->session->set( 'stirjoy_pending_cart_global_key', $global_key );
+            WC()->session->save_data();
+        }
+        
+        error_log( 'Stirjoy SiteGround: Saved guest cart during registration processing. Items: ' . count( $guest_cart ) );
+    }
+    
+    // CRITICAL: Return the errors object (this is a filter)
+    return $errors;
+}
+
+/**
+ * Save guest cart on woocommerce_register_post action
+ * This is a separate action hook that doesn't require a return value
+ */
+function stirjoy_save_guest_cart_on_register_post( $username, $email, $errors ) {
+    if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart || ! WC()->session ) {
+        return;
+    }
+    
+    // Get guest cart
+    $guest_cart = WC()->cart->get_cart();
+    
+    if ( ! empty( $guest_cart ) ) {
+        $session_id = WC()->session->get_customer_id();
+        $temp_key = 'stirjoy_guest_cart_before_registration_' . md5( $session_id . ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '' ) );
+        
+        $cart_data = array(
+            'cart' => $guest_cart,
+            'totals' => WC()->cart->get_totals(),
+            'coupons' => WC()->cart->get_applied_coupons(),
+            'timestamp' => time(),
+            'session_id' => $session_id,
+        );
+        
+        // Save to multiple locations for SiteGround reliability
+        set_transient( $temp_key, $cart_data, 3600 );
+        $global_key = 'stirjoy_pending_registration_cart_' . md5( $session_id . time() );
+        update_option( $global_key, $cart_data, false );
+        
+        if ( WC()->session ) {
+            WC()->session->set( 'stirjoy_pending_cart_key', $temp_key );
+            WC()->session->set( 'stirjoy_pending_cart_global_key', $global_key );
+            WC()->session->save_data();
+        }
+        
+        error_log( 'Stirjoy SiteGround: Saved guest cart on register_post. Items: ' . count( $guest_cart ) );
+    }
+}
+
+// Hook into registration processing - woocommerce_process_registration_errors is a FILTER
+add_filter( 'woocommerce_process_registration_errors', 'stirjoy_save_guest_cart_during_registration', 1, 4 );
+// woocommerce_register_post is an ACTION (doesn't need return value)
+add_action( 'woocommerce_register_post', 'stirjoy_save_guest_cart_on_register_post', 1, 3 );
+
+/**
+ * Mark user as just registered and merge guest cart
+ * CRITICAL: This runs when user is created during registration
+ */
+function stirjoy_mark_user_registered_and_merge_cart( $customer_id ) {
+    // Mark user as just registered
+    update_user_meta( $customer_id, '_stirjoy_just_registered', time() );
+    
+    // CRITICAL: Merge guest cart immediately after user creation
+    // This happens BEFORE the user is logged in, so we need to handle it specially
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    
+    // Get the saved guest cart from before registration
+    $session_id = WC()->session ? WC()->session->get_customer_id() : '';
+    $temp_key = WC()->session ? WC()->session->get( 'stirjoy_pending_cart_key' ) : '';
+    
+    if ( ! $temp_key ) {
+        // Try to find it by session ID
+        $temp_key = 'stirjoy_guest_cart_before_registration_' . md5( $session_id . ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '' ) );
+    }
+    
+    $saved_guest_cart = get_transient( $temp_key );
+    
+    // If transient is empty, try global option
+    if ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) {
+        $global_key = WC()->session ? WC()->session->get( 'stirjoy_pending_cart_global_key' ) : '';
+        if ( $global_key ) {
+            $saved_guest_cart = get_option( $global_key );
+        }
+    }
+    
+    // If still empty, try to get from current session (might still be there)
+    if ( ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) && WC()->cart && ! WC()->cart->is_empty() ) {
+        $saved_guest_cart = array(
+            'cart' => WC()->cart->get_cart(),
+            'totals' => WC()->cart->get_totals(),
+            'coupons' => WC()->cart->get_applied_coupons(),
+        );
+        error_log( 'Stirjoy SiteGround: Using current session cart for registration merge. User: ' . $customer_id );
+    }
+    
+    if ( $saved_guest_cart && ! empty( $saved_guest_cart['cart'] ) ) {
+        // Save to the same location as login merge (for consistency)
+        set_transient( 'stirjoy_guest_cart_before_login_' . $customer_id, $saved_guest_cart, 3600 );
+        update_user_meta( $customer_id, '_stirjoy_guest_cart_backup', $saved_guest_cart );
+        
+        error_log( 'Stirjoy SiteGround: Saved guest cart for registration merge. User: ' . $customer_id . ', Items: ' . count( $saved_guest_cart['cart'] ) );
+        
+        // Clear temporary storage
+        if ( $temp_key ) {
+            delete_transient( $temp_key );
+        }
+        if ( $global_key ) {
+            delete_option( $global_key );
+        }
+        if ( WC()->session ) {
+            WC()->session->__unset( 'stirjoy_pending_cart_key' );
+            WC()->session->__unset( 'stirjoy_pending_cart_global_key' );
+        }
+    }
+    
+    // CRITICAL: Schedule merge to happen after user is logged in
+    // WooCommerce logs the user in automatically after registration
+    // We need to wait for that, but merge BEFORE session is finalized
+    add_action( 'wp_login', function( $user_login, $user ) use ( $customer_id ) {
+        if ( $user->ID == $customer_id ) {
+            // This is our newly registered user - merge cart immediately
+            error_log( 'Stirjoy SiteGround: User logged in after registration. Merging cart for user: ' . $customer_id );
+            stirjoy_merge_guest_cart_with_user_cart( $customer_id );
+        }
+    }, 5, 2 );
+    
+    // Also try to merge immediately if user is already logged in (some registration flows)
+    if ( is_user_logged_in() && get_current_user_id() == $customer_id ) {
+        error_log( 'Stirjoy SiteGround: User already logged in during registration. Merging cart immediately for user: ' . $customer_id );
+        stirjoy_merge_guest_cart_with_user_cart( $customer_id );
+    }
+}
+add_action( 'woocommerce_created_customer', 'stirjoy_mark_user_registered_and_merge_cart', 5, 1 );
 
 /**
  * Hook into wholesale plugin's registration hooks to redirect to checkout
@@ -1029,29 +1328,134 @@ add_action( 'template_redirect', 'stirjoy_force_checkout_redirect_after_registra
  * This ensures cart persists even with caching/speed optimizers
  * Enhanced for SiteGround hosting compatibility
  * FIXED: Now properly merges guest cart with user cart
+ * CRITICAL: Merge happens BEFORE WooCommerce loads persistent cart from session
  */
 function stirjoy_transfer_guest_cart_to_user( $user_login, $user ) {
     if ( ! class_exists( 'WooCommerce' ) ) {
         return;
     }
     
-    // Wait a moment for WooCommerce to initialize after login
-    // Use a later priority to ensure WooCommerce has loaded persistent cart
-    add_action( 'wp_loaded', function() use ( $user ) {
+    // CRITICAL: Merge cart BEFORE WooCommerce loads persistent cart from session
+    // Hook into woocommerce_load_cart_from_session with HIGH priority (5) to run FIRST
+    // This ensures merge happens before session cart is processed
+    add_action( 'woocommerce_load_cart_from_session', function() use ( $user ) {
+        // Only merge once per login
+        static $merged = false;
+        if ( $merged ) {
+            return;
+        }
+        $merged = true;
+        
+        // Perform merge BEFORE WooCommerce processes the session cart
+        // This ensures: new user cart = old user cart + guest cart
         stirjoy_merge_guest_cart_with_user_cart( $user->ID );
-    }, 30 );
+    }, 5 );
+    
+    // Also hook into wp_loaded as backup with HIGH priority (5) to run BEFORE WooCommerce's cart loading (priority 10)
+    add_action( 'wp_loaded', function() use ( $user ) {
+        // Only merge if not already merged via woocommerce_load_cart_from_session
+        $merge_completed = get_user_meta( $user->ID, '_stirjoy_cart_merge_completed', true );
+        if ( ! $merge_completed ) {
+            // Perform merge BEFORE WooCommerce loads cart from session
+            stirjoy_merge_guest_cart_with_user_cart( $user->ID );
+        }
+    }, 5 );
+    
+    // CRITICAL: Also hook into init with HIGH priority to ensure merge happens before session initialization
+    add_action( 'init', function() use ( $user ) {
+        // Only merge if not already merged
+        $merge_completed = get_user_meta( $user->ID, '_stirjoy_cart_merge_completed', true );
+        if ( ! $merge_completed ) {
+            // Perform merge BEFORE WooCommerce initializes session
+            stirjoy_merge_guest_cart_with_user_cart( $user->ID );
+        }
+    }, 5 );
 }
 add_action( 'wp_login', 'stirjoy_transfer_guest_cart_to_user', 10, 2 );
 
 /**
+ * CRITICAL: Prevent session cookie initialization until cart merge completes
+ * This ensures merged cart is saved before cookies are set on SiteGround
+ */
+function stirjoy_delay_session_cookies_until_merge_complete( $set ) {
+    // Only delay on login/checkout pages and if merge is in progress
+    if ( ! is_user_logged_in() || ! is_checkout() && ! is_cart() ) {
+        return $set;
+    }
+    
+    $user_id = get_current_user_id();
+    $merge_completed = get_user_meta( $user_id, '_stirjoy_cart_merge_completed', true );
+    
+    // If merge is not completed, delay cookie setting
+    if ( ! $merge_completed ) {
+        // Check if we have a guest cart that needs merging
+        $transient_key = 'stirjoy_guest_cart_before_login_' . $user_id;
+        $saved_guest_cart = get_transient( $transient_key );
+        
+        if ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) {
+            $saved_guest_cart = get_user_meta( $user_id, '_stirjoy_guest_cart_backup', true );
+        }
+        
+        // If we have a guest cart to merge, prevent cookie setting until merge completes
+        if ( $saved_guest_cart && ! empty( $saved_guest_cart['cart'] ) ) {
+            // Try to complete merge immediately
+            stirjoy_merge_guest_cart_with_user_cart( $user_id );
+            
+            // Check again if merge completed
+            $merge_completed = get_user_meta( $user_id, '_stirjoy_cart_merge_completed', true );
+            if ( ! $merge_completed ) {
+                // Still not merged - delay cookie setting
+                error_log( 'Stirjoy SiteGround: Delaying session cookie until merge completes for user: ' . $user_id );
+                return false; // Prevent cookie setting
+            }
+        }
+    }
+    
+    return $set;
+}
+// Hook into WooCommerce cookie setting with HIGH priority
+add_filter( 'woocommerce_set_cart_cookies', 'stirjoy_delay_session_cookies_until_merge_complete', 5, 1 );
+
+/**
  * Actually perform the cart merge
- * This is called after WooCommerce has loaded the persistent cart
+ * CRITICAL: This runs BEFORE WooCommerce loads persistent cart from session
  * Enhanced for SiteGround hosting - uses multiple fallback methods
+ * Returns true if merge was successful, false otherwise
+ * 
+ * Flow: new user cart = old user cart + guest cart
  */
 function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
-    if ( ! class_exists( 'WooCommerce' ) || ! WC()->cart || ! WC()->session ) {
-        return;
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        error_log( 'Stirjoy SiteGround: WooCommerce not available for merge. User: ' . $user_id );
+        return false;
     }
+    
+    // CRITICAL: Initialize WooCommerce objects if not already initialized
+    // But do NOT call session->init() yet - we need to merge BEFORE session is finalized
+    if ( ! WC()->cart ) {
+        WC()->initialize_cart();
+    }
+    if ( ! WC()->session ) {
+        WC()->initialize_session();
+        // But don't load cart from session yet - we'll do that after merge
+        if ( method_exists( WC()->session, 'init' ) ) {
+            // Initialize session but prevent cart loading
+            WC()->session->init();
+        }
+    }
+    
+    if ( ! WC()->cart || ! WC()->session ) {
+        error_log( 'Stirjoy SiteGround: WooCommerce cart/session not available for merge. User: ' . $user_id );
+        return false;
+    }
+    
+    // Check if merge already completed
+    $merge_completed = get_user_meta( $user_id, '_stirjoy_cart_merge_completed', true );
+    if ( $merge_completed ) {
+        return true; // Already merged
+    }
+    
+    error_log( 'Stirjoy SiteGround: Starting cart merge for user: ' . $user_id . ' BEFORE session cart loading' );
     
     // Check if we have a saved guest cart from before login
     $transient_key = 'stirjoy_guest_cart_before_login_' . $user_id;
@@ -1059,17 +1463,35 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
     
     // If transient is empty (SiteGround cache issue), try user meta backup
     if ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) {
+        error_log( 'Stirjoy SiteGround: Transient empty, trying user meta backup for user: ' . $user_id );
         $saved_guest_cart = get_user_meta( $user_id, '_stirjoy_guest_cart_backup', true );
+        
+        // If still empty, try database options (ultimate backup)
+        if ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) {
+            error_log( 'Stirjoy SiteGround: User meta empty, trying database options for user: ' . $user_id );
+            global $wpdb;
+            $option_keys = $wpdb->get_col( $wpdb->prepare(
+                "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s ORDER BY option_id DESC LIMIT 1",
+                'stirjoy_guest_cart_' . $user_id . '_%'
+            ) );
+            if ( ! empty( $option_keys ) ) {
+                $saved_guest_cart = get_option( $option_keys[0] );
+                error_log( 'Stirjoy SiteGround: Found cart in database option: ' . $option_keys[0] );
+            }
+        }
         
         // If still empty, check if there's a guest cart in the current session
         if ( ! $saved_guest_cart || empty( $saved_guest_cart['cart'] ) ) {
             $current_session_cart = WC()->session->get( 'cart' );
             if ( ! empty( $current_session_cart ) ) {
                 $saved_guest_cart = array( 'cart' => $current_session_cart );
+                error_log( 'Stirjoy SiteGround: Found cart in current session for user: ' . $user_id );
             } else {
                 // No guest cart to merge
-                error_log( 'Stirjoy: No guest cart found to merge for user: ' . $user_id );
-                return;
+                error_log( 'Stirjoy SiteGround: No guest cart found to merge for user: ' . $user_id );
+                // Mark as completed even if no guest cart (prevents retry loops)
+                update_user_meta( $user_id, '_stirjoy_cart_merge_completed', time() );
+                return false;
             }
         }
     }
@@ -1077,22 +1499,33 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
     $guest_cart_contents = $saved_guest_cart['cart'];
     
     if ( empty( $guest_cart_contents ) ) {
-        return;
+        error_log( 'Stirjoy SiteGround: Guest cart is empty for user: ' . $user_id );
+        update_user_meta( $user_id, '_stirjoy_cart_merge_completed', time() );
+        return false;
     }
     
-    // Get existing user's persistent cart (WooCommerce may have already loaded it)
+    error_log( 'Stirjoy SiteGround: Starting merge for user ' . $user_id . '. Guest items: ' . count( $guest_cart_contents ) );
+    
+    // CRITICAL: Get existing user's persistent cart DIRECTLY from database
+    // Do NOT rely on WooCommerce session cart - it may not be loaded yet
+    // This ensures we get the OLD user cart before any session processing
     $existing_persistent_cart_meta = get_user_meta( $user_id, '_woocommerce_persistent_cart_' . get_current_blog_id(), true );
     $existing_user_cart = array();
     
     if ( is_array( $existing_persistent_cart_meta ) && isset( $existing_persistent_cart_meta['cart'] ) ) {
         $existing_user_cart = array_filter( (array) $existing_persistent_cart_meta['cart'] );
+        error_log( 'Stirjoy SiteGround: Found existing user cart with ' . count( $existing_user_cart ) . ' items for user: ' . $user_id );
+    } else {
+        error_log( 'Stirjoy SiteGround: No existing user cart found for user: ' . $user_id );
     }
     
-    // Also check current cart in WooCommerce object (might have been loaded from persistent cart)
-    $current_cart = WC()->cart->get_cart();
-    if ( ! empty( $current_cart ) ) {
-        // Merge current cart with existing user cart
-        foreach ( $current_cart as $cart_item_key => $cart_item ) {
+    // Also check current session cart (if already loaded by WooCommerce)
+    // But prioritize persistent cart from database
+    $current_session_cart = WC()->session->get( 'cart', null );
+    if ( ! is_null( $current_session_cart ) && ! empty( $current_session_cart ) ) {
+        error_log( 'Stirjoy SiteGround: Found session cart with ' . count( $current_session_cart ) . ' items for user: ' . $user_id );
+        // Merge session cart with existing user cart (combine quantities for duplicates)
+        foreach ( $current_session_cart as $cart_item_key => $cart_item ) {
             $product_id = $cart_item['product_id'];
             $variation_id = isset( $cart_item['variation_id'] ) ? $cart_item['variation_id'] : 0;
             
@@ -1101,6 +1534,7 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
             foreach ( $existing_user_cart as $key => $item ) {
                 if ( $item['product_id'] == $product_id && 
                      ( isset( $item['variation_id'] ) ? $item['variation_id'] : 0 ) == $variation_id ) {
+                    // Same product - combine quantities
                     $existing_user_cart[ $key ]['quantity'] += $cart_item['quantity'];
                     $found = true;
                     break;
@@ -1154,18 +1588,23 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
         foreach ( $merged_cart as $cart_item_key => $cart_item ) {
             $product_id = $cart_item['product_id'];
             $variation_id = isset( $cart_item['variation_id'] ) ? $cart_item['variation_id'] : 0;
-            $quantity = $cart_item['quantity'];
+            $quantity = isset( $cart_item['quantity'] ) ? absint( $cart_item['quantity'] ) : 1;
             $variation = isset( $cart_item['variation'] ) ? $cart_item['variation'] : array();
             
-            // Add to cart
-            WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation );
+            // Add to cart (this will create proper cart item keys)
+            $new_cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variation );
+            
+            if ( ! $new_cart_item_key ) {
+                error_log( 'Stirjoy SiteGround: Failed to add product ' . $product_id . ' (qty: ' . $quantity . ') to cart during merge' );
+            }
         }
         
-        // Update session with merged cart
-        WC()->session->set( 'cart', WC()->cart->get_cart() );
-        
-        // Calculate totals
+        // Force cart recalculation to ensure all items are properly registered
         WC()->cart->calculate_totals();
+        
+        // Update session with merged cart (use actual cart from WooCommerce object)
+        $final_cart = WC()->cart->get_cart();
+        WC()->session->set( 'cart', $final_cart );
         
         // Save session multiple times for SiteGround reliability
         WC()->session->save_data();
@@ -1184,6 +1623,9 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
             }, 999 );
         }
         
+        // Mark merge as completed
+        update_user_meta( $user_id, '_stirjoy_cart_merge_completed', time() );
+        
         // Clear transient and backup
         delete_transient( $transient_key );
         delete_user_meta( $user_id, '_stirjoy_guest_cart_backup' );
@@ -1197,7 +1639,17 @@ function stirjoy_merge_guest_cart_with_user_cart( $user_id ) {
             wp_cache_flush();
         }
         
-        error_log( 'Stirjoy: Merged guest cart with user cart. Total items: ' . count( $merged_cart ) . ' for user: ' . $user_id );
+        // Verify merge was successful
+        $final_cart = WC()->cart->get_cart();
+        $final_count = count( $final_cart );
+        
+        error_log( 'Stirjoy SiteGround: SUCCESS - Merged guest cart with user cart. Total items: ' . $final_count . ' for user: ' . $user_id );
+        error_log( 'Stirjoy SiteGround: Merge details - Guest items: ' . count( $guest_cart_contents ) . ', Merged items: ' . count( $merged_cart ) . ', Final cart items: ' . $final_count );
+        
+        return true;
+    } else {
+        error_log( 'Stirjoy SiteGround: Merge failed - merged cart is empty for user: ' . $user_id );
+        return false;
     }
 }
 
@@ -1210,6 +1662,9 @@ function stirjoy_save_guest_cart_before_login( $user_login, $user ) {
         return;
     }
     
+    // Clear any previous merge completion flag
+    delete_user_meta( $user->ID, '_stirjoy_cart_merge_completed' );
+    
     // Get guest cart before login
     $guest_cart = WC()->cart->get_cart();
     
@@ -1221,16 +1676,23 @@ function stirjoy_save_guest_cart_before_login( $user_login, $user ) {
             'timestamp' => time(),
         );
         
-        // Save to transient (expires in 30 minutes for SiteGround compatibility)
-        set_transient( 'stirjoy_guest_cart_before_login_' . $user->ID, $cart_data, 1800 );
+        // Save to transient (expires in 1 hour for SiteGround compatibility - longer than before)
+        set_transient( 'stirjoy_guest_cart_before_login_' . $user->ID, $cart_data, 3600 );
         
-        // Also save to user meta as backup (for SiteGround cache issues)
+        // Also save to user meta as backup (for SiteGround cache issues) - permanent until merge
         update_user_meta( $user->ID, '_stirjoy_guest_cart_backup', $cart_data );
+        
+        // Also save to database option as ultimate backup
+        $option_key = 'stirjoy_guest_cart_' . $user->ID . '_' . time();
+        update_option( $option_key, $cart_data, false );
         
         // Force session save before login
         WC()->session->save_data();
         
-        error_log( 'Stirjoy: Saved guest cart before login. Items: ' . count( $guest_cart ) . ' for user: ' . $user->ID );
+        error_log( 'Stirjoy SiteGround: Saved guest cart before login. Items: ' . count( $guest_cart ) . ' for user: ' . $user->ID );
+        error_log( 'Stirjoy SiteGround: Cart saved to transient, user meta, and option: ' . $option_key );
+    } else {
+        error_log( 'Stirjoy SiteGround: No guest cart to save for user: ' . $user->ID );
     }
 }
 add_action( 'wp_login', 'stirjoy_save_guest_cart_before_login', 5, 2 );
@@ -1238,7 +1700,7 @@ add_action( 'wp_login', 'stirjoy_save_guest_cart_before_login', 5, 2 );
 /**
  * Ensure cart is loaded after login/registration
  * This handles cases where session migration doesn't happen immediately
- * Enhanced for SiteGround hosting compatibility
+ * Enhanced for SiteGround hosting compatibility - tries multiple times until successful
  */
 function stirjoy_ensure_cart_after_login() {
     if ( ! is_user_logged_in() || ! class_exists( 'WooCommerce' ) ) {
@@ -1250,6 +1712,9 @@ function stirjoy_ensure_cart_after_login() {
         return;
     }
     
+    // Check if merge has already been completed (to avoid infinite loops)
+    $merge_completed = get_user_meta( $user_id, '_stirjoy_cart_merge_completed', true );
+    
     // Check if we have a saved guest cart that needs to be merged
     $transient_key = 'stirjoy_guest_cart_before_login_' . $user_id;
     $saved_guest_cart = get_transient( $transient_key );
@@ -1259,13 +1724,40 @@ function stirjoy_ensure_cart_after_login() {
         $saved_guest_cart = get_user_meta( $user_id, '_stirjoy_guest_cart_backup', true );
     }
     
-    if ( $saved_guest_cart && ! empty( $saved_guest_cart['cart'] ) ) {
-        // For SiteGround, add a small delay to ensure WooCommerce is fully initialized
+    // If we have a guest cart and merge hasn't been completed, attempt merge
+    if ( $saved_guest_cart && ! empty( $saved_guest_cart['cart'] ) && ! $merge_completed ) {
+        error_log( 'Stirjoy SiteGround: Attempting cart merge for user ' . $user_id . '. Guest items: ' . count( $saved_guest_cart['cart'] ) );
+        
+        // Force WooCommerce session initialization first
+        if ( WC()->session ) {
+            if ( ! WC()->session->has_session() ) {
+                WC()->session->set_customer_session_cookie( true );
+            }
+            // Force session start
+            WC()->session->init();
+        }
+        
+        // For SiteGround, try multiple approaches
         if ( function_exists( 'sg_cachepress_purge_cache' ) || class_exists( 'SiteGround_Optimizer\Supercacher\Supercacher' ) ) {
-            // Use shutdown hook for SiteGround to ensure everything is loaded
-            add_action( 'shutdown', function() use ( $user_id ) {
-                stirjoy_merge_guest_cart_with_user_cart( $user_id );
-            }, 1 );
+            // Try immediate merge first
+            $merge_result = stirjoy_merge_guest_cart_with_user_cart( $user_id );
+            
+            // If immediate merge didn't work, schedule for shutdown
+            if ( ! $merge_result ) {
+                add_action( 'shutdown', function() use ( $user_id ) {
+                    stirjoy_merge_guest_cart_with_user_cart( $user_id );
+                }, 1 );
+            }
+            
+            // Also schedule for next page load as backup
+            add_action( 'template_redirect', function() use ( $user_id ) {
+                if ( is_user_logged_in() && get_current_user_id() == $user_id ) {
+                    $merge_completed = get_user_meta( $user_id, '_stirjoy_cart_merge_completed', true );
+                    if ( ! $merge_completed ) {
+                        stirjoy_merge_guest_cart_with_user_cart( $user_id );
+                    }
+                }
+            }, 999 );
         } else {
             // Immediate merge for other hosts
             stirjoy_merge_guest_cart_with_user_cart( $user_id );
@@ -1284,7 +1776,7 @@ function stirjoy_ensure_cart_after_login() {
         WC()->cart->calculate_totals();
         
         // Force session save for SiteGround
-        if ( WC()->session && ( function_exists( 'sg_cachepress_purge_cache' ) || class_exists( 'SiteGround_Optimizer\Supercacher\Supercacher' ) ) ) {
+        if ( WC()->session ) {
             WC()->session->save_data();
         }
     }
@@ -1353,6 +1845,47 @@ function stirjoy_siteground_cart_fixes() {
                 header( 'Pragma: no-cache' );
                 header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
                 header( 'X-Accel-Expires: 0' ); // Nginx cache control
+                
+                // CRITICAL: Add CSP headers to allow Stripe payment iframes and other required resources
+                // More permissive CSP to allow all necessary third-party services
+                if ( is_checkout() && ! headers_sent() ) {
+                    // CRITICAL: Explicitly allow Stripe domains for better compatibility
+                    $stripe_domains = 'https://js.stripe.com https://hooks.stripe.com https://m.stripe.com https://r.stripe.com https://q.stripe.com https://b.stripecdn.com https://stripecdn.com https://*.stripe.com https://*.stripecdn.com';
+                    
+                    $csp_directives = array(
+                        // CRITICAL: Explicitly allow Stripe iframes and frames (including all Stripe domains)
+                        "frame-src 'self' " . $stripe_domains . " https: http:",
+                        // CRITICAL: Explicitly allow Stripe scripts
+                        "script-src 'self' 'unsafe-inline' 'unsafe-eval' " . $stripe_domains . " https: http: blob:",
+                        // Explicitly allow script-src-elem for external scripts (including Stripe)
+                        "script-src-elem 'self' 'unsafe-inline' " . $stripe_domains . " https: http: blob:",
+                        // CRITICAL: Allow workers from blob: URLs (required for Stripe and other services)
+                        "worker-src 'self' blob: " . $stripe_domains . " https: http:",
+                        // CRITICAL: Explicitly allow Stripe connections (including all Stripe API endpoints)
+                        "connect-src 'self' " . $stripe_domains . " https: http: ws: wss:",
+                        // CRITICAL: Allow payment manifest for Google Pay
+                        "manifest-src 'self' https://www.google.com https://pay.google.com",
+                        // Allow images from anywhere
+                        "img-src 'self' data: https: http:",
+                        // Allow styles from Google Fonts (both HTTP and HTTPS) - more permissive
+                        "style-src 'self' 'unsafe-inline' https: http:",
+                        // Explicitly allow style-src-elem for external stylesheets (more permissive)
+                        "style-src-elem 'self' 'unsafe-inline' https: http:",
+                        // Allow fonts from Google Fonts
+                        "font-src 'self' data: https: http:",
+                    );
+                    
+                    // CRITICAL: Remove any existing CSP headers first to avoid conflicts
+                    // Then set our permissive CSP
+                    if ( function_exists( 'header_remove' ) ) {
+                        header_remove( 'Content-Security-Policy' );
+                        header_remove( 'X-Content-Security-Policy' );
+                        header_remove( 'X-WebKit-CSP' );
+                    }
+                    
+                    // Set our permissive CSP that allows all necessary resources
+                    header( 'Content-Security-Policy: ' . implode( '; ', $csp_directives ) );
+                }
             }
         }
         
@@ -1388,6 +1921,21 @@ function stirjoy_siteground_cart_fixes() {
     }
 }
 add_action( 'template_redirect', 'stirjoy_siteground_cart_fixes', 1 );
+
+/**
+ * Add CSP meta tag for Stripe iframes (fallback if headers don't work)
+ * This fixes sandboxed frame errors on checkout page that prevent payment processing
+ */
+function stirjoy_add_csp_meta_tag() {
+    if ( is_checkout() ) {
+        // CRITICAL: Explicitly allow Stripe domains
+        $stripe_domains = 'https://js.stripe.com https://hooks.stripe.com https://m.stripe.com https://r.stripe.com https://q.stripe.com https://b.stripecdn.com https://stripecdn.com https://*.stripe.com https://*.stripecdn.com';
+        ?>
+        <meta http-equiv="Content-Security-Policy" content="frame-src 'self' <?php echo esc_attr( $stripe_domains ); ?> https: http:; script-src 'self' 'unsafe-inline' 'unsafe-eval' <?php echo esc_attr( $stripe_domains ); ?> https: http: blob:; script-src-elem 'self' 'unsafe-inline' <?php echo esc_attr( $stripe_domains ); ?> https: http: blob:; worker-src 'self' blob: <?php echo esc_attr( $stripe_domains ); ?> https: http:; connect-src 'self' <?php echo esc_attr( $stripe_domains ); ?> https: http: ws: wss:; manifest-src 'self' https://www.google.com https://pay.google.com; img-src 'self' data: https: http:; style-src 'self' 'unsafe-inline' https: http:; style-src-elem 'self' 'unsafe-inline' https: http:; font-src 'self' data: https: http:;">
+        <?php
+    }
+}
+add_action( 'wp_head', 'stirjoy_add_csp_meta_tag', 1 );
 
 /**
  * SiteGround-specific: Exclude WooCommerce pages from dynamic cache
@@ -1972,6 +2520,7 @@ add_action( 'woocommerce_before_checkout_process', 'stirjoy_log_checkout_post_da
 
 /**
  * Set default payment method to Stripe/Credit Card on checkout page load
+ * CRITICAL: Enhanced for SiteGround compatibility with multiple attempts
  */
 function stirjoy_set_default_payment_method() {
 	if ( is_checkout() && ! is_wc_endpoint_url() && class_exists( 'WooCommerce' ) && WC()->payment_gateways ) {
@@ -2005,15 +2554,23 @@ function stirjoy_set_default_payment_method() {
 				$selected_gateway = $gateway_ids[0];
 			}
 			
-			// Set as chosen payment method
-			if ( empty( WC()->session->get( 'chosen_payment_method' ) ) ) {
+			// CRITICAL: Always set as chosen payment method (not just if empty)
+			// On SiteGround, the session might have a different value that needs to be overridden
+			$current_method = WC()->session->get( 'chosen_payment_method' );
+			
+			// Only set if not already set to our preferred gateway
+			if ( $current_method !== $selected_gateway ) {
 				WC()->session->set( 'chosen_payment_method', $selected_gateway );
-				error_log( 'Stirjoy: Set default payment method to ' . $selected_gateway );
+				error_log( 'Stirjoy: Set default payment method to ' . $selected_gateway . ' (was: ' . ( $current_method ? $current_method : 'none' ) . ')' );
 			}
 		}
 	}
 }
-add_action( 'wp', 'stirjoy_set_default_payment_method' );
+// CRITICAL: Run on multiple hooks for SiteGround compatibility
+add_action( 'init', 'stirjoy_set_default_payment_method', 20 );
+add_action( 'wp', 'stirjoy_set_default_payment_method', 20 );
+add_action( 'template_redirect', 'stirjoy_set_default_payment_method', 20 );
+add_action( 'woocommerce_checkout_init', 'stirjoy_set_default_payment_method', 5 );
 
 /**
  * Ensure billing state is always present in checkout data (even if empty)
@@ -2353,11 +2910,54 @@ function stirjoy_social_login_handler() {
             'coupons' => WC()->cart->get_applied_coupons(),
         ), 600 );
         
+        // Also save to user meta as backup
+        update_user_meta( $user->ID, '_stirjoy_guest_cart_backup', array(
+            'cart' => $guest_cart_contents,
+            'totals' => WC()->cart->get_totals(),
+            'coupons' => WC()->cart->get_applied_coupons(),
+        ) );
+        
         // Reinitialize WooCommerce session for logged-in user
         WC()->session->init();
         
-        // Merge will happen in stirjoy_ensure_cart_after_login via wp_loaded hook
+        // IMPORTANT: Perform merge immediately before redirect (for SiteGround)
+        // This ensures cart is merged before the next page loads
+        $merge_result = stirjoy_merge_guest_cart_with_user_cart( $user->ID );
+        
+        if ( $merge_result ) {
+            error_log( 'Stirjoy SiteGround: Cart merge completed before redirect for user: ' . $user->ID );
+        } else {
+            error_log( 'Stirjoy SiteGround: Cart merge failed before redirect for user: ' . $user->ID . ' - will retry on next page load' );
+        }
+        
+        // Force session save after merge (multiple saves for SiteGround reliability)
+        if ( WC()->session ) {
+            WC()->session->save_data();
+            // Additional save for SiteGround reliability
+            if ( function_exists( 'sg_cachepress_purge_cache' ) || class_exists( 'SiteGround_Optimizer\Supercacher\Supercacher' ) ) {
+                usleep( 100000 ); // 0.1 second delay
+                WC()->session->save_data();
+            }
+        }
+        
+        // Force cart recalculation to ensure accurate count
+        if ( WC()->cart ) {
+            WC()->cart->calculate_totals();
+            // Force another calculation to ensure all items are registered
+            WC()->cart->get_cart();
+        }
     }
+    
+    // Get accurate cart count after merge using helper function
+    // Small delay for SiteGround to ensure cart is fully loaded
+    if ( function_exists( 'sg_cachepress_purge_cache' ) || class_exists( 'SiteGround_Optimizer\Supercacher\Supercacher' ) ) {
+        usleep( 50000 ); // 0.05 second delay
+        if ( WC()->cart ) {
+            WC()->cart->calculate_totals();
+        }
+    }
+    
+    $cart_count = stirjoy_get_accurate_cart_count();
     
     // Redirect to checkout
     $checkout_url = wc_get_checkout_url();
@@ -2366,11 +2966,62 @@ function stirjoy_social_login_handler() {
         'message' => 'Login successful!',
         'redirect_url' => $checkout_url,
         'user_id' => $user->ID,
-        'cart_count' => class_exists( 'WooCommerce' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0
+        'cart_count' => $cart_count,
+        'cart_merged' => isset( $merge_result ) ? $merge_result : false,
+        'cart_ready' => true // Flag to indicate cart is ready before redirect
     ) );
 }
 add_action( 'wp_ajax_stirjoy_social_login', 'stirjoy_social_login_handler' );
 add_action( 'wp_ajax_nopriv_stirjoy_social_login', 'stirjoy_social_login_handler' );
+
+/**
+ * AJAX endpoint to manually trigger cart merge (for SiteGround debugging/fixing)
+ */
+function stirjoy_manual_cart_merge() {
+    check_ajax_referer( 'stirjoy_nonce', 'nonce' );
+    
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 'message' => 'User must be logged in' ) );
+    }
+    
+    $user_id = get_current_user_id();
+    
+    // Clear merge completion flag to force retry
+    delete_user_meta( $user_id, '_stirjoy_cart_merge_completed' );
+    
+    // Attempt merge
+    $result = stirjoy_merge_guest_cart_with_user_cart( $user_id );
+    
+    if ( $result ) {
+        $cart_count = WC()->cart->get_cart_contents_count();
+        wp_send_json_success( array(
+            'message' => 'Cart merge successful',
+            'cart_count' => $cart_count,
+            'cart_total' => WC()->cart->get_cart_subtotal()
+        ) );
+    } else {
+        wp_send_json_error( array(
+            'message' => 'Cart merge failed. Check error logs for details.',
+            'has_guest_cart' => ! empty( get_transient( 'stirjoy_guest_cart_before_login_' . $user_id ) ) || ! empty( get_user_meta( $user_id, '_stirjoy_guest_cart_backup', true ) )
+        ) );
+    }
+}
+add_action( 'wp_ajax_stirjoy_manual_cart_merge', 'stirjoy_manual_cart_merge' );
+
+/**
+ * Cleanup old database option backups (runs daily)
+ */
+function stirjoy_cleanup_old_cart_backups() {
+    global $wpdb;
+    
+    // Delete options older than 24 hours
+    $wpdb->query( $wpdb->prepare(
+        "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s AND option_id < %d",
+        'stirjoy_guest_cart_%',
+        time() - 86400
+    ) );
+}
+add_action( 'wp_scheduled_delete', 'stirjoy_cleanup_old_cart_backups' );
 
 /**
  * Make postcode validation more lenient
@@ -2422,6 +3073,61 @@ function stirjoy_relax_postcode_validation( $valid, $postcode, $country ) {
 add_filter( 'woocommerce_validate_postcode', 'stirjoy_relax_postcode_validation', 10, 3 );
 
 /**
+ * Disable WooCommerce Payments Express Checkout on checkout page
+ * Prevents wcpay-express-checkout-wrapper from being displayed
+ */
+function stirjoy_disable_wcpay_express_checkout() {
+	if ( ! is_checkout() ) {
+		return;
+	}
+	
+	// Remove all possible hooks that display express checkout
+	// Try to remove using class name (static method)
+	if ( class_exists( 'WC_Payments_Express_Checkout_Button_Display_Handler' ) ) {
+		remove_action( 'woocommerce_checkout_before_customer_details', array( 'WC_Payments_Express_Checkout_Button_Display_Handler', 'display_express_checkout_buttons' ), 1 );
+	}
+	
+	// Remove using global if available
+	global $wcpay_express_checkout_button_display_handler;
+	if ( isset( $wcpay_express_checkout_button_display_handler ) && is_object( $wcpay_express_checkout_button_display_handler ) ) {
+		remove_action( 'woocommerce_checkout_before_customer_details', array( $wcpay_express_checkout_button_display_handler, 'display_express_checkout_buttons' ), 1 );
+		remove_action( 'woocommerce_proceed_to_checkout', array( $wcpay_express_checkout_button_display_handler, 'display_express_checkout_buttons' ), 21 );
+		remove_action( 'woocommerce_after_add_to_cart_form', array( $wcpay_express_checkout_button_display_handler, 'display_express_checkout_buttons' ), 1 );
+		remove_action( 'woocommerce_pay_order_before_payment', array( $wcpay_express_checkout_button_display_handler, 'display_express_checkout_buttons' ), 1 );
+	}
+	
+	// Try to remove all instances by checking all registered hooks
+	global $wp_filter;
+	if ( isset( $wp_filter['woocommerce_checkout_before_customer_details'] ) ) {
+		$callbacks = $wp_filter['woocommerce_checkout_before_customer_details']->callbacks;
+		if ( isset( $callbacks[1] ) ) {
+			foreach ( $callbacks[1] as $callback_key => $callback ) {
+				if ( is_array( $callback['function'] ) && is_object( $callback['function'][0] ) ) {
+					$class_name = get_class( $callback['function'][0] );
+					if ( strpos( $class_name, 'WC_Payments_Express_Checkout' ) !== false || 
+					     strpos( $class_name, 'Express_Checkout_Button' ) !== false ) {
+						remove_action( 'woocommerce_checkout_before_customer_details', $callback['function'], 1 );
+					}
+				}
+			}
+		}
+	}
+}
+add_action( 'init', 'stirjoy_disable_wcpay_express_checkout', 999 );
+add_action( 'wp', 'stirjoy_disable_wcpay_express_checkout', 999 );
+add_action( 'template_redirect', 'stirjoy_disable_wcpay_express_checkout', 999 );
+
+/**
+ * Filter to disable WooPay and Express Checkout buttons
+ * These filters prevent the buttons from being enabled in the first place
+ */
+add_filter( 'wcpay_woopay_enabled', '__return_false', 999 );
+add_filter( 'wcpay_payment_request_enabled', '__return_false', 999 );
+add_filter( 'wcpay_express_checkout_enabled', '__return_false', 999 );
+add_filter( 'wcpay_should_show_woopay_button', '__return_false', 999 );
+add_filter( 'wcpay_should_show_express_checkout_button', '__return_false', 999 );
+
+/**
  * Remove WooCommerce order details and customer details sections from order received page
  * These sections are always hidden to match the custom design
  */
@@ -2453,3 +3159,72 @@ function stirjoy_remove_order_details_sections() {
 	}, 999 );
 }
 add_action( 'init', 'stirjoy_remove_order_details_sections', 20 );
+
+/**
+ * CRITICAL: Ensure Stripe payment gateway is available on checkout
+ * This prevents Stripe from being blocked by other plugins or filters
+ */
+function stirjoy_ensure_stripe_available( $available_gateways ) {
+    // Only run on checkout page
+    if ( ! is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
+        return $available_gateways;
+    }
+    
+    // Check if Stripe gateway exists but is not available
+    $stripe_gateway_ids = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+    
+    if ( ! WC()->payment_gateways ) {
+        return $available_gateways;
+    }
+    
+    $all_gateways = WC()->payment_gateways->payment_gateways();
+    
+    foreach ( $stripe_gateway_ids as $gateway_id ) {
+        if ( isset( $all_gateways[ $gateway_id ] ) ) {
+            $gateway = $all_gateways[ $gateway_id ];
+            
+            // If gateway is enabled but not in available gateways, add it
+            if ( $gateway->enabled === 'yes' && ! isset( $available_gateways[ $gateway_id ] ) ) {
+                // Check if gateway is available (not blocked by other conditions)
+                if ( $gateway->is_available() ) {
+                    $available_gateways[ $gateway_id ] = $gateway;
+                    error_log( 'Stirjoy: Added Stripe gateway ' . $gateway_id . ' to available gateways' );
+                } else {
+                    error_log( 'Stirjoy: Stripe gateway ' . $gateway_id . ' is enabled but not available: ' . print_r( $gateway->get_error_message(), true ) );
+                }
+            }
+        }
+    }
+    
+    return $available_gateways;
+}
+add_filter( 'woocommerce_available_payment_gateways', 'stirjoy_ensure_stripe_available', 999 );
+
+/**
+ * CRITICAL: Log Stripe gateway availability for debugging
+ */
+function stirjoy_log_stripe_availability() {
+    if ( ! is_checkout() || ! class_exists( 'WooCommerce' ) || ! WC()->payment_gateways ) {
+        return;
+    }
+    
+    $all_gateways = WC()->payment_gateways->payment_gateways();
+    $available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+    
+    $stripe_gateway_ids = array( 'stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments' );
+    
+    foreach ( $stripe_gateway_ids as $gateway_id ) {
+        if ( isset( $all_gateways[ $gateway_id ] ) ) {
+            $gateway = $all_gateways[ $gateway_id ];
+            $is_enabled = $gateway->enabled === 'yes';
+            $is_available = isset( $available_gateways[ $gateway_id ] );
+            $is_available_method = $gateway->is_available();
+            
+            error_log( 'Stirjoy Stripe Debug: Gateway ' . $gateway_id . 
+                      ' - Enabled: ' . ( $is_enabled ? 'Yes' : 'No' ) . 
+                      ' - Available Method: ' . ( $is_available_method ? 'Yes' : 'No' ) . 
+                      ' - In Available Gateways: ' . ( $is_available ? 'Yes' : 'No' ) );
+        }
+    }
+}
+add_action( 'wp', 'stirjoy_log_stripe_availability', 999 );

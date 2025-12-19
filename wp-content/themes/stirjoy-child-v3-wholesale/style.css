@@ -5784,19 +5784,44 @@ body.woocommerce-account #customer_login .u-columns {
 #wc-stripe-express-checkout-element,
 #wc-stripe-express-checkout-button-separator,
 #wc-stripe-express-checkout__order-attribution-inputs {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
+	display: none !important;
+	visibility: hidden !important;
+	height: 0 !important;
+	width: 0 !important;
+	overflow: hidden !important;
+	position: absolute !important;
+	left: -9999px !important;
+}
+
+/* CRITICAL: Hide WooCommerce Payments Express Checkout wrapper */
+.wcpay-express-checkout-wrapper,
+#wcpay-express-checkout-wrapper,
+wcpay-express-checkout-wrapper,
+[class*="wcpay-express"],
+[id*="wcpay-express"],
+[class*="express-checkout-wrapper"],
+#wcpay-express-checkout-button-separator,
+#wcpay-express-checkout__order-attribution-inputs {
+	display: none !important;
+	visibility: hidden !important;
+	height: 0 !important;
+	width: 0 !important;
+	overflow: hidden !important;
+	position: absolute !important;
+	left: -9999px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	opacity: 0 !important;
 }
 
 .woocommerce-checkout-payment{
-    display: none !important;
+    /* display: none !important; */
+    position: absolute !important;
+    left: -9999px !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
 }
 
 .stirjoy-register-form input.error,
@@ -7811,6 +7836,19 @@ body.woocommerce-checkout .site-content {
     pointer-events: none;
 }
 
+/* Hide payment section visually but keep it accessible for JavaScript initialization
+ * CRITICAL: display: none prevents payment methods from initializing on SiteGround
+ * Using position: absolute with off-screen positioning instead */
+.woocommerce-checkout #payment{
+    position: absolute !important;
+    left: -9999px !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+    /* Don't use display: none - it prevents payment gateway initialization */
+    /* display: none !important; */
+}
 /* Hide default WooCommerce order details and customer details sections */
 .stirjoy-thankyou-wrapper .woocommerce-order-overview,
 .stirjoy-thankyou-wrapper .woocommerce-order-details,

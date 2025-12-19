@@ -304,9 +304,241 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 <script>
 jQuery(document).ready(function($) {
-	// Function to remove Stripe Express Checkout elements
+	// CRITICAL: Check if Stripe scripts are loading properly
+	function checkStripeScriptsLoading() {
+		var stripeScripts = [
+			'script[src*="js.stripe.com"]',
+			'script[src*="stripe.com/v3"]',
+			'script[src*="stripecdn.com"]'
+		];
+		
+		var scriptsFound = false;
+		stripeScripts.forEach(function(selector) {
+			if ($(selector).length > 0) {
+				scriptsFound = true;
+				console.log('Stirjoy: Found Stripe script:', selector);
+			}
+		});
+		
+		if (!scriptsFound) {
+			console.warn('Stirjoy Warning: No Stripe scripts found on page. Stripe may be blocked.');
+		}
+		
+		// Check if Stripe object is available
+		if (typeof Stripe === 'undefined' && typeof stripe === 'undefined' && typeof wc_stripe_form === 'undefined') {
+			console.warn('Stirjoy Warning: Stripe object not found. Stripe scripts may not be loaded.');
+			
+			// Try to detect if scripts are blocked
+			setTimeout(function() {
+				if (typeof Stripe === 'undefined' && typeof stripe === 'undefined') {
+					console.error('Stirjoy Error: Stripe still not loaded after delay. Possible causes:');
+					console.error('1. CSP headers blocking Stripe scripts');
+					console.error('2. Network/firewall blocking Stripe domains');
+					console.error('3. Stripe plugin not active or misconfigured');
+					console.error('4. JavaScript errors preventing Stripe initialization');
+				}
+			}, 3000);
+		} else {
+			console.log('Stirjoy: Stripe object found:', typeof Stripe !== 'undefined' ? 'Stripe' : (typeof stripe !== 'undefined' ? 'stripe' : 'wc_stripe_form'));
+		}
+	}
+	
+	// Check immediately and after delays
+	checkStripeScriptsLoading();
+	setTimeout(checkStripeScriptsLoading, 1000);
+	setTimeout(checkStripeScriptsLoading, 3000);
+	setTimeout(checkStripeScriptsLoading, 5000);
+	// CRITICAL: Fix sandboxed iframe issues for Stripe payment processing
+	// This fixes sandboxed frame errors that prevent payment processing
+	function fixStripeIframeSandbox() {
+		// Fix ALL iframes in the payment section and Stripe/Google Pay related iframes
+		$('iframe, #payment iframe, iframe[src*="stripe"], iframe[src*="js.stripe"], iframe[src*="hooks.stripe"], iframe[src*="pay.google"], iframe[src*="google.com"], iframe[src*="stripecdn.com"], iframe[src*="b.stripecdn.com"], iframe[src*="generate_gpay"]').each(function() {
+			var $iframe = $(this);
+			var sandbox = $iframe.attr('sandbox');
+			var src = $iframe.attr('src') || '';
+			
+			// CRITICAL: For payment-related iframes (especially Google Pay), be very aggressive
+			// Google Pay iframes MUST have allow-scripts or be removed entirely
+			if (src.indexOf('pay.google') !== -1 || src.indexOf('generate_gpay') !== -1 || src.indexOf('stripe') !== -1 || src.indexOf('google.com') !== -1 || src.indexOf('stripecdn.com') !== -1) {
+				// For Google Pay and payment iframes, CRITICAL: Remove sandbox if it's blocking
+				if (sandbox) {
+					// Check if sandbox has all required permissions
+					var hasAllPermissions = sandbox.indexOf('allow-scripts') !== -1 && 
+					                        sandbox.indexOf('allow-same-origin') !== -1 &&
+					                        sandbox.indexOf('allow-forms') !== -1;
+					
+					if (!hasAllPermissions) {
+						// Try to fix it by adding all required permissions
+						var newSandbox = sandbox;
+						if (sandbox.indexOf('allow-scripts') === -1) {
+							newSandbox += ' allow-scripts';
+						}
+						if (sandbox.indexOf('allow-same-origin') === -1) {
+							newSandbox += ' allow-same-origin';
+						}
+						if (sandbox.indexOf('allow-forms') === -1) {
+							newSandbox += ' allow-forms';
+						}
+						if (sandbox.indexOf('allow-popups') === -1) {
+							newSandbox += ' allow-popups';
+						}
+						if (sandbox.indexOf('allow-top-navigation-by-user-activation') === -1) {
+							newSandbox += ' allow-top-navigation-by-user-activation';
+						}
+						
+						$iframe.attr('sandbox', newSandbox.trim());
+						console.log('Stirjoy: Fixed sandbox on payment iframe:', src.substring(0, 80));
+						
+						// CRITICAL: For Google Pay iframes, remove sandbox entirely if it's blocking
+						// Google Pay iframes MUST be able to execute scripts
+						if (src.indexOf('pay.google') !== -1 || src.indexOf('generate_gpay') !== -1) {
+							// Remove sandbox entirely for Google Pay - it's required for functionality
+							$iframe.removeAttr('sandbox');
+							console.log('Stirjoy: Removed sandbox from Google Pay iframe (required for functionality)');
+							
+							// Also monitor to prevent sandbox from being re-added
+							var checkInterval = setInterval(function() {
+								if (!$iframe.length || !$iframe.parent().length) {
+									clearInterval(checkInterval);
+									return;
+								}
+								var currentSandbox = $iframe.attr('sandbox');
+								if (currentSandbox) {
+									$iframe.removeAttr('sandbox');
+									console.log('Stirjoy: Prevented sandbox from being re-added to Google Pay iframe');
+								}
+							}, 200);
+							
+							// Stop monitoring after 10 seconds
+							setTimeout(function() {
+								clearInterval(checkInterval);
+							}, 10000);
+						}
+					}
+				} else {
+					// No sandbox is good - ensure it stays that way
+					// Monitor to prevent sandbox from being added
+				}
+			} else {
+				// For other iframes, just add missing permissions
+				if (sandbox) {
+					var newSandbox = sandbox;
+					var needsUpdate = false;
+					
+					if (sandbox.indexOf('allow-scripts') === -1) {
+						newSandbox += ' allow-scripts';
+						needsUpdate = true;
+					}
+					if (sandbox.indexOf('allow-same-origin') === -1) {
+						newSandbox += ' allow-same-origin';
+						needsUpdate = true;
+					}
+					if (sandbox.indexOf('allow-forms') === -1) {
+						newSandbox += ' allow-forms';
+						needsUpdate = true;
+					}
+					
+					if (needsUpdate) {
+						$iframe.attr('sandbox', newSandbox.trim());
+					}
+				}
+			}
+		});
+	}
+	
+	// CRITICAL: Use MutationObserver to catch dynamically created iframes immediately
+	// This is essential for Google Pay iframes that are created after page load
+	if (window.MutationObserver) {
+		var iframeObserver = new MutationObserver(function(mutations) {
+			var foundNewIframe = false;
+			mutations.forEach(function(mutation) {
+				if (mutation.addedNodes) {
+					mutation.addedNodes.forEach(function(node) {
+						if (node.nodeType === 1) { // Element node
+							// Check if it's an iframe or contains iframes
+							if (node.tagName === 'IFRAME') {
+								foundNewIframe = true;
+								// Fix immediately
+								setTimeout(function() {
+									fixStripeIframeSandbox();
+								}, 10);
+							} else if (node.querySelectorAll) {
+								var iframes = node.querySelectorAll('iframe');
+								if (iframes.length > 0) {
+									foundNewIframe = true;
+									// Fix immediately
+									setTimeout(function() {
+										fixStripeIframeSandbox();
+									}, 10);
+								}
+							}
+						}
+					});
+				}
+			});
+		});
+		
+		// Observe the entire document for new iframes
+		iframeObserver.observe(document.body || document.documentElement, {
+			childList: true,
+			subtree: true
+		});
+		
+		// Also observe the payment section specifically
+		if ($('#payment').length) {
+			iframeObserver.observe(document.getElementById('payment'), {
+				childList: true,
+				subtree: true
+			});
+		}
+	}
+	
+	// Monitor and fix iframe sandbox issues continuously (very frequent for payment iframes)
+	setInterval(fixStripeIframeSandbox, 300);
+	
+	// Also fix immediately on page load and after payment method changes
+	$(document).ready(function() {
+		fixStripeIframeSandbox();
+		// Fix again after a short delay to catch late-loading iframes
+		setTimeout(fixStripeIframeSandbox, 100);
+		setTimeout(fixStripeIframeSandbox, 500);
+		setTimeout(fixStripeIframeSandbox, 1000);
+	});
+	
+	$(document.body).on('updated_checkout', function() {
+		fixStripeIframeSandbox();
+		// Fix again after checkout updates
+		setTimeout(fixStripeIframeSandbox, 100);
+		setTimeout(fixStripeIframeSandbox, 500);
+	});
+	
+	// CRITICAL: Force HTTPS for all images to prevent mixed content warnings
+	function forceHttpsImages() {
+		if (window.location.protocol === 'https:') {
+			$('img[src^="http://"]').each(function() {
+				var $img = $(this);
+				var src = $img.attr('src');
+				if (src && src.indexOf('http://') === 0) {
+					$img.attr('src', src.replace('http://', 'https://'));
+				}
+			});
+		}
+	}
+	
+	// Fix images on page load and after checkout updates
+	forceHttpsImages();
+	$(document.body).on('updated_checkout', forceHttpsImages);
+	setInterval(forceHttpsImages, 2000);
+	
+	// Function to remove Stripe Express Checkout elements and WooCommerce Payments Express Checkout
 	function removeStripeExpressElements() {
+		// Remove Stripe Express Checkout elements
 		$('#wc-stripe-express-checkout-element, #wc-stripe-express-checkout-button-separator, #wc-stripe-express-checkout__order-attribution-inputs').remove();
+		
+		// CRITICAL: Remove WooCommerce Payments Express Checkout wrapper
+		$('.wcpay-express-checkout-wrapper, #wcpay-express-checkout-wrapper, wcpay-express-checkout-wrapper').remove();
+		$('[class*="wcpay-express"], [id*="wcpay-express"], [class*="express-checkout-wrapper"]').remove();
+		$('#wcpay-express-checkout-button-separator, #wcpay-express-checkout__order-attribution-inputs').remove();
 	}
 	
 	// Remove immediately on page load
@@ -332,43 +564,261 @@ jQuery(document).ready(function($) {
 	setTimeout(removeStripeExpressElements, 500);
 	setTimeout(removeStripeExpressElements, 1000);
 	
-	// Sync display card fields with Stripe Elements (if Stripe is active)
-	function syncCardFieldsWithStripe() {
-		// Check if Stripe Elements are available
-		if (typeof stripe_card !== 'undefined' && stripe_card) {
-			// Listen to Stripe card element changes and update display fields
-			stripe_card.on('change', function(event) {
-				if (event.complete) {
-					// Card number is handled by Stripe, we can show masked version
-					var cardNumber = event.brand ? '**** **** **** ' + (event.last4 || '') : '';
-					$('#stirjoy_card_number_display').val(cardNumber);
-				}
-			});
+	// CRITICAL: Make Stripe Elements functional by positioning them over display fields
+	// Since Stripe Elements are iframes, we position the container divs over display fields
+	function positionStripeElementsOverDisplayFields() {
+		// Wait for Stripe Elements to be mounted
+		var stripeCardElement = $('#stripe-card-element');
+		var stripeExpElement = $('#stripe-exp-element');
+		var stripeCvcElement = $('#stripe-cvc-element');
+		
+		if (!stripeCardElement.length) {
+			return false;
 		}
 		
-		// Ensure display fields are interactive (they're just for visual feedback)
-		$('.stirjoy-card-input').each(function() {
-			var $input = $(this);
-			// These are display-only fields, but allow user interaction for visual feedback
-			$input.css({
-				'pointer-events': 'auto',
-				'cursor': 'text',
-				'z-index': '10',
-				'position': 'relative'
-			});
-		});
+		// Ensure payment section is accessible
+		ensurePaymentSectionAccessible();
 		
-		// Ensure card container is interactive
-		$('.stirjoy-card-container, .stirjoy-card-fields').css({
-			'pointer-events': 'auto',
-			'z-index': '1',
-			'position': 'relative'
-		});
+		// Check if Stripe is using inline form (single card element)
+		var isInlineForm = !stripeExpElement.length || stripeExpElement.length === 0;
+		
+		if (isInlineForm) {
+			// Inline form: position the single card element container over all display fields
+			var $cardContainer = $('.stirjoy-card-container');
+			if ($cardContainer.length && stripeCardElement.length) {
+				var containerOffset = $cardContainer.offset();
+				var containerWidth = $cardContainer.outerWidth();
+				var containerHeight = $cardContainer.outerHeight();
+				
+				// Get the parent container of Stripe card element
+				var $stripeContainer = stripeCardElement.closest('.wc-stripe-elements-field, #wc-stripe-cc-form, fieldset');
+				if (!$stripeContainer.length) {
+					$stripeContainer = stripeCardElement.parent();
+				}
+				
+				// Position Stripe container over the display container
+				$stripeContainer.css({
+					'position': 'fixed',
+					'top': containerOffset.top + 'px',
+					'left': containerOffset.left + 'px',
+					'width': containerWidth + 'px',
+					'height': containerHeight + 'px',
+					'opacity': '0.01', // Almost invisible but still functional
+					'z-index': '1000',
+					'pointer-events': 'auto',
+					'background': 'transparent',
+					'border': 'none',
+					'padding': '0',
+					'margin': '0'
+				});
+				
+				// Make Stripe card element fill the container
+				stripeCardElement.css({
+					'width': '100%',
+					'height': '100%',
+					'min-height': containerHeight + 'px'
+				});
+				
+				// Make display fields show placeholder but not interfere
+				$('.stirjoy-card-input').css({
+					'pointer-events': 'none',
+					'color': 'transparent',
+					'caret-color': 'transparent'
+				});
+				
+				// Listen to Stripe changes and update display fields for visual feedback
+				if (typeof stripe_card !== 'undefined' && stripe_card) {
+					stripe_card.on('change', function(event) {
+						if (event.complete && event.last4) {
+							$('#stirjoy_card_number_display').val('**** **** **** ' + event.last4).css('color', '#333');
+						} else if (event.empty) {
+							$('#stirjoy_card_number_display').val('').css('color', 'transparent');
+						}
+					});
+				}
+				
+				console.log('Stirjoy: Positioned Stripe inline card element over display fields');
+				return true;
+			}
+		} else {
+			// Separate form: position each element over corresponding display field
+			var positioned = false;
+			
+			// Card number
+			if (stripeCardElement.length) {
+				var $cardNumberDisplay = $('#stirjoy_card_number_display');
+				if ($cardNumberDisplay.length) {
+					var cardNumberOffset = $cardNumberDisplay.offset();
+					var cardNumberWidth = $cardNumberDisplay.outerWidth();
+					var cardNumberHeight = $cardNumberDisplay.outerHeight();
+					
+					var $stripeCardContainer = stripeCardElement.closest('.wc-stripe-elements-field, .stripe-card-group');
+					if (!$stripeCardContainer.length) {
+						$stripeCardContainer = stripeCardElement.parent();
+					}
+					
+					$stripeCardContainer.css({
+						'position': 'fixed',
+						'top': cardNumberOffset.top + 'px',
+						'left': cardNumberOffset.left + 'px',
+						'width': cardNumberWidth + 'px',
+						'height': cardNumberHeight + 'px',
+						'opacity': '0.01',
+						'z-index': '1000',
+						'pointer-events': 'auto',
+						'background': 'transparent'
+					});
+					
+					$cardNumberDisplay.css({
+						'pointer-events': 'none',
+						'color': 'transparent',
+						'caret-color': 'transparent'
+					});
+					
+					if (typeof stripe_card !== 'undefined' && stripe_card) {
+						stripe_card.on('change', function(event) {
+							if (event.complete && event.last4) {
+								$cardNumberDisplay.val('**** **** **** ' + event.last4).css('color', '#333');
+							} else if (event.empty) {
+								$cardNumberDisplay.val('').css('color', 'transparent');
+							}
+						});
+					}
+					positioned = true;
+				}
+			}
+			
+			// Expiry
+			if (stripeExpElement.length) {
+				var $expiryDisplay = $('#stirjoy_card_expiry_display');
+				if ($expiryDisplay.length) {
+					var expiryOffset = $expiryDisplay.offset();
+					var expiryWidth = $expiryDisplay.outerWidth();
+					var expiryHeight = $expiryDisplay.outerHeight();
+					
+					var $stripeExpContainer = stripeExpElement.closest('.wc-stripe-elements-field');
+					if (!$stripeExpContainer.length) {
+						$stripeExpContainer = stripeExpElement.parent();
+					}
+					
+					$stripeExpContainer.css({
+						'position': 'fixed',
+						'top': expiryOffset.top + 'px',
+						'left': expiryOffset.left + 'px',
+						'width': expiryWidth + 'px',
+						'height': expiryHeight + 'px',
+						'opacity': '0.01',
+						'z-index': '1000',
+						'pointer-events': 'auto',
+						'background': 'transparent'
+					});
+					
+					$expiryDisplay.css({
+						'pointer-events': 'none',
+						'color': 'transparent',
+						'caret-color': 'transparent'
+					});
+					
+					if (typeof stripe_exp !== 'undefined' && stripe_exp) {
+						stripe_exp.on('change', function(event) {
+							if (event.complete) {
+								$expiryDisplay.val(event.value || '').css('color', '#333');
+							} else if (event.empty) {
+								$expiryDisplay.val('').css('color', 'transparent');
+							}
+						});
+					}
+					positioned = true;
+				}
+			}
+			
+			// CVC
+			if (stripeCvcElement.length) {
+				var $cvcDisplay = $('#stirjoy_card_cvc_display');
+				if ($cvcDisplay.length) {
+					var cvcOffset = $cvcDisplay.offset();
+					var cvcWidth = $cvcDisplay.outerWidth();
+					var cvcHeight = $cvcDisplay.outerHeight();
+					
+					var $stripeCvcContainer = stripeCvcElement.closest('.wc-stripe-elements-field');
+					if (!$stripeCvcContainer.length) {
+						$stripeCvcContainer = stripeCvcElement.parent();
+					}
+					
+					$stripeCvcContainer.css({
+						'position': 'fixed',
+						'top': cvcOffset.top + 'px',
+						'left': cvcOffset.left + 'px',
+						'width': cvcWidth + 'px',
+						'height': cvcHeight + 'px',
+						'opacity': '0.01',
+						'z-index': '1000',
+						'pointer-events': 'auto',
+						'background': 'transparent'
+					});
+					
+					$cvcDisplay.css({
+						'pointer-events': 'none',
+						'color': 'transparent',
+						'caret-color': 'transparent'
+					});
+					
+					if (typeof stripe_cvc !== 'undefined' && stripe_cvc) {
+						stripe_cvc.on('change', function(event) {
+							if (event.complete) {
+								$cvcDisplay.val('***').css('color', '#333');
+							} else if (event.empty) {
+								$cvcDisplay.val('').css('color', 'transparent');
+							}
+						});
+					}
+					positioned = true;
+				}
+			}
+			
+			if (positioned) {
+				console.log('Stirjoy: Positioned Stripe elements over display fields');
+			}
+			return positioned;
+		}
 	}
 	
-	// Initialize card field sync
-	setTimeout(syncCardFieldsWithStripe, 1000);
-	setTimeout(syncCardFieldsWithStripe, 2000);
+	// CRITICAL: Continuously try to position Stripe Elements (for SiteGround compatibility)
+	function tryPositionStripeElements(retries) {
+		retries = retries || 30; // Try for 15 seconds
+		
+		if (positionStripeElementsOverDisplayFields()) {
+			// Success, also update on window resize and scroll
+			$(window).on('resize scroll', function() {
+				setTimeout(positionStripeElementsOverDisplayFields, 100);
+			});
+		} else if (retries > 0) {
+			setTimeout(function() {
+				tryPositionStripeElements(retries - 1);
+			}, 500);
+		}
+	}
+	
+	// Start trying to position immediately and after delays
+	tryPositionStripeElements();
+	setTimeout(tryPositionStripeElements, 1000);
+	setTimeout(tryPositionStripeElements, 2000);
+	setTimeout(tryPositionStripeElements, 3000);
+	setTimeout(tryPositionStripeElements, 5000);
+	
+	// Also try after checkout updates and payment method changes
+	$(document.body).on('updated_checkout', function() {
+		setTimeout(function() {
+			tryPositionStripeElements();
+		}, 500);
+	});
+	
+	// Also try when payment method is selected
+	$(document.body).on('change', '#payment input[name="payment_method"]', function() {
+		setTimeout(function() {
+			tryPositionStripeElements();
+		}, 1000);
+	});
 	
 	// Ensure payment method is selected before form submission
 	$('form.checkout').on('checkout_place_order', function() {
@@ -421,7 +871,7 @@ jQuery(document).ready(function($) {
 		}
 		
 		// Ensure payment gateway fields are initialized
-		// Some gateways need their fields to be "visible" (even if off-screen) to initialize
+		// CRITICAL: Fix sandboxed iframe issues for Stripe
 		if ($('#payment').length) {
 			// Temporarily make payment section visible for initialization
 			var $paymentSection = $('#payment');
@@ -430,23 +880,48 @@ jQuery(document).ready(function($) {
 				'left': '-9999px',
 				'visibility': 'visible',
 				'height': 'auto',
-				'overflow': 'visible'
+				'overflow': 'visible',
+				'pointer-events': 'auto'
+			});
+			
+			// CRITICAL: Remove or fix sandbox attributes on iframes that block Stripe
+			$('#payment iframe, iframe[src*="stripe"]').each(function() {
+				var $iframe = $(this);
+				var sandbox = $iframe.attr('sandbox');
+				if (sandbox) {
+					// Add allow-scripts if missing
+					if (sandbox.indexOf('allow-scripts') === -1) {
+						$iframe.attr('sandbox', sandbox + ' allow-scripts allow-same-origin allow-forms');
+					}
+				} else {
+					// If no sandbox, ensure it's not added
+					$iframe.removeAttr('sandbox');
+				}
 			});
 			
 			// Trigger payment gateway initialization events
-			$('#payment input[name="payment_method"]').first().trigger('change');
+			if (paymentMethod) {
+				$('#payment input[name="payment_method"][value="' + paymentMethod + '"]').trigger('change');
+			} else {
+				$('#payment input[name="payment_method"]').first().trigger('change');
+			}
 			
 			// Restore after a short delay
 			setTimeout(function() {
 				$paymentSection.css({
 					'position': 'absolute',
 					'left': '-9999px',
-					'visibility': 'hidden',
-					'height': '1px',
-					'overflow': 'hidden'
+					'visibility': 'visible', // Keep visible for Stripe to work
+					'height': 'auto',
+					'overflow': 'visible',
+					'pointer-events': 'auto'
 				});
 			}, 100);
 		}
+		
+		// CRITICAL: Don't prevent default - let payment gateway handle submission
+		// Stripe needs to tokenize the card before form submission
+		return true;
 	});
 	
 	// Function to check payment gateway initialization status
@@ -501,6 +976,7 @@ jQuery(document).ready(function($) {
 		
 		// Priority: stripe, stripe_cc, stripe_credit_card, woocommerce_payments, then any with 'stripe' or 'card'
 		var preferredIds = ['stripe', 'stripe_cc', 'stripe_credit_card', 'woocommerce_payments'];
+		//var preferredIds = ['card'];
 		var $selectedMethod = null;
 		
 		// Try preferred gateways first
@@ -516,6 +992,7 @@ jQuery(document).ready(function($) {
 			$('#payment input[name="payment_method"]').each(function() {
 				var value = $(this).val().toLowerCase();
 				if (value.indexOf('stripe') !== -1 || value.indexOf('card') !== -1) {
+				//if (value.indexOf('card') !== -1) {
 					$selectedMethod = $(this);
 					return false; // break
 				}
@@ -542,14 +1019,46 @@ jQuery(document).ready(function($) {
 		return false;
 	}
 	
+	// Function to ensure payment section is accessible for initialization
+	// CRITICAL: Payment section must be accessible (even if off-screen) for payment methods to initialize
+	// This is especially important on SiteGround where CSS display:none can prevent initialization
+	function ensurePaymentSectionAccessible() {
+		var $paymentSection = $('#payment');
+		if ($paymentSection.length) {
+			// Check if payment section is hidden by CSS
+			var computedDisplay = window.getComputedStyle($paymentSection[0]).display;
+			var isHidden = computedDisplay === 'none' || 
+			              $paymentSection.is(':hidden') ||
+			              $paymentSection.css('visibility') === 'hidden';
+			
+			if (isHidden) {
+				// Make it accessible but off-screen for initialization
+				$paymentSection.css({
+					'position': 'absolute',
+					'left': '-9999px',
+					'visibility': 'visible',
+					'height': 'auto',
+					'overflow': 'visible',
+					'pointer-events': 'auto',
+					'display': 'block' // Override display: none !important
+				});
+				console.log('Stirjoy: Made payment section accessible for initialization');
+			}
+		}
+	}
+	
 	// Function to wait for payment methods to load and then initialize
 	function waitForPaymentMethodsAndInitialize(retries) {
-		retries = retries || 15; // Max 15 retries (7.5 seconds)
+		retries = retries || 20; // Increased retries for SiteGround (10 seconds)
+		
+		// CRITICAL: Ensure payment section is accessible before checking
+		ensurePaymentSectionAccessible();
 		
 		var status = checkPaymentGatewayStatus(false); // Don't log on every retry
 		
 		if (!status.paymentMethodsExist && retries > 0) {
 			// Payment methods not loaded yet, wait and retry
+			// Use shorter interval for faster detection on SiteGround
 			setTimeout(function() {
 				waitForPaymentMethodsAndInitialize(retries - 1);
 			}, 500);
@@ -559,7 +1068,19 @@ jQuery(document).ready(function($) {
 		if (status.paymentMethodsExist) {
 			// Payment methods are loaded, set default
 			console.log('Stirjoy: Payment methods loaded, setting default...');
-			setDefaultPaymentMethod();
+			
+			// CRITICAL: Ensure payment section is accessible before setting default
+			ensurePaymentSectionAccessible();
+			
+			var setSuccess = setDefaultPaymentMethod();
+			
+			if (!setSuccess) {
+				// If setting failed, retry after a short delay
+				setTimeout(function() {
+					ensurePaymentSectionAccessible();
+					setDefaultPaymentMethod();
+				}, 200);
+			}
 			
 			// Check Stripe loading after a delay
 			setTimeout(function() {
@@ -577,6 +1098,7 @@ jQuery(document).ready(function($) {
 							} else {
 								console.warn('Stirjoy: Stripe not loaded after 2 seconds, retrying...');
 								// Retry Stripe initialization
+								ensurePaymentSectionAccessible();
 								$('#payment input[name="payment_method"]:checked').trigger('change');
 							}
 						}, 2000);
@@ -584,24 +1106,111 @@ jQuery(document).ready(function($) {
 				}
 			}, 500);
 		} else {
-			console.error('Stirjoy: Payment methods failed to load after multiple retries');
+			if (retries === 0) {
+				console.error('Stirjoy Error: Payment methods not found after maximum retries');
+				// Last attempt: try to force initialization
+				ensurePaymentSectionAccessible();
+				setTimeout(function() {
+					setDefaultPaymentMethod();
+				}, 500);
+			}
 		}
 	}
 	
-	// Initialize payment gateway on page load
+	// CRITICAL: Initialize payment method selection immediately and with multiple attempts
+	// This ensures it works on SiteGround where timing may be different due to caching
+	ensurePaymentSectionAccessible();
+	
+	// Function to force set default payment method (more aggressive for SiteGround)
+	function forceSetDefaultPaymentMethod() {
+		ensurePaymentSectionAccessible();
+		
+		if (!$('#payment').length || !$('#payment input[name="payment_method"]').length) {
+			return false;
+		}
+		
+		// Check if a payment method is already selected
+		var $selected = $('#payment input[name="payment_method"]:checked');
+		if ($selected.length) {
+			var selectedValue = $selected.val().toLowerCase();
+			// If it's already a card/stripe method, we're good
+			if (selectedValue.indexOf('stripe') !== -1 || selectedValue.indexOf('card') !== -1) {
+			//if (selectedValue.indexOf('card') !== -1) {
+				console.log('Stirjoy: Credit card already selected:', selectedValue);
+				return true;
+			}
+		}
+		
+		// Force set default
+		var success = setDefaultPaymentMethod();
+		if (success) {
+			console.log('Stirjoy: Force set default payment method (SiteGround compatibility)');
+		}
+		return success;
+	}
+	
+	// Try immediately (for fast loading)
 	setTimeout(function() {
+		forceSetDefaultPaymentMethod();
+	}, 100);
+	
+	// Also try after a delay (for slower loading on SiteGround)
+	setTimeout(function() {
+		forceSetDefaultPaymentMethod();
 		waitForPaymentMethodsAndInitialize();
+	}, 1000);
+	
+	// And try again after longer delay (SiteGround cache might delay things)
+	setTimeout(function() {
+		forceSetDefaultPaymentMethod();
+		waitForPaymentMethodsAndInitialize();
+	}, 3000);
+	
+	// CRITICAL: Additional attempt after 5 seconds for SiteGround
+	setTimeout(function() {
+		forceSetDefaultPaymentMethod();
+	}, 5000);
+	
+	// CRITICAL: Monitor continuously for first 10 seconds (SiteGround specific)
+	var sitegroundMonitorInterval = setInterval(function() {
+		var $selected = $('#payment input[name="payment_method"]:checked');
+		if ($selected.length) {
+			var selectedValue = $selected.val().toLowerCase();
+			if (selectedValue.indexOf('stripe') !== -1 || selectedValue.indexOf('card') !== -1) {
+				// Credit card is selected, stop monitoring
+				clearInterval(sitegroundMonitorInterval);
+				console.log('Stirjoy: Credit card confirmed selected, stopping monitor');
+			} else {
+				// Not credit card, try to set it
+				forceSetDefaultPaymentMethod();
+			}
+		} else {
+			// Nothing selected, try to set it
+			forceSetDefaultPaymentMethod();
+		}
 	}, 500);
+	
+	// Stop monitoring after 10 seconds
+	setTimeout(function() {
+		clearInterval(sitegroundMonitorInterval);
+	}, 10000);
 	
 	// Also initialize after checkout updates
 	$(document.body).on('updated_checkout', function() {
 		setTimeout(function() {
+			ensurePaymentSectionAccessible();
+			// CRITICAL: Use force function to ensure credit card is selected
+			forceSetDefaultPaymentMethod();
+			
 			var status = checkPaymentGatewayStatus(false);
 			if (status.paymentMethodsExist) {
-				if (!status.paymentMethodSelected) {
-					setDefaultPaymentMethod();
-				}
 				if (status.paymentMethodSelected) {
+					var selectedMethod = $('#payment input[name="payment_method"]:checked').val();
+					// Only trigger change if it's not already a credit card method
+					if (selectedMethod && (selectedMethod.indexOf('stripe') === -1 && selectedMethod.indexOf('card') === -1)) {
+						// Try to switch to credit card
+						forceSetDefaultPaymentMethod();
+					}
 					$('#payment input[name="payment_method"]:checked').trigger('change');
 				}
 			}
@@ -609,26 +1218,11 @@ jQuery(document).ready(function($) {
 	});
 	
 	// Ensure form submission works correctly
+	// CRITICAL: Don't prevent default for Stripe - let it handle submission
 	$('form.checkout').on('submit', function(e) {
 		// Check status before form submission
 		var status = checkPaymentGatewayStatus();
 		
-		if (!status.paymentMethodSelected) {
-			console.error('Stirjoy Error: No payment method selected before submission');
-			if (!setDefaultPaymentMethod()) {
-				alert('Please select a payment method.');
-				e.preventDefault();
-				return false;
-			}
-		}
-		
-		if (!status.paymentMethodInForm) {
-			var paymentMethod = $('#payment input[name="payment_method"]:checked').val();
-			if (paymentMethod) {
-				$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-				$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
-			}
-		}
 		// Ensure payment method is set before submission
 		var paymentMethod = $('input[name="payment_method"]:checked').val();
 		
@@ -637,35 +1231,39 @@ jQuery(document).ready(function($) {
 			var hiddenPaymentMethod = $('#payment input[name="payment_method"]:checked').val();
 			if (hiddenPaymentMethod) {
 				paymentMethod = hiddenPaymentMethod;
-				// Add to form
-				$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-				$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
 			} else {
 				// Auto-select first available
 				var firstPaymentMethod = $('#payment input[name="payment_method"]').first();
 				if (firstPaymentMethod.length) {
 					firstPaymentMethod.prop('checked', true).trigger('change');
 					paymentMethod = firstPaymentMethod.val();
-					$('form.checkout input[type="hidden"][name="payment_method"]').remove();
-					$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
 				}
-			}
-		} else {
-			// Ensure payment method input exists in form
-			if (!$('form.checkout input[type="hidden"][name="payment_method"]').length) {
-				$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
 			}
 		}
 		
-		// For Stripe, ensure Elements are initialized
-		if (paymentMethod && paymentMethod.indexOf('stripe') !== -1) {
-			// Stripe will handle tokenization via its own JavaScript
-			// We just need to ensure payment method is set
-			// Don't prevent default - let Stripe handle it
+		// Ensure payment method is in form
+		if (paymentMethod) {
+			$('form.checkout input[type="hidden"][name="payment_method"]').remove();
+			$('form.checkout').append('<input type="hidden" name="payment_method" value="' + paymentMethod + '" />');
+		} else {
+			console.error('Stirjoy Error: No payment method available');
+			alert('Please select a payment method.');
+			e.preventDefault();
+			return false;
+		}
+		
+		// For Stripe, CRITICAL: Don't prevent default - let Stripe handle submission
+		// Stripe needs to tokenize the card and submit via its own handler
+		if (paymentMethod && (paymentMethod.indexOf('stripe') !== -1 || paymentMethod.indexOf('card') !== -1)) {
+			// Check if Stripe is loaded and ready
+			if (typeof Stripe === 'undefined' && typeof stripe === 'undefined') {
+				console.warn('Stirjoy: Stripe not loaded, allowing form submission anyway');
+			}
+			// Let Stripe handle the submission - don't prevent default
 			return true;
 		}
 		
-		// For other payment methods, ensure payment method is set
+		// For other payment methods, allow normal submission
 		return true;
 	});
 	
