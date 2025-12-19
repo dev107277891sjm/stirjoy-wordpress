@@ -103,8 +103,8 @@ get_header( 'shop' );
 	<div class="container customize-box-container">
 		
 		<header class="woocommerce-products-header">
-			<h1 class="woocommerce-products-header__title page-title">Customize Your Box</h1>
-			<p class="customize-box-subtitle">Your box is pre-filled with this month's selection. Swap meals to customize!</p>
+			<h1 class="woocommerce-products-header__title page-title">Our menu</h1>
+			<p class="customize-box-subtitle">It’s simple: every month, we prepare a new menu of meal kits that you can customize to your liking online.</p>
 		</header>
 
 		<!-- Search Bar -->

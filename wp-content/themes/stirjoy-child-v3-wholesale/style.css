@@ -2366,25 +2366,32 @@ footer p.card-icons {
 }
 
 .customize-your-box-page .woocommerce-products-header__title {
-    font-size: 32px;
+    font-size: 48px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #333;
+    font-style: italic;
+    color: #396A26;
+    letter-spacing: 2px;
 }
 
 .customize-box-subtitle {
-    font-size: 15px;
-    color: #666;
-    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #396A26;
+    letter-spacing: 0.8px;
+    margin: 24px 300px;
+    line-height: 1.5;
 }
 
 /* Search Bar */
 .meal-search-wrapper {
+    display: none;
     max-width: 600px;
     margin: 0 auto 24px;
 }
 
 .meal-search-form {
+    display: none;
     display: flex;
     position: relative;
 }
@@ -2425,7 +2432,8 @@ footer p.card-icons {
 
 /* Category Tabs */
 .meal-category-tabs {
-    display: flex;
+    /* display: flex; */
+    display: none;
     justify-content: center;
     gap: 8px;
     margin-bottom: 40px;
