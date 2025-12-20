@@ -1261,118 +1261,107 @@
             }
         });
         
-        // Populate modal with product data
+        // Populate modal with product data - Figma Design
         function populateModal(data) {
             console.log('=== POPULATING MODAL ===');
             console.log('Product data:', data);
             
-            // Basic info
+            // Top Section: Product Image (Right side - prepared meal)
             $('#modal-product-img').attr('src', data.image_url).attr('alt', data.name);
+            
+            // Top Section: Product Box (Left side)
+            $('#modal-box-title').text(data.name);
+            $('#modal-box-weight').text((data.weight || '115 g') + ' À BASE DE PLANTES | PLANT-BASED');
+            
+            // Box Icons: Portions and Protein
+            if (data.serving_size) {
+                $('#modal-box-portions .icon-number').text(data.serving_size);
+                $('#modal-box-portions').show();
+            } else {
+                $('#modal-box-portions').hide();
+            }
+            
+            if (data.protein) {
+                $('#modal-box-protein .icon-number').text(data.protein);
+                $('#modal-box-protein').show();
+            } else {
+                $('#modal-box-protein').hide();
+            }
+            
+            // Bottom Section: Product Title
             $('#modal-product-title').text(data.name);
             
-            // Rating
-            if (data.rating > 0) {
-                $('#modal-rating-value').text(data.rating.toFixed(1));
-                $('#modal-rating').show();
-            } else {
-                $('#modal-rating').hide();
-            }
+            // Serving Info with Person Icon
+            var servingText = (data.serving_size || '2') + ' people';
+            var pricePerPortion = data.price_per_portion || 6;
+            $('#modal-serving-text').text(servingText);
+            $('#modal-price-per-portion').text('(' + pricePerPortion + '$/portion)');
             
-            // Description (use .html() to properly render text, but data is already sanitized in PHP)
+            // Description
             $('#modal-description').html(data.description || '');
             
-            // Metrics
-            if (data.prep_time) {
-                $('#modal-prep-time .metric-value').text(data.prep_time);
-                $('#modal-prep-time').show();
-            } else {
-                $('#modal-prep-time').hide();
-            }
-            
-            if (data.cook_time) {
-                $('#modal-cook-time .metric-value').text(data.cook_time);
-                $('#modal-cook-time').show();
-            } else {
-                $('#modal-cook-time').hide();
-            }
-            
-            if (data.serving_size) {
-                $('#modal-serving-size .metric-value').text(data.serving_size);
-                $('#modal-serving-size').show();
-            } else {
-                $('#modal-serving-size').hide();
-            }
-            
-            if (data.calories) {
-                $('#modal-calories .metric-value').text(data.calories);
-                $('#modal-calories').show();
-            } else {
-                $('#modal-calories').hide();
-            }
-            
-            // Nutrition
+            // Three Circular Nutritional Icons
             if (data.protein) {
-                $('#modal-protein .nutrition-value').text(data.protein + 'g');
-                $('#modal-protein').show();
+                $('#modal-protein-value').text(data.protein);
+                $('#modal-nutrition-protein').show();
             } else {
-                $('#modal-protein').hide();
+                $('#modal-nutrition-protein').hide();
             }
             
-            if (data.carbs) {
-                $('#modal-carbs .nutrition-value').text(data.carbs + 'g');
-                $('#modal-carbs').show();
+            if (data.portions_of_veggies) {
+                $('#modal-veggies-value').text(data.portions_of_veggies);
+                $('#modal-nutrition-veggies').show();
             } else {
-                $('#modal-carbs').hide();
+                // Default to serving size if portions_of_veggies not available
+                $('#modal-veggies-value').text(data.serving_size || '2');
+                $('#modal-nutrition-veggies').show();
             }
             
-            if (data.fat) {
-                $('#modal-fat .nutrition-value').text(data.fat + 'g');
-                $('#modal-fat').show();
+            if (data.fiber) {
+                $('#modal-fiber-value').text(data.fiber);
+                $('#modal-nutrition-fiber').show();
             } else {
-                $('#modal-fat').hide();
+                $('#modal-nutrition-fiber').hide();
             }
             
-            // Ingredients
-            if (data.ingredients) {
-                var ingredients = data.ingredients.split(',').map(function(item) {
-                    return item.trim();
-                }).filter(function(item) {
-                    return item.length > 0;
+            // Quantity Selector - Get current cart quantity
+            var currentQuantity = 1;
+            if (data.in_cart) {
+                // Get quantity from cart
+                $.ajax({
+                    url: stirjoyData.ajaxUrl,
+                    type: 'POST',
+                    async: false,
+                    data: {
+                        action: 'stirjoy_get_cart_info',
+                        nonce: stirjoyData.nonce
+                    },
+                    success: function(response) {
+                        if (response.success && response.data && response.data.cart_contents) {
+                            var cartItem = response.data.cart_contents.find(function(item) {
+                                return item.product_id == data.product_id;
+                            });
+                            if (cartItem) {
+                                currentQuantity = cartItem.quantity || 1;
+                            }
+                        }
+                    }
                 });
-                
-                var $ingredientsList = $('#modal-ingredients-list');
-                $ingredientsList.empty();
-                
-                ingredients.forEach(function(ingredient) {
-                    $ingredientsList.append('<span class="ingredient-tag">' + ingredient + '</span>');
-                });
-                
-                $('#modal-ingredients-section').show();
+            }
+            $('#modal-quantity-value').text(currentQuantity);
+            $('#modal-quantity-minus').prop('disabled', currentQuantity <= 1);
+            
+            // Add to Cart Button
+            var $actionBtn = $('#modal-action-btn');
+            $actionBtn.attr('data-product-id', data.product_id);
+            
+            if (data.in_cart) {
+                $actionBtn.text('REMOVE FROM CART').removeClass('add-btn').addClass('remove-btn');
             } else {
-                $('#modal-ingredients-section').hide();
+                $actionBtn.text('ADD TO CART').removeClass('remove-btn').addClass('add-btn');
             }
             
-            // Allergens
-            if (data.allergens) {
-                var allergens = data.allergens.split(',').map(function(item) {
-                    return item.trim();
-                }).filter(function(item) {
-                    return item.length > 0;
-                });
-                
-                var $allergensList = $('#modal-allergens-list');
-                $allergensList.empty();
-                
-                allergens.forEach(function(allergen) {
-                    $allergensList.append('<span class="allergen-tag">' + allergen + '</span>');
-                });
-                
-                $('#modal-allergens-section').show();
-            } else {
-                $('#modal-allergens-section').hide();
-            }
-            
-            // Instructions
+            // Expandable Sections: Instructions
             if (data.instructions) {
                 var instructions = data.instructions.split('\n').filter(function(item) {
                     return item.trim().length > 0;
@@ -1390,28 +1379,93 @@
                 $('#modal-instructions-section').hide();
             }
             
-            // Price and action button
-            $('#modal-price').html(data.price);
-            
-            var $actionBtn = $('#modal-action-btn');
-            console.log('Found action button:', $actionBtn.length, 'elements');
-            console.log('Button before update:', $actionBtn[0] ? $actionBtn[0].outerHTML : 'not found');
-            
-            // Set product ID
-            $actionBtn.attr('data-product-id', data.product_id);
-            console.log('Set product ID to:', data.product_id);
-            console.log('Product ID after setting:', $actionBtn.attr('data-product-id'));
-            
-            // Set button text and class based on cart status
-            if (data.in_cart) {
-                $actionBtn.text('- Remove').removeClass('add-btn').addClass('remove-btn');
-                console.log('Set button to REMOVE mode');
+            // Expandable Sections: Nutritional Info
+            if (data.protein || data.carbs || data.fat || data.calories) {
+                if (data.protein) {
+                    $('#modal-protein-detail-value').text(data.protein + 'g');
+                    $('#modal-nutrition-protein-detail').show();
+                } else {
+                    $('#modal-nutrition-protein-detail').hide();
+                }
+                
+                if (data.carbs) {
+                    $('#modal-carbs-detail-value').text(data.carbs + 'g');
+                    $('#modal-nutrition-carbs-detail').show();
+                } else {
+                    $('#modal-nutrition-carbs-detail').hide();
+                }
+                
+                if (data.fat) {
+                    $('#modal-fat-detail-value').text(data.fat + 'g');
+                    $('#modal-nutrition-fat-detail').show();
+                } else {
+                    $('#modal-nutrition-fat-detail').hide();
+                }
+                
+                if (data.calories) {
+                    $('#modal-calories-detail-value').text(data.calories);
+                    $('#modal-nutrition-calories-detail').show();
+                } else {
+                    $('#modal-nutrition-calories-detail').hide();
+                }
+                
+                $('#modal-nutrition-section').show();
             } else {
-                $actionBtn.text('+ Add').removeClass('remove-btn').addClass('add-btn');
-                console.log('Set button to ADD mode');
+                $('#modal-nutrition-section').hide();
             }
             
-            console.log('Button after update:', $actionBtn[0] ? $actionBtn[0].outerHTML : 'not found');
+            // Expandable Sections: Ingredients and Allergens
+            var hasIngredients = false;
+            var hasAllergens = false;
+            
+            if (data.ingredients) {
+                var ingredients = data.ingredients.split(',').map(function(item) {
+                    return item.trim();
+                }).filter(function(item) {
+                    return item.length > 0;
+                });
+                
+                var $ingredientsList = $('#modal-ingredients-list');
+                $ingredientsList.empty();
+                
+                if (ingredients.length > 0) {
+                    $ingredientsList.append('<h4>Ingredients</h4>');
+                    var $ingredientsTags = $('<div class="ingredients-list"></div>');
+                    ingredients.forEach(function(ingredient) {
+                        $ingredientsTags.append('<span class="ingredient-tag">' + ingredient + '</span>');
+                    });
+                    $ingredientsList.append($ingredientsTags);
+                    hasIngredients = true;
+                }
+            }
+            
+            if (data.allergens) {
+                var allergens = data.allergens.split(',').map(function(item) {
+                    return item.trim();
+                }).filter(function(item) {
+                    return item.length > 0;
+                });
+                
+                var $allergensList = $('#modal-allergens-list');
+                $allergensList.empty();
+                
+                if (allergens.length > 0) {
+                    $allergensList.append('<h4>Allergens</h4>');
+                    var $allergensTags = $('<div class="allergens-list"></div>');
+                    allergens.forEach(function(allergen) {
+                        $allergensTags.append('<span class="allergen-tag">' + allergen + '</span>');
+                    });
+                    $allergensList.append($allergensTags);
+                    hasAllergens = true;
+                }
+            }
+            
+            if (hasIngredients || hasAllergens) {
+                $('#modal-ingredients-section').show();
+            } else {
+                $('#modal-ingredients-section').hide();
+            }
+            
             console.log('=== MODAL POPULATION COMPLETE ===');
         }
         
@@ -1420,6 +1474,34 @@
             $modal.removeClass('active');
             $('body').removeClass('modal-open');
         }
+        
+        // Expandable sections toggle
+        $(document).on('click', '.modal-expandable-header', function(e) {
+            e.preventDefault();
+            var $section = $(this).closest('.modal-expandable-section');
+            $section.toggleClass('active');
+        });
+        
+        // Modal quantity selector
+        $(document).on('click', '#modal-quantity-minus', function(e) {
+            e.preventDefault();
+            var $quantityValue = $('#modal-quantity-value');
+            var currentQuantity = parseInt($quantityValue.text()) || 1;
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                $quantityValue.text(currentQuantity);
+                $('#modal-quantity-minus').prop('disabled', currentQuantity <= 1);
+            }
+        });
+        
+        $(document).on('click', '#modal-quantity-plus', function(e) {
+            e.preventDefault();
+            var $quantityValue = $('#modal-quantity-value');
+            var currentQuantity = parseInt($quantityValue.text()) || 1;
+            currentQuantity++;
+            $quantityValue.text(currentQuantity);
+            $('#modal-quantity-minus').prop('disabled', false);
+        });
         
         // Handle modal action button (Add/Remove) - Works independently
         $(document).on('click', '#modal-action-btn', function(e) {
@@ -1452,6 +1534,9 @@
             }
             
             console.log('Proceeding with', isRemove ? 'REMOVE' : 'ADD', 'for product ID:', productId);
+            
+            // Get quantity from modal selector
+            var quantity = parseInt($('#modal-quantity-value').text()) || 1;
             
             // Lock cart operations
             isCartOperationInProgress = true;
@@ -1527,7 +1612,7 @@
                     data: {
                         action: 'stirjoy_add_to_cart',
                         product_id: productId,
-                        quantity: 1,
+                        quantity: quantity,
                         nonce: stirjoyData.nonce
                     },
                     success: function(response) {

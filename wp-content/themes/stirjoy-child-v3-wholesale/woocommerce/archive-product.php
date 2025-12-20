@@ -190,11 +190,12 @@ get_header( 'shop' );
 
 	</div><!-- .container -->
 
-	<!-- Product Detail Modal -->
+	<!-- Product Detail Modal - Figma Design -->
 	<div id="product-detail-modal" class="product-detail-modal">
 		<div class="modal-overlay"></div>
 		<div class="modal-content-wrapper">
 			<div class="modal-content">
+				<!-- Close Button (Top Right) -->
 				<button type="button" class="modal-close" aria-label="Close modal">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<path d="M18 6 6 18"></path>
@@ -202,89 +203,106 @@ get_header( 'shop' );
 					</svg>
 				</button>
 				
-				<div class="modal-body">
-					<!-- Product Image -->
-					<div class="modal-product-image">
+				<!-- Top Section: Orange Background -->
+				<div class="modal-top-section">
+					<div class="modal-meal-image">
 						<img src="" alt="" id="modal-product-img" />
 					</div>
+				</div>
+				
+				<!-- Bottom Section: Cream/Yellow Background -->
+				<div class="modal-bottom-section">
+					<!-- Three Circular Nutritional Icons -->
+					<img src="<?php echo esc_url(stirjoy_get_image_url('pastilles.png')); ?>" alt="Bowl">
 					
-					<!-- Product Info -->
-					<div class="modal-product-info">
-						<!-- Title and Rating -->
-						<div class="modal-header">
-							<h2 class="modal-product-title" id="modal-product-title"></h2>
-							<div class="modal-rating" id="modal-rating">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-									<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>
+					<!-- Product Title -->
+					<h2 class="modal-product-title" id="modal-product-title"></h2>
+					
+					<!-- Serving Info with Person Icon -->
+					<div class="modal-serving-info">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="person-icon">
+							<circle cx="7" cy="4.5" r="2.5"/>
+							<path d="M2 12.5c0-2.2 2.2-4 5-4s5 1.8 5 4"/>
+						</svg>
+						<span class="serving-text" id="modal-serving-text">2 people</span>
+						<span class="price-per-portion" id="modal-price-per-portion">(6$/portion)</span>
+					</div>
+					
+					<!-- Description -->
+					<p class="modal-description" id="modal-description"></p>
+					
+					<!-- Quantity Selector and Add to Cart -->
+					<div class="modal-actions">
+						<div class="modal-quantity-selector">
+							<button type="button" class="modal-quantity-btn modal-quantity-minus" id="modal-quantity-minus">-</button>
+							<span class="modal-quantity-value" id="modal-quantity-value">1</span>
+							<button type="button" class="modal-quantity-btn modal-quantity-plus" id="modal-quantity-plus">+</button>
+						</div>
+						<button type="button" class="modal-add-to-cart-btn" id="modal-action-btn" data-product-id="">
+							ADD TO CART
+						</button>
+					</div>
+					
+					<!-- Expandable Sections -->
+					<div class="modal-expandable-sections">
+						<!-- Cooking Instructions -->
+						<div class="modal-expandable-section" id="modal-instructions-section">
+							<button type="button" class="modal-expandable-header">
+								<span class="expandable-title">Cooking instructions</span>
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expandable-icon">
+									<path d="M12 5v14"></path>
+									<path d="M5 12h14"></path>
 								</svg>
-								<span id="modal-rating-value"></span>
+							</button>
+							<div class="modal-expandable-content">
+								<ol class="instructions-list" id="modal-instructions-list"></ol>
 							</div>
 						</div>
 						
-						<!-- Description -->
-						<p class="modal-description" id="modal-description"></p>
-						
-						<!-- Key Metrics -->
-						<div class="modal-metrics">
-							<div class="metric-item" id="modal-prep-time">
-								<span class="metric-value"></span>
-								<span class="metric-label">Prep</span>
-							</div>
-							<div class="metric-item" id="modal-cook-time">
-								<span class="metric-value"></span>
-								<span class="metric-label">Cook</span>
-							</div>
-							<div class="metric-item" id="modal-serving-size">
-								<span class="metric-value"></span>
-								<span class="metric-label">Servings</span>
-							</div>
-							<div class="metric-item" id="modal-calories">
-								<span class="metric-value"></span>
-								<span class="metric-label">cal</span>
-							</div>
-						</div>
-						
-						<!-- Nutrition Facts -->
-						<div class="modal-nutrition">
-							<h3>Nutrition Facts</h3>
-							<div class="nutrition-items">
-								<div class="nutrition-item" id="modal-protein">
-									<span class="nutrition-value"></span>
-									<span class="nutrition-label">protein</span>
-								</div>
-								<div class="nutrition-item" id="modal-carbs">
-									<span class="nutrition-value"></span>
-									<span class="nutrition-label">carbs</span>
-								</div>
-								<div class="nutrition-item" id="modal-fat">
-									<span class="nutrition-value"></span>
-									<span class="nutrition-label">fat</span>
+						<!-- Nutritional Info -->
+						<div class="modal-expandable-section" id="modal-nutrition-section">
+							<button type="button" class="modal-expandable-header">
+								<span class="expandable-title">Nutritional info</span>
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expandable-icon">
+									<path d="M12 5v14"></path>
+									<path d="M5 12h14"></path>
+								</svg>
+							</button>
+							<div class="modal-expandable-content">
+								<div class="modal-nutrition-details">
+									<div class="nutrition-detail-item" id="modal-nutrition-protein-detail">
+										<span class="nutrition-detail-label">Protein</span>
+										<span class="nutrition-detail-value" id="modal-protein-detail-value">20g</span>
+									</div>
+									<div class="nutrition-detail-item" id="modal-nutrition-carbs-detail">
+										<span class="nutrition-detail-label">Carbs</span>
+										<span class="nutrition-detail-value" id="modal-carbs-detail-value">0g</span>
+									</div>
+									<div class="nutrition-detail-item" id="modal-nutrition-fat-detail">
+										<span class="nutrition-detail-label">Fat</span>
+										<span class="nutrition-detail-value" id="modal-fat-detail-value">0g</span>
+									</div>
+									<div class="nutrition-detail-item" id="modal-nutrition-calories-detail">
+										<span class="nutrition-detail-label">Calories</span>
+										<span class="nutrition-detail-value" id="modal-calories-detail-value">0</span>
+									</div>
 								</div>
 							</div>
 						</div>
 						
-						<!-- Ingredients -->
-						<div class="modal-ingredients" id="modal-ingredients-section">
-							<h3>Ingredients</h3>
-							<div class="ingredients-list" id="modal-ingredients-list"></div>
-						</div>
-						
-						<!-- Allergens -->
-						<div class="modal-allergens" id="modal-allergens-section">
-							<h3>Allergens</h3>
-							<div class="allergens-list" id="modal-allergens-list"></div>
-						</div>
-						
-						<!-- Instructions -->
-						<div class="modal-instructions" id="modal-instructions-section">
-							<h3>Instructions</h3>
-							<ol class="instructions-list" id="modal-instructions-list"></ol>
-						</div>
-						
-						<!-- Price and Action Button -->
-						<div class="modal-footer">
-							<div class="modal-price" id="modal-price"></div>
-							<button type="button" class="modal-action-btn" id="modal-action-btn" data-product-id=""></button>
+						<!-- Ingredients and Allergens -->
+						<div class="modal-expandable-section" id="modal-ingredients-section">
+							<button type="button" class="modal-expandable-header">
+								<span class="expandable-title">Ingredients and allergens</span>
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="expandable-icon">
+									<path d="M12 5v14"></path>
+									<path d="M5 12h14"></path>
+								</svg>
+							</button>
+							<div class="modal-expandable-content">
+								<div class="modal-ingredients-list" id="modal-ingredients-list"></div>
+								<div class="modal-allergens-list" id="modal-allergens-list"></div>
+							</div>
 						</div>
 					</div>
 				</div>

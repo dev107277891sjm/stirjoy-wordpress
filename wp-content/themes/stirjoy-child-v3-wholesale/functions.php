@@ -662,8 +662,11 @@ function stirjoy_add_to_cart() {
     check_ajax_referer( 'stirjoy_nonce', 'nonce' );
     
     $product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
-    // Force quantity to 1 - each product can only be added once
-    $quantity = 1;
+    $quantity = isset( $_POST['quantity'] ) ? absint( $_POST['quantity'] ) : 1;
+    // Ensure minimum quantity of 1
+    if ( $quantity < 1 ) {
+        $quantity = 1;
+    }
     
     if ( ! $product_id ) {
         wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
@@ -671,17 +674,21 @@ function stirjoy_add_to_cart() {
     
     // Check if product is already in cart
     $cart = WC()->cart->get_cart();
-    foreach ( $cart as $cart_item_key => $cart_item ) {
+    $cart_item_key = null;
+    foreach ( $cart as $key => $cart_item ) {
         if ( $cart_item['product_id'] == $product_id ) {
-            wp_send_json_error( array( 
-                'message' => 'This product is already in your cart. Each product can only be added once.',
-                'already_in_cart' => true,
-                'cart_item_key' => $cart_item_key
-            ) );
+            $cart_item_key = $key;
+            break;
         }
     }
     
-    $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity );
+    if ( $cart_item_key ) {
+        // Product already in cart, update quantity
+        WC()->cart->set_quantity( $cart_item_key, $quantity );
+    } else {
+        // Add new product to cart
+        $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity );
+    }
     
     if ( $cart_item_key ) {
         wp_send_json_success( array(
@@ -836,9 +843,15 @@ function stirjoy_get_product_details() {
     $protein = get_post_meta( $product_id, '_protein', true );
     $carbs = get_post_meta( $product_id, '_carbs', true );
     $fat = get_post_meta( $product_id, '_fat', true );
+    $fiber = get_post_meta( $product_id, '_fiber', true );
+    $portions_of_veggies = get_post_meta( $product_id, '_portions_of_veggies', true );
     $ingredients = get_post_meta( $product_id, '_ingredients', true );
     $allergens = get_post_meta( $product_id, '_allergens', true );
     $instructions = get_post_meta( $product_id, '_instructions', true );
+    
+    // Get product weight
+    $weight = $product->get_weight();
+    $weight_text = $weight ? $weight . ' g' : '115 g';
     
     // Get product image
     $image_id = $product->get_image_id();
@@ -860,12 +873,17 @@ function stirjoy_get_product_details() {
         }
     }
     
+    // Calculate price per portion
+    $price = $product->get_price();
+    $price_per_portion = $serving_size ? round( $price / $serving_size, 2 ) : $price;
+    
     wp_send_json_success( array(
         'product_id' => $product_id,
         'name' => $product->get_name(),
         'description' => $description,
         'image_url' => $image_url,
         'price' => $product->get_price_html(),
+        'price_per_portion' => $price_per_portion,
         'rating' => $average_rating,
         'prep_time' => $prep_time,
         'cook_time' => $cook_time,
@@ -874,6 +892,9 @@ function stirjoy_get_product_details() {
         'protein' => $protein,
         'carbs' => $carbs,
         'fat' => $fat,
+        'fiber' => $fiber,
+        'portions_of_veggies' => $portions_of_veggies,
+        'weight' => $weight_text,
         'ingredients' => $ingredients,
         'allergens' => $allergens,
         'instructions' => $instructions,
